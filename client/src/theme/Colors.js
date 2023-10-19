@@ -20,7 +20,7 @@
 //     // 0A2362
 //   },
 //   chartColor: {
-   
+
 //     backgroundColor: "#e26a00",
 //     backgroundGradientFrom: "#fb8c00",
 //     backgroundGradientTo: "#ffa726",
@@ -49,7 +49,7 @@
 //   gradient: {
 //     colors: ['#1d0e4b', '#34073d'],
 //     // color1: '#009DDC',
-//     // color2: '#009B72',
+//     // color2: '#2df793',
 //     // color1: '#BBD4CE',
 //     // color2: '#679186',
 //     // color1: '#62929E',
@@ -62,7 +62,7 @@
 //     // 0A2362
 //   },
 //   chartColor: {
-   
+
 //     backgroundColor: "#e26a00",
 //     backgroundGradientFrom: "#7A9E9F",
 //     backgroundGradientTo: "#B8D8D8",
@@ -91,7 +91,7 @@ tertiary: '#152f28',
   gradient: {
     colors: ['#1d0e4b', '#34073d'],
     color1: '#009DDC',
-    color2: '#009B72',
+    color2: '#2df793',
     // color1: '#BBD4CE',
     // color2: '#679186',
     // color1: '#62929E',
@@ -104,10 +104,10 @@ tertiary: '#152f28',
     // 0A2362
   },
   chartColor: {
-   
+
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#009DDC",
-    backgroundGradientTo: "#009B72",
+    backgroundGradientTo: "#2df793",
   },
   icon:'#009DDC',
   backgroundColorActionCenter: "#fff",
@@ -135,7 +135,7 @@ tertiary: '#152f28',
   gradient: {
     colors: ['#1d0e4b', '#34073d'],
     // color1: '#009DDC',
-    // color2: '#009B72',
+    // color2: '#2df793',
     // color1: '#BBD4CE',
     // color2: '#679186',
     // color1: '#62929E',
@@ -148,7 +148,7 @@ tertiary: '#152f28',
     // 0A2362
   },
   chartColor: {
-   
+
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#7A9E9F",
     backgroundGradientTo: "#B8D8D8",
@@ -178,7 +178,7 @@ tertiary: '#152f28',
   gradient: {
     colors: ['#1d0e4b', '#34073d'],
     color1: '#009DDC',
-    color2: '#009B72',
+    color2: '#2df793',
     // color1: '#BBD4CE',
     // color2: '#679186',
     // color1: '#62929E',
@@ -191,10 +191,10 @@ tertiary: '#152f28',
     // 0A2362
   },
   chartColor: {
-   
+
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#009DDC",
-    backgroundGradientTo: "#009B72",
+    backgroundGradientTo: "#2df793",
   },
   icon:'#009DDC',
   backgroundColorActionCenter: "#fff",
@@ -207,7 +207,7 @@ tertiary: '#152f28',
 }
 
 const theme3= {
-  primary: '#BBD4CE',
+  primary: '#2df793',
   secondary: '#6cc6ac',
 tertiary: '#152f28',
   backgroundColor: '#f4f6fc',
@@ -224,7 +224,7 @@ tertiary: '#152f28',
   gradient: {
     colors: ['#1d0e4b', '#34073d'],
     // color1: '#009DDC',
-    // color2: '#009B72',
+    // color2: '#2df793',
     color1: '#BBD4CE',
     color2: '#679186',
     // color1: '#62929E',
@@ -237,7 +237,7 @@ tertiary: '#152f28',
     // 0A2362
   },
   chartColor: {
-   
+
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#BBD4CE",
     backgroundGradientTo: "#679186",
@@ -248,7 +248,7 @@ tertiary: '#152f28',
 }
 
 const theme4= {
-  primary: '#62929E',
+  primary: '#2df793',
   secondary: '#6cc6ac',
 tertiary: '#152f28',
   backgroundColor: '#f4f6fc',
@@ -265,7 +265,7 @@ tertiary: '#152f28',
   gradient: {
     colors: ['#1d0e4b', '#34073d'],
     // color1: '#009DDC',
-    // color2: '#009B72',
+    // color2: '#2df793',
     // color1: '#BBD4CE',
     // color2: '#679186',
     color1: '#62929E',
@@ -278,7 +278,7 @@ tertiary: '#152f28',
     // 0A2362
   },
   chartColor: {
-   
+
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#62929E",
     backgroundGradientTo: "#546A7B",
@@ -291,7 +291,7 @@ tertiary: '#152f28',
 }
 
 const dark = {
-  primary: '#62929E',
+  primary: '#2df793',
   secondary: '#6cc6ac',
 tertiary: '#152f28',
   backgroundColor: '#f4f6fc',
@@ -308,7 +308,7 @@ tertiary: '#152f28',
   gradient: {
     colors: ['#1d0e4b', '#34073d'],
     // color1: '#009DDC',
-    // color2: '#009B72',
+    // color2: '#2df793',
     // color1: '#BBD4CE',
     // color2: '#679186',
     color1: '#62929E',
@@ -321,7 +321,7 @@ tertiary: '#152f28',
     // 0A2362
   },
   chartColor: {
-   
+
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#62929E",
     backgroundGradientTo: "#546A7B",

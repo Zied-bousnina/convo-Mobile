@@ -6,7 +6,7 @@
  */
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useCallback } from 'react';
 import type {PropsWithChildren} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 
@@ -31,6 +31,10 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import LogInScreen from './src/screens/AuthScreens/LoginScreen';
 import InternetDisconnected from './src/components/Animations/InternetDisconnected';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { save } from './src/Storage';
+import SignUpScreen from './src/screens/AuthScreens/SignUpScreen';
+import VerifyEmailScreen from './src/screens/AuthScreens/VerifyEmailScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,10 +67,46 @@ function Section({children, title}: SectionProps): JSX.Element {
     </View>
   );
 }
+import { LogBox } from 'react-native';
+import ForgotPasswordScreen from './src/screens/AuthScreens/ForgotPasswordScreen';
+import UserDashboardScreen from './src/screens/DashboardScreens/UserDashboardScreen';
+import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwt_decode } from 'jwt-decode';
+import { LogOut, setCurrentUser } from './src/redux/actions/authActions';
+import { SetAuthToken } from './src/utils/SetAuthToken';
+import store from './src/redux/store/store';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 
 function App(): JSX.Element {
+
+
   const [isConnected, setIsConnected] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
+  const user = useSelector(state => state?.auth);
+  const profile = useSelector(state => state?.profile);
+  const request = useSelector(state => state?.request?.requestIsEmpty);
+  // -------------theme----------------------------
+  const appearance = useColorScheme();
+  const setAppTheme = useCallback(async () => {
+    const IS_FIRST = await get('IS_FIRST');
+    // console.log(IS_FIRST);
+    if (IS_FIRST === null) {
+      save('Theme', appearance);
+      save('IsDefault', true);
+      save('IS_FIRST', true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setAppTheme();
+  }, [setAppTheme]);
+
+  // -------------theme----------------------------
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
@@ -77,6 +117,62 @@ function App(): JSX.Element {
     };
   }, []);
 
+  useEffect(() => {
+    AsyncStorage.getItem('jwtToken')
+    .then(value => {
+      if (value) {
+        const decode = jwt_decode(value);
+        // console.log("ligne 107:******************************************",value)
+        // console.log(decode);
+        // store.dispatch(GetRequest());
+        store.dispatch(setCurrentUser(decode));
+        // store.dispatch(GetProfile());
+        // store.dispatch(GetCurrentAccess())
+        SetAuthToken(value); // Corrected typo here
+      }
+    })
+    .catch(err => {
+      // console.log(err);
+    });
+  }, [])
+
+  useEffect(() => {
+    AsyncStorage.getItem('jwtToken')
+      .then(value => {
+        if (value) {
+          const decode = jwt_decode(value);
+          // console.log("ligne 107:******************************************",value)
+          // console.log(decode);
+          store.dispatch(setCurrentUser(decode));
+          // store.dispatch(GetProfile());
+          // store.dispatch(GetRequest());
+          // store.dispatch(CreateScore());
+          SetAuthToken(value); // Corrected typo here
+        }
+      })
+      .catch(err => {
+        // console.log(err);
+      });
+
+    const activeExpires = new Date(user?.user?.iat);
+    const currentDate = new Date();
+    // console.log(`activeExpires-----------------------------------------------------------------------------------`,
+    //  activeExpires < currentDate);
+    if (currentDate > activeExpires) {
+      AsyncStorage.removeItem('jwtToken');
+      store.dispatch(LogOut())
+      // store.dispatch(setCurrentUser({}));
+    }
+  }, []);
+
+console.log("is user", user)
+  useEffect(() => {
+    if (showMessage) {
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 1000); // Delay for 1 second
+    }
+  }, [showMessage]);
 
   const backgroundStyle = {
     // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -92,9 +188,33 @@ function App(): JSX.Element {
       {/* {!isConnected && <OTPVerified/>} */}
 
       <NavigationContainer>
-        <Stack.Navigator>
-        <Stack.Screen name="Login" component={LogInScreen} />
+      {user.isConnected ? (
+        <Stack.Navigator
+        initialRouteName="UserDashboard"
+        screenOptions={{
+          headerShown: false,
+        }}>
+
+        <Stack.Screen
+          name="UserDashboard"
+          component={UserDashboardScreen}
+        />
+
         </Stack.Navigator>
+
+        ):(
+          <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        >
+        <Stack.Screen name="Login" component={LogInScreen} />
+         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+          <Stack.Screen name="VerifyEmailScreen" component={VerifyEmailScreen}/>
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+        </Stack.Navigator>
+        )}
+
 
       </NavigationContainer>
     </>

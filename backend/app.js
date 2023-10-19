@@ -6,6 +6,7 @@ require('dotenv').config()
 var indexRouter = require('./routes/index');
 const mongoose = require('mongoose')
 
+const userRoutes = require('./routes/userRoutes.js');
 
 var app = express();
 
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("connected to db"))
 .catch(err=>console.log(err))
 app.use('/api', indexRouter);
+app.use('/api/users', userRoutes);
 
 
 module.exports = app;

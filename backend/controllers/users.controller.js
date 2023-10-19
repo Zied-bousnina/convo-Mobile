@@ -3,7 +3,7 @@ const generateToken = require('../utils/generateToken.js')
 const User = require('../models/userModel.js')
 var crypto = require('crypto');
 var mailer = require('../utils/mailer');
-const validateRegisterInput = require('../validations/Register')
+const validateRegisterInput = require('../validations/validateRegisterInput')
 const validateFeedbackInput = require('../validations/FeedbackValidation')
 const validateLoginInput = require('../validations/login')
 const bcrypt = require('bcryptjs');
@@ -91,6 +91,7 @@ const authUser = async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res, next) => {
+  console.log(req.body)
   const { errors, isValid } = validateRegisterInput(req.body)
   const {avatar} = req.body;
 

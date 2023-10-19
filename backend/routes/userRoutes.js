@@ -4,34 +4,28 @@ const router = express.Router()
 const {
   authUser,
   registerUser,
-  getUserProfile,
-  updateUserProfile,
+
   getUsers,
   deleteUser,
   getUserById,
   updateUser,
-  addToFav,
-  getFavorites,
-  removeFavorite,
+
   resetPassword,
-  checkFavExistsOrNot,
+
   verifyEmail,
   forgotPassword,
   resendOTP,
   getUserByEmail,
-  registerGoogleUser,
+
   resendOTPDeleteAccount,
   DeleteAccount,
-  addAccessCode,
-  getCurrentAccessList,
-  getUsersCount,
-  getAllUserDetails,
+
   getAllUserDetailsById,
   blockUser,
   deblockUser,
-  getAllUserWhoHasASameAccessBin,
+
   CreateFeedback
-} = require('../controllers/userController');
+} = require('../controllers/users.controller');
 const passport = require('passport');
 const protect = require('../middleware/authMiddleware.js');
 const { CreateReportOnuser, CreateSupport } = require('../controllers/Report.controller');
@@ -41,12 +35,12 @@ router.route('/login').post(authUser)
 router.route('/createReport').post(passport.authenticate('jwt', {session: false}),CreateReportOnuser)
 router.route('/createSupport').post(passport.authenticate('jwt', {session: false}),CreateSupport)
 router.route('/createFeedback').post(passport.authenticate('jwt', {session: false}),CreateFeedback)
-router.route("/getUserCounts").get(getUsersCount)
+// router.route("/getUserCounts").get(getUsersCount)
 
 
 router.route('/getUsers').get(getUsers)
   router.route('/getUserByEmail/:email').get(getUserByEmail)
-  router.route('/registerGoogleUser').post(registerGoogleUser)
+  // router.route('/registerGoogleUser').post(registerGoogleUser)
 //   .put(protect, updateUser)
 router.route('/verifyemail').post(verifyEmail)
 router.route('/deleteaccount').post(DeleteAccount)
@@ -56,9 +50,9 @@ router.route("/resendOTPDeleteAccount").post( resendOTPDeleteAccount )
 // router.post("/reset-password", resetPassword )
 router.post("/reset-password",isResetTokenValid,  resetPassword )
 // router.get("/addAccessCode",  addAccessCode )
-router.route("/access/addAccess").put(passport.authenticate('jwt', {session: false}),addAccessCode)
-router.route("/access/getCurrentAccessList").get(passport.authenticate('jwt', {session: false}),getCurrentAccessList)
-router.route("/access/getAllUserWhoHasASameAccessBin").get(passport.authenticate('jwt', {session: false}),getAllUserWhoHasASameAccessBin)
+// router.route("/access/addAccess").put(passport.authenticate('jwt', {session: false}),addAccessCode)
+// router.route("/access/getCurrentAccessList").get(passport.authenticate('jwt', {session: false}),getCurrentAccessList)
+// router.route("/access/getAllUserWhoHasASameAccessBin").get(passport.authenticate('jwt', {session: false}),getAllUserWhoHasASameAccessBin)
 router.get("/verify-token", isResetTokenValid, (req, res)=> {
   res.json({success:true})
 })

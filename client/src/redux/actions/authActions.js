@@ -13,7 +13,7 @@ import { GetCurrentAccess } from './accessAction';
 
 export const registerUser =  (userData, navigation ) => (dispatch) => {
     // console.log(userData.role)
-    
+
     dispatch({
         type: SET_ERRORS,
         payload: {}
@@ -26,7 +26,7 @@ export const registerUser =  (userData, navigation ) => (dispatch) => {
         type:SET_IS_SECCESS,
         payload:false
     })
-    axios.post(`https://xgenboxv2.onrender.com/api/users`, userData)
+    axios.post(`http://192.168.1.6:3600/api/register`, userData)
         .then(async(res) => {
             dispatch({
                 type:SET_IS_LOADING,
@@ -41,34 +41,29 @@ export const registerUser =  (userData, navigation ) => (dispatch) => {
                     type:SET_IS_SECCESS,
                     payload:false
                 })
-                
+
             }, 3000);
             setTimeout(() => {
-                
+
                 dispatch({
                     type:SET_IS_LOADING,
                     payload:false
                 })
                 dispatch(setLoading(false));
-                if(userData.role === 'MUNICIPAL' || userData.role ==='PRIVATE_COMPANY'){
-                    const { token } = res.data
-            AsyncStorage.setItem('jwtToken', token)
-            SetAuthToken(token)
-                    navigation.navigate('DemandeMunicipalScreen', {role:userData.role})
-                }else{
-                    
-                    navigation.navigate('OTPVerifyEmail', {email:res?.data?.user?.email, userId:res?.data?.user?._id})
-                }
-                
+
+
+                    navigation.navigate('VerifyEmailScreen', {email:res?.data?.user?.email, userId:res?.data?.user?._id})
+
+
                 dispatch(setLoading(true));
             }, 1000);
-           
-           
-            
+
+
+
 
         })
-        
-        
+
+
         .catch( (err) =>{
                dispatch({
                   type: SET_ERRORS,
@@ -79,22 +74,22 @@ export const registerUser =  (userData, navigation ) => (dispatch) => {
                     type: SET_ERRORS,
                     payload: err?.response?.data
                   })
-  
+
                   dispatch({
                     type:SET_IS_LOADING,
                     payload:false
                 })
                 setTimeout(() => {
-                    
+
                     dispatch({
                         type:SET_IS_SECCESS,
                         payload:false
                     })
                 }, 3000);
             }
-           
-        
-            
+
+
+
         )
 }
 export const verifyEmail = (userData, navigation)=>(dispatch)=> {
@@ -110,8 +105,8 @@ export const verifyEmail = (userData, navigation)=>(dispatch)=> {
         type:SET_NOT_SUCCESS,
         payload:false
       })
-    
-    axios.post(`https://xgenboxv2.onrender.com/api/users/verifyemail`, userData)
+
+    axios.post(`http://192.168.1.6:3600/api/users/verifyemail`, userData)
     .then(async(res) => {
 
         dispatch({
@@ -154,7 +149,7 @@ export const verifyEmail = (userData, navigation)=>(dispatch)=> {
             dispatch( {
                 type: SET_USER,
                 payload: {}
-            })            
+            })
         }).catch(async (err) => {
             // console.log("No", err)
 
@@ -172,22 +167,22 @@ export const verifyEmail = (userData, navigation)=>(dispatch)=> {
                 payload:false
               })
 
-                
+
               }, 4000);
-            
-            
+
+
             dispatch({
                 type: SET_ERRORS,
                 payload: err?.response?.data
             })
            }
-        
-            
+
+
         )
 }
 
 export const deleteaccount = (userData, navigation)=>(dispatch)=> {
-    
+
     axios.post(`https://xgenboxv2.onrender.com/api/users/deleteaccount`, userData)
     .then(async(res) => {
         dispatch({
@@ -202,7 +197,7 @@ export const deleteaccount = (userData, navigation)=>(dispatch)=> {
         // navigation.navigate('Login', {email:res?.data?.user?.email})
         dispatch(LogOut())
 
-       
+
             dispatch({
                 type: SET_EMAIL_SENT,
                 payload: true
@@ -215,15 +210,15 @@ export const deleteaccount = (userData, navigation)=>(dispatch)=> {
             })
 
             dispatch(setLoading(false));
-            
+
             // dispatch(setLoading(true));
             setTimeout(() => {
-                
-                
+
+
                 dispatch({
                     type: SET_ERRORS,
                     payload: {}
-                    
+
                 })
                 // navigation.navigate('Login', {email:res?.data?.user?.email})
                 dispatch({
@@ -231,18 +226,18 @@ export const deleteaccount = (userData, navigation)=>(dispatch)=> {
                     payload: false
                 });
             }, 4000);
-            
+
 
         })
-        
-        
+
+
         .catch(async (err) => {
             // console.log("No", err)
 
-            
+
             setTimeout(() => {
-                
-                
+
+
                 dispatch(setLoading(false));
             }, 2310);
             dispatch({
@@ -250,8 +245,8 @@ export const deleteaccount = (userData, navigation)=>(dispatch)=> {
                 payload: err?.response?.data
             })
            }
-        
-            
+
+
         )
 }
 export function setLoading(isLoading) {
@@ -274,7 +269,7 @@ export const resendOtp = (email)=>dispatch=> {
         type:SET_NOT_SUCCESS,
         payload:false
       })
-    axios.post(`https://xgenboxv2.onrender.com/api/users/resendotp`, email)
+    axios.post(`http://192.168.1.6:3600/api/users/resendotp`, email)
     .then(async(res) => {
         dispatch({
             type:SET_IS_LOADING,
@@ -298,10 +293,10 @@ export const resendOtp = (email)=>dispatch=> {
           dispatch({
               type: SET_ERRORS,
               payload: {}
-              
+
           })
-           
-          
+
+
 
 
         })
@@ -321,19 +316,19 @@ export const resendOtp = (email)=>dispatch=> {
                 payload:false
               })
 
-                
+
               }, 4000);
-            
+
                 dispatch({
                     type: SET_ERRORS,
                     payload: err?.response?.data
                 })
-                
-           
+
+
               }
               )
 }
-     
+
 export const resendOTPDeleteAccount = (email)=>dispatch=> {
     axios.post(`https://xgenboxv2.onrender.com/api/users/resendOTPDeleteAccount`, email)
     .then(async(res) => {
@@ -344,12 +339,12 @@ export const resendOTPDeleteAccount = (email)=>dispatch=> {
             });
             // dispatch(setLoading(true));
             setTimeout(() => {
-                
-                
+
+
                 dispatch({
                     type: SET_ERRORS,
                     payload: {}
-                    
+
                 })
                 dispatch({
                     type: SET_EMAIL_SENT,
@@ -395,7 +390,7 @@ export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
         'Content-Type': 'multipart/form-data'
         // 'Authorization': 'Bearer ' + token
       }
-  
+
     })
         .then(async(res) => {
             // console.log("authActions file ligne 308:", res)
@@ -408,15 +403,15 @@ export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
             })
             dispatch(LogOut())
             setTimeout(() => {
-                
+
                 navigation.navigate('Login')
             }, 1000);
-          
-  
-          
-          
-         
-          
+
+
+
+
+
+
         })
         .catch( (err) =>{
         //   console.log(err)
@@ -433,14 +428,14 @@ export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
             dispatch(
               setLoading(false)
             )
-            
+
           }, 3000);
         }
-           
-        ) 
+
+        )
   }
 
-        
+
 
 
 export const setCurrentUser = (decoded) => {
@@ -453,7 +448,7 @@ export const setCurrentUser = (decoded) => {
 
 export const loginUser = (userData) => dispatch => {
     // console.log("--------------userData-----------------------------")
-    // console.log("--------------------------------------",userData)
+    console.log("--------------------------------------",userData)
     // console.log("---------------userData----------------------------")
     dispatch({
         type: SET_ERRORS,
@@ -465,7 +460,7 @@ export const loginUser = (userData) => dispatch => {
     })
     dispatch(LogOut())
     axios
-        .post(`https://xgenboxv2.onrender.com/api/users/login`, {email:userData.email, password:userData.password})
+        .post(`http://192.168.1.6:3600/api/users/login`, {email:userData.email, password:userData.password})
         .then(res => {
             // Save to localStorage
             const { token } = res.data
@@ -473,14 +468,14 @@ export const loginUser = (userData) => dispatch => {
             // console.log("--------------userData-----------------------------")
     // console.log("--------------------------------------",res.data)
     // console.log("---------------userData----------------------------")
-            dispatch(GetRequest())
-            dispatch(GetProfile())
-            dispatch(GetCurrentAccess())
-            dispatch(GetRequest())
-            
+            // dispatch(GetRequest())
+            // dispatch(GetProfile())
+            // dispatch(GetCurrentAccess())
+            // dispatch(GetRequest())
+
             AsyncStorage.setItem('jwtToken', token)
-            
-            
+
+
             // Set token to Auth header
             SetAuthToken(token)
             // Decode token to get user data
@@ -494,15 +489,15 @@ export const loginUser = (userData) => dispatch => {
                 payload: []
             })
             setTimeout(() => {
-                
+
                 dispatch({
                     type:SET_IS_LOADING,
                     payload:false
                 })
             }, 1000);
         })
-        .catch(err => 
-           { 
+        .catch(err =>
+           {
             // console.log(err)
             dispatch({
                 type: SET_ERRORS,
@@ -513,18 +508,18 @@ export const loginUser = (userData) => dispatch => {
                 payload:false
             })
         }
-            
+
         )
 }
 
-  
+
 
 export const LogOut = (navigation)=>dispatch=>{
     AsyncStorage.removeItem("jwtToken")
-    
-    
-   
-    
+
+
+
+
     dispatch( {
         type: SET_USER,
         payload: {}
@@ -542,7 +537,7 @@ export const LogOut = (navigation)=>dispatch=>{
         payload:[]
     })
     // navigation.navigate('Login')
-   
+
 }
 
 export const getUserByEmail = (info,navigation)=>dispatch=>{
@@ -567,8 +562,8 @@ const data = {email, name:familyName+' '+givenName,avatar:photo, googleId:id, to
 
         // dispatch(loginUser(data))
     })
-    .catch(err => 
-       { 
+    .catch(err =>
+       {
         // console.log("err in authAction.js line 366",err)
         // dispatch({
         //     type: SET_ERRORS,
@@ -591,8 +586,8 @@ export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
             // console.log(res)
             // dispatch(loginUser())
             AsyncStorage.setItem('jwtToken', res.data.token)
-            
-            
+
+
             // Set token to Auth header
             SetAuthToken(res.data.token)
             // Decode token to get user data
@@ -605,28 +600,28 @@ export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
             dispatch(setCurrentUser(decoded))
             dispatch(GetRequest())
             dispatch(GetProfile())
-            
+
 
             setTimeout(() => {
-                
-                
+
+
                 dispatch(setLoading(false));
                 // navigation.navigate('EditProfile', {email:res?.data?.user?.email, userId:res?.data?.user?._id})
-                
+
                 dispatch(setLoading(true));
             }, 3000);
-           
-           
-            
+
+
+
 
         })
-        
-        
+
+
         .catch( (err) =>{
             // console.log(err)
         //     AsyncStorage.setItem('jwtToken', token)
-            
-            
+
+
         //     // Set token to Auth header
         //     SetAuthToken(token)
         //     // Decode token to get user data
@@ -642,9 +637,9 @@ export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
                   payload: err?.response?.data
                 })
             }
-           
-        
-            
+
+
+
         )
 }
 
@@ -653,13 +648,17 @@ export const forgotPassword = (email)=>dispatch=> {
     dispatch({
         type: SET_ERRORS,
         payload: {}
-        
+
     })
     dispatch({
         type: SET_EMAIL_SENT,
         payload: true
     });
-    axios.post(`https://xgenboxv2.onrender.com/api/users/forgot-password`, {email})
+    dispatch({
+        type:SET_IS_LOADING,
+        payload:true
+    })
+    axios.post(`http://192.168.1.6:3600/api/users/forgot-password`, {email})
     .then(async(res) => {
         // console.log(res)
             dispatch({
@@ -668,18 +667,25 @@ export const forgotPassword = (email)=>dispatch=> {
             });
             // dispatch(setLoading(true));
             setTimeout(() => {
-                
-                
+
+
                 dispatch({
                     type: SET_ERRORS,
                     payload: {}
-                    
+
                 })
                 dispatch({
                     type: SET_EMAIL_SENT,
                     payload: false
                 });
             }, 2310);
+            setTimeout(() => {
+
+                dispatch({
+                    type:SET_IS_LOADING,
+                    payload:false
+                })
+            }, 1000);
 
 
         })
@@ -694,6 +700,10 @@ export const forgotPassword = (email)=>dispatch=> {
                     type: SET_EMAIL_SENT,
                     payload: false
                 });
+                dispatch({
+                    type:SET_IS_LOADING,
+                    payload:false
+                })
             // }, 2310);
               }
               )

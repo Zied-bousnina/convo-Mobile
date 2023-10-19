@@ -21,28 +21,28 @@ exports.mailTransport =()=>
       exports.generateEmailTemplate = code=> {
         return `
         <div style="background-color: #f5f5f5; padding: 10px; text-align: center;">
-        <div style="background-color: #fff; padding: 20px; border-radius: 5px;">
-          <h2 style="color: #333; font-size: 24px; font-weight: 500; margin: 0 0 10px;">Welcome to Xgenbox</h2>
-          <p style="color: #333; font-size: 16px; font-weight: 400; margin: 0 0 10px;">Please use the following code to verify your email.</p>
-          <div style="background-color: #333; color: #fff; font-size: 20px; font-weight: 500; padding: 10px 20px; border-radius: 5px; display: inline-block;">
-            ${code}
+          <div style="background-color: #fff; padding: 20px; border-radius: 5px;">
+            <img src="./logo.png" alt="Convoyage Logo" style="max-width: 100px; margin: 0 auto;">
+            <h2 style="color: #333; font-size: 24px; font-weight: 500; margin: 0 0 10px;">Welcome to Convoyage</h2>
+            <p style="color: #333; font-size: 16px; font-weight: 400; margin: 0 0 10px;">Please use the following code to verify your email.</p>
+            <div style="background-color: #333; color: #fff; font-size: 20px; font-weight: 500; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+              ${code}
+            </div>
           </div>
         </div>
-      
-        </div>
-        `;
+      `;
         };
         exports.generateEmailTemplateDeleterAccount = code=> {
           return `
           <div style="background-color: #f5f5f5; padding: 10px; text-align: center;">
           <div style="background-color: #fff; padding: 20px; border-radius: 5px;">
-            <h2 style="color: #333; font-size: 24px; font-weight: 500; margin: 0 0 10px;">Welcome to Xgenbox</h2>
+            <h2 style="color: #333; font-size: 24px; font-weight: 500; margin: 0 0 10px;">Welcome to Convoyage</h2>
             <p style="color: #333; font-size: 16px; font-weight: 400; margin: 0 0 10px;">Please use the following code to Delete you're account.</p>
             <div style="background-color: #333; color: #fff; font-size: 20px; font-weight: 500; padding: 10px 20px; border-radius: 5px; display: inline-block;">
               ${code}
             </div>
           </div>
-        
+
           </div>
           `;
           };
@@ -54,7 +54,7 @@ exports.plainEmailTemplate = (heading, message) => {
         <h2 style="color: #333; font-size: 24px; font-weight: 500; margin: 0 0 10px;">${heading}</h2>
         <p style="color: #333; font-size: 16px; font-weight: 400; margin: 0 0 10px;">${message}</p>
         </div>
-    
+
         </div>
         `;
 }
@@ -69,10 +69,10 @@ exports.generatePasswordResetTemplate = url => {
             <a href="${url}" style="color: #fff; text-decoration: none;">Reset Password</a>
         </div>
         </div>
-    
+
         </div>
         `;
-        
+
 }
 
 

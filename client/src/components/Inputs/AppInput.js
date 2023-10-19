@@ -16,30 +16,30 @@ const AppInput = ({ name, placeholder,style,errorStyle, placeholderTextColor, ..
                 placeholderTextColor={placeholderTextColor}
               onChangeText={handleChange(name)}
               onBlur={handleBlur(name)}
-              
-              
-              
-              
+
+
+
+
               value={values[name]}
               {...rest}
-              
-              
+
+
               />
                {touched[name] && errors[name] || errors1&& errors1[name] ? (
                   <Text style={styles.error}>{errors[name]} {errors1 && errors1[name]} </Text>
                   ) : null}
-             
+
                   </>
   )
 }
 
 const styles = StyleSheet.create({
-   
+
     error: {
       color: 'red',
       fontFamily: Fonts.type.NotoSansSemiBold,
       fontSize: 12,
-   
+
     },
 
   });
