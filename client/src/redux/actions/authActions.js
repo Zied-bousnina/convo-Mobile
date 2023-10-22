@@ -26,7 +26,7 @@ export const registerUser =  (userData, navigation ) => (dispatch) => {
         type:SET_IS_SECCESS,
         payload:false
     })
-    axios.post(`http://192.168.1.6:3600/api/register`, userData)
+    axios.post(`https://convoyage.onrender.com/api/register`, userData)
         .then(async(res) => {
             dispatch({
                 type:SET_IS_LOADING,
@@ -106,7 +106,7 @@ export const verifyEmail = (userData, navigation)=>(dispatch)=> {
         payload:false
       })
 
-    axios.post(`http://192.168.1.6:3600/api/users/verifyemail`, userData)
+    axios.post(`https://convoyage.onrender.com/api/users/verifyemail`, userData)
     .then(async(res) => {
 
         dispatch({
@@ -269,7 +269,7 @@ export const resendOtp = (email)=>dispatch=> {
         type:SET_NOT_SUCCESS,
         payload:false
       })
-    axios.post(`http://192.168.1.6:3600/api/users/resendotp`, email)
+    axios.post(`https://convoyage.onrender.com/api/users/resendotp`, email)
     .then(async(res) => {
         dispatch({
             type:SET_IS_LOADING,
@@ -460,7 +460,7 @@ export const loginUser = (userData) => dispatch => {
     })
     dispatch(LogOut())
     axios
-        .post(`http://192.168.1.6:3600/api/users/login`, {email:userData.email, password:userData.password})
+        .post(`https://convoyage.onrender.com/api/users/login`, {email:userData.email, password:userData.password})
         .then(res => {
             // Save to localStorage
             const { token } = res.data
@@ -658,7 +658,7 @@ export const forgotPassword = (email)=>dispatch=> {
         type:SET_IS_LOADING,
         payload:true
     })
-    axios.post(`http://192.168.1.6:3600/api/users/forgot-password`, {email})
+    axios.post(`https://convoyage.onrender.com/api/users/forgot-password`, {email})
     .then(async(res) => {
         // console.log(res)
             dispatch({

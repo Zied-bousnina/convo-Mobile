@@ -4,6 +4,7 @@
  *
  * @format
  */
+import 'react-native-gesture-handler';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useCallback } from 'react';
@@ -35,53 +36,24 @@ import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { save } from './src/Storage';
 import SignUpScreen from './src/screens/AuthScreens/SignUpScreen';
 import VerifyEmailScreen from './src/screens/AuthScreens/VerifyEmailScreen';
-
-const Stack = createNativeStackNavigator();
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  // const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            // color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            // color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 import { LogBox } from 'react-native';
 import ForgotPasswordScreen from './src/screens/AuthScreens/ForgotPasswordScreen';
 import UserDashboardScreen from './src/screens/DashboardScreens/UserDashboardScreen';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwt_decode } from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
+
 import { LogOut, setCurrentUser } from './src/redux/actions/authActions';
 import { SetAuthToken } from './src/utils/SetAuthToken';
 import store from './src/redux/store/store';
+
+const Stack = createNativeStackNavigator();
+
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
 
 
 function App(): JSX.Element {
-
 
   const [isConnected, setIsConnected] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
@@ -122,7 +94,7 @@ function App(): JSX.Element {
     .then(value => {
       if (value) {
         const decode = jwt_decode(value);
-        // console.log("ligne 107:******************************************",value)
+        console.log("ligne 96:******************************************",value)
         // console.log(decode);
         // store.dispatch(GetRequest());
         store.dispatch(setCurrentUser(decode));
@@ -137,11 +109,12 @@ function App(): JSX.Element {
   }, [])
 
   useEffect(() => {
+
     AsyncStorage.getItem('jwtToken')
       .then(value => {
         if (value) {
           const decode = jwt_decode(value);
-          // console.log("ligne 107:******************************************",value)
+          console.log("ligne 107:******************************************",value)
           // console.log(decode);
           store.dispatch(setCurrentUser(decode));
           // store.dispatch(GetProfile());
@@ -177,6 +150,7 @@ console.log("is user", user)
   const backgroundStyle = {
     // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  console.log('(((((((((((((((((((((((((((((((((((',user)
 
   if (!isConnected) {
     return <InternetDisconnected />;
