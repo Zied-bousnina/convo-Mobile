@@ -46,13 +46,38 @@ import jwt_decode from 'jwt-decode';
 import { LogOut, setCurrentUser } from './src/redux/actions/authActions';
 import { SetAuthToken } from './src/utils/SetAuthToken';
 import store from './src/redux/store/store';
-
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import SecondPage from './src/screens/DashboardScreens/SideBarComponents/SecondPage';
+import FirstPage from './src/screens/DashboardScreens/SideBarComponents/FirstPage';
+import ThirdPage from './src/screens/DashboardScreens/SideBarComponents/ThirdPage';
+import CustomSidebarMenu from './src/screens/DashboardScreens/CustomSidebarMenu';
+import ProfileSettings from './src/screens/DashboardScreens/ProfileSettings';
 const Stack = createNativeStackNavigator();
-
+const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
 
 
+function FirstScreenStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="FirstPage"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="FirstPage" component={UserDashboardScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function SecondScreenStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="SecondPage"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="SecondPage" component={SecondPage} />
+      <Stack.Screen name="ThirdPage" component={ThirdPage} />
+    </Stack.Navigator>
+  );
+}
 function App(): JSX.Element {
 
   const [isConnected, setIsConnected] = useState(false);
@@ -163,18 +188,35 @@ console.log("is user", user)
 
       <NavigationContainer>
       {user.isConnected ? (
-        <Stack.Navigator
-        initialRouteName="UserDashboard"
-        screenOptions={{
-          headerShown: false,
-        }}>
+       <Drawer.Navigator
+       screenOptions={{
+         activeTintColor: '#e91e63',
+         itemStyle: {marginVertical: 5},
 
-        <Stack.Screen
-          name="UserDashboard"
-          component={UserDashboardScreen}
-        />
+                    // headerShown: false,
 
-        </Stack.Navigator>
+
+       }}
+       drawerContent={props => <CustomSidebarMenu {...props} />}>
+       <Drawer.Screen
+         name="FirstDrawerPage"
+         options={{drawerLabel: 'First page Option', title: 'First Stack'}}
+         component={FirstScreenStack}
+       />
+       <Drawer.Screen
+         name="ScondDrawerPage"
+         options={{drawerLabel: 'Second page Option', title: 'Second Stack'}}
+         component={SecondScreenStack}
+       />
+       <Drawer.Screen
+      name="profileSettings"
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+      }}
+      component={ProfileSettings}
+    />
+     </Drawer.Navigator>
 
         ):(
           <Stack.Navigator
@@ -188,7 +230,7 @@ console.log("is user", user)
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         </Stack.Navigator>
         )}
-
+ <Stack.Screen name="profileSettings" component={ProfileSettings} />
 
       </NavigationContainer>
     </>
