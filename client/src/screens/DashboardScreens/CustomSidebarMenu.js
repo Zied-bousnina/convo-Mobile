@@ -1,7 +1,8 @@
 // Custom Navigation Drawer / Sidebar with Image and Icon in Menu Options
 // https://aboutreact.com/custom-navigation-drawer-sidebar-with-image-and-icon-in-menu-options/
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Button, ThemeProvider } from 'react-native-elements';
 import {
   SafeAreaView,
   View,
@@ -19,11 +20,15 @@ import {
 } from '@react-navigation/drawer';
 import ProfileSection from './Components/ProfileSection';
 import LoginButton from '../../components/Buttons/LoginButton';
-import Button from '../../components/Buttons/Button';
-import Icon from 'react-native-vector-icons/Entypo';
+import ButtonCustom from '../../components/Buttons/ButtonCustom';
+import { SocialIcon } from 'react-native-elements'
 
 
 const CustomSidebarMenu = (props) => {
+  const [isDriverMode, setIsDriverMode] = useState(false);
+  const toggleMode = () => {
+    setIsDriverMode(!isDriverMode);
+  };
   const BASE_PATH =
     'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';
   const proileImage = 'react_logo.png';
@@ -42,15 +47,22 @@ const CustomSidebarMenu = (props) => {
             {/* <Text style={styles.or}>OR</Text> */}
           </View>
       <View style={styles.loginCon}>
-            <Button
+            <ButtonCustom
               style={styles.LoginBtn}
               loginBtnLbl={styles.loginBtnLbl}
-              btnName={"Driver Mode"}
+              btnName={isDriverMode ? "Passenger Mode" : "Driver Mode"}
+          onPress={toggleMode}
               />
 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-          <Icon name="facebook-with-circle" size={50} color={"black"} />
-          <Icon name="instagram-with-circle" size={50} color={"black"}  />
+<SocialIcon
+  type='facebook'
+/>
+<SocialIcon
+  type='instagram'
+
+/>
         </View>
+
           </View>
     </SafeAreaView>
   );

@@ -57,6 +57,12 @@ import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import Icon5 from 'react-native-vector-icons/MaterialCommunityIcons';
+import CityScreen from './src/screens/DashboardScreens/CityScreen';
+import RequestHistory from './src/screens/DashboardScreens/RequestHistory';
+import SafetyScreen from './src/screens/DashboardScreens/SafetyScreen';
+import SettingsScreen from './src/screens/DashboardScreens/SettingsScreen';
+import FAQScreen from './src/screens/DashboardScreens/FAQScreen';
+import SupportScreen from './src/screens/DashboardScreens/SupportScreen';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -229,7 +235,7 @@ console.log("is user", user)
           />
       ),
         }}
-         component={SecondScreenStack}
+         component={CityScreen}
        />
        <Drawer.Screen
          name="RequestHistoryPage"
@@ -241,7 +247,7 @@ console.log("is user", user)
               color={focused ? '#26cbfc' : 'black'}
           />
       ),}}
-         component={SecondScreenStack}
+         component={RequestHistory}
        />
         <Drawer.Screen
          name="SafetyPage"
@@ -253,7 +259,7 @@ console.log("is user", user)
               color={focused ? '#26cbfc' : 'black'}
           />
       ),}}
-         component={SecondScreenStack}
+         component={SafetyScreen}
        />
         <Drawer.Screen
          name="SettingsPage"
@@ -266,7 +272,7 @@ console.log("is user", user)
           />
       ),
         }}
-         component={SecondScreenStack}
+         component={SettingsScreen}
        />
        <Drawer.Screen
          name="FaqPage"
@@ -280,7 +286,7 @@ console.log("is user", user)
       ),
 
         }}
-         component={SecondScreenStack}
+         component={FAQScreen}
        />
        <Drawer.Screen
          name="SupportPage"
@@ -293,7 +299,7 @@ console.log("is user", user)
           />
       ),
         }}
-         component={SecondScreenStack}
+         component={SupportScreen}
        />
        <Drawer.Screen
       name="profileSettings"

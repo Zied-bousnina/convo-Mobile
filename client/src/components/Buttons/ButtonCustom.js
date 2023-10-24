@@ -2,7 +2,7 @@ import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import { useFormikContext } from 'formik'
 
-const Button = ({ name, placeholder,style,errorStyle,loginBtnLbl,btnName, ...rest}) => {
+const ButtonCustom = ({ name, placeholder,style,errorStyle,loginBtnLbl,btnName, onPress, ...rest}) => {
     // const { handleSubmit, touched, values, isSubmitting } = useFormikContext()
     // console.log(isSubmitting)
 
@@ -10,7 +10,7 @@ const Button = ({ name, placeholder,style,errorStyle,loginBtnLbl,btnName, ...res
     <Pressable
     style={style}
     // onPress={ isSubmitting? null : handleSubmit}
-    // onPress={()=>console.log(props.values)}
+    onPress={()=>onPress()}
     backgroundColor={  '#6bc7ab' }
 
     // disabled={
@@ -26,4 +26,4 @@ const Button = ({ name, placeholder,style,errorStyle,loginBtnLbl,btnName, ...res
   )
 }
 
-export default Button
+export default ButtonCustom
