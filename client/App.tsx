@@ -63,6 +63,7 @@ import SafetyScreen from './src/screens/DashboardScreens/SafetyScreen';
 import SettingsScreen from './src/screens/DashboardScreens/SettingsScreen';
 import FAQScreen from './src/screens/DashboardScreens/FAQScreen';
 import SupportScreen from './src/screens/DashboardScreens/SupportScreen';
+
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -209,11 +210,11 @@ console.log("is user", user)
 
        }}
        drawerContent={props => <CustomSidebarMenu {...props} />}>
-       <Drawer.Screen
+       {/* <Drawer.Screen
          name="FirstDrawerPage"
          options={{drawerLabel: 'Home'
           , title: 'Home',
-          // headerShown:false
+          headerShown:false
           drawerIcon: ({ focused, size }) => (
             <Icon
                 name="home"
@@ -223,7 +224,7 @@ console.log("is user", user)
         ),
         }}
          component={FirstScreenStack}
-       />
+       /> */}
        <Drawer.Screen
          name="CityPage"
          options={{drawerLabel: 'City', title: 'City',
@@ -328,89 +329,7 @@ console.log("is user", user)
       </NavigationContainer>
     </>
 
-    // <NavigationContainer>
-    //   <View>
-    //     {showMessage && isConnected && (
-    //       <View style={styles.messageContainer}>
-    //         <Text style={styles.messageText}>Connected</Text>
-    //       </View>
-    //     )}
-    //     {!isConnected && (
-    //       <Text style={{ color: 'red', backgroundColor: 'white' }}>
-    //         {!isConnected && 'Internet Disconnected'}
-    //       </Text>
-    //     )}
-    //   </View>
 
-    //   {user.isConnected ? (
-    //     user.isUser && user?.profile?.profileIsEmpty ? (
-    //       <Stack.Navigator
-    //         initialRouteName="EditProfile"
-    //         screenOptions={{
-    //           headerShown: false,
-    //         }}>
-    //         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-    //       </Stack.Navigator>
-    //     ) : user.isAdmin ? (
-    //       <Stack.Navigator
-    //         initialRouteName="AdminDashboard"
-    //         screenOptions={{
-    //           headerShown: false,
-    //         }}>
-    //         <Stack.Screen
-    //           name="AdminDashboard"
-    //           component={AdminDashboardScreen}
-    //         />
-    //       </Stack.Navigator>
-    //     ) : user.isMunicipal ? (
-    //       <Stack.Navigator initialRouteName="MunicipalDashboard">
-    //         <Stack.Screen
-    //           name="MunicipalDashboard"
-    //           component={MunicipalDashboardScreen}
-    //         />
-    //       </Stack.Navigator>
-    //     ) : user.isUser && !user.isVerified ? (
-    //       <Stack.Navigator
-    //         initialRouteName="VerifyEmail"
-    //         screenOptions={{
-    //           headerShown: false,
-    //         }}>
-    //         <Stack.Screen
-    //           name="VerifyEmail"
-    //           component={VerifyEmailScreen}
-    //           initialParams={{ email: user.email }}
-    //         />
-    //       </Stack.Navigator>
-    //     ) : (
-    //       <Stack.Navigator
-    //         initialRouteName="UserDashboard"
-    //         screenOptions={{
-    //           headerShown: false,
-    //         }}>
-    //         <Stack.Screen
-    //           name="UserDashboard"
-    //           component={UserDashboardScreen}
-    //         />
-    //       </Stack.Navigator>
-    //     )
-    //   ) : (
-    //     <Stack.Navigator
-    //       initialRouteName="Login"
-    //       screenOptions={{
-    //         headerShown: false,
-    //       }}>
-    //         <Stack.Screen name="googleSignUp" component={SignUpGoogleScreen} />
-    //         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-    //       <Stack.Screen name="Login" component={LogInScreen} />
-    //       <Stack.Screen name="SignUpScreen" component={SignupScreen} />
-    //       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-    //       <Stack.Screen name="EnterOTPResetPassword" component={EnterOTPResetPassword} />
-    //       <Stack.Screen name="OTPVerifyEmail" component={VerifyEmailScreen} />
-    //       <Stack.Screen name="ResetPassword" component={ResetPassword} />
-
-    //     </Stack.Navigator>
-    //   )}
-    // </NavigationContainer>
   );
 }
 
