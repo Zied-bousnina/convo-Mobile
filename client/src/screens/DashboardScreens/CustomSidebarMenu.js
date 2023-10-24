@@ -9,14 +9,19 @@ import {
   Image,
   Text,
   Linking,
+  Pressable,
 } from 'react-native';
-
+import Fonts from '../../../src/assets/fonts';
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
 import ProfileSection from './Components/ProfileSection';
+import LoginButton from '../../components/Buttons/LoginButton';
+import Button from '../../components/Buttons/Button';
+import Icon from 'react-native-vector-icons/Entypo';
+
 
 const CustomSidebarMenu = (props) => {
   const BASE_PATH =
@@ -32,14 +37,21 @@ const CustomSidebarMenu = (props) => {
 
 
       </DrawerContentScrollView>
-      <Text
-        style={{
-          fontSize: 16,
-          textAlign: 'center',
-          color: 'grey'
-        }}>
-        www.aboutreact.com
-      </Text>
+      <View style={styles.deviderCon}>
+            <View style={styles.devider} />
+            {/* <Text style={styles.or}>OR</Text> */}
+          </View>
+      <View style={styles.loginCon}>
+            <Button
+              style={styles.LoginBtn}
+              loginBtnLbl={styles.loginBtnLbl}
+              btnName={"Driver Mode"}
+              />
+<View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
+          <Icon name="facebook-with-circle" size={50} color={"black"} />
+          <Icon name="instagram-with-circle" size={50} color={"black"}  />
+        </View>
+          </View>
     </SafeAreaView>
   );
 };
@@ -56,12 +68,41 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
     marginHorizontal: 5,
+    color:'red'
   },
   customItem: {
     padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },
+  LoginBtn: {
+    backgroundColor: "#2df793",
+    borderRadius: 20,
+    shadowColor: "black",
+    borderColor: 'transparent',
+  },
+  loginBtnLbl: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: Fonts.type.NotoSansBlack,
+    color: "white",
+    paddingVertical: 10,
+  },
+  devider: {
+    borderBottomColor: "#ccc",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginTop: 20,
+  },
+
+  deviderCon: {
+    paddingVertical: 10,
+  },
+  loginCon: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  paddingBottom:100
+  }
+
 });
 
 export default CustomSidebarMenu;

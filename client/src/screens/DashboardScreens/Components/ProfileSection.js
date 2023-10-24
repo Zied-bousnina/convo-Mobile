@@ -15,7 +15,7 @@ const ProfileSection = () => {
         </View>
         <View style={styles.userInfo}>
           <Text style={styles.userName}>zed bousnina</Text>
-          <Text style={styles.userFollowers}>1000 followers</Text>
+          <Text style={styles.userFollowers}>Newbie</Text>
         </View>
         <TouchableOpacity
         onPress={
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
         marginBottom: 5,
-        color:'red'
+        color:'#989'
       },
       userFollowers: {
         color: '#999',

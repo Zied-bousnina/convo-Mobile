@@ -52,6 +52,11 @@ import FirstPage from './src/screens/DashboardScreens/SideBarComponents/FirstPag
 import ThirdPage from './src/screens/DashboardScreens/SideBarComponents/ThirdPage';
 import CustomSidebarMenu from './src/screens/DashboardScreens/CustomSidebarMenu';
 import ProfileSettings from './src/screens/DashboardScreens/ProfileSettings';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/FontAwesome6';
+import Icon3 from 'react-native-vector-icons/AntDesign';
+import Icon4 from 'react-native-vector-icons/MaterialIcons';
+import Icon5 from 'react-native-vector-icons/MaterialCommunityIcons';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -200,12 +205,94 @@ console.log("is user", user)
        drawerContent={props => <CustomSidebarMenu {...props} />}>
        <Drawer.Screen
          name="FirstDrawerPage"
-         options={{drawerLabel: 'First page Option', title: 'First Stack'}}
+         options={{drawerLabel: 'Home'
+          , title: 'Home',
+          // headerShown:false
+          drawerIcon: ({ focused, size }) => (
+            <Icon
+                name="home"
+                size={size}
+                color={focused ? '#26cbfc' : 'black'}
+            />
+        ),
+        }}
          component={FirstScreenStack}
        />
        <Drawer.Screen
-         name="ScondDrawerPage"
-         options={{drawerLabel: 'Second page Option', title: 'Second Stack'}}
+         name="CityPage"
+         options={{drawerLabel: 'City', title: 'City',
+         drawerIcon: ({ focused, size }) => (
+          <Icon2
+              name="car-side"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),
+        }}
+         component={SecondScreenStack}
+       />
+       <Drawer.Screen
+         name="RequestHistoryPage"
+         options={{drawerLabel: 'Request history', title: 'Request History',
+         drawerIcon: ({ focused, size }) => (
+          <Icon3
+              name="clockcircleo"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),}}
+         component={SecondScreenStack}
+       />
+        <Drawer.Screen
+         name="SafetyPage"
+         options={{drawerLabel: 'Safety', title: 'Safety',
+         drawerIcon: ({ focused, size }) => (
+          <Icon4
+              name="safety-check"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),}}
+         component={SecondScreenStack}
+       />
+        <Drawer.Screen
+         name="SettingsPage"
+         options={{drawerLabel: 'Settings', title: 'Settings',
+         drawerIcon: ({ focused, size }) => (
+          <Icon3
+              name="setting"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),
+        }}
+         component={SecondScreenStack}
+       />
+       <Drawer.Screen
+         name="FaqPage"
+         options={{drawerLabel: 'FAQ', title: 'FAQ',
+         drawerIcon: ({ focused, size }) => (
+          <Icon3
+              name="exclamationcircleo"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),
+
+        }}
+         component={SecondScreenStack}
+       />
+       <Drawer.Screen
+         name="SupportPage"
+         options={{drawerLabel: 'Support', title: 'Support',
+         drawerIcon: ({ focused, size }) => (
+          <Icon5
+              name="comment-processing-outline"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),
+        }}
          component={SecondScreenStack}
        />
        <Drawer.Screen
