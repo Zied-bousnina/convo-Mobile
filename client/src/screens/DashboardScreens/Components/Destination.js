@@ -1,84 +1,49 @@
-import {Text,View,StyleSheet,KeyboardAvoidingView, TouchableOpacity, Pressable, Dimensions, ToastAndroid, Image} from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React, { useRef } from 'react'
-import { useState, useEffect } from 'react';
+import CostomFormik from '../../../components/costomFormik/CostomFormik'
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
+import AppInput from '../../../components/Inputs/AppInput';
+import LoginButton from '../../../components/Buttons/LoginButton';
+import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import { setLoading } from '../../../redux/actions/authActions';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
-import Fonts from '../../../assets/fonts';
-// import InternetDisconnected from '../../components/Animations/InternetDisconnected';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Picker } from '@react-native-picker/picker';
-import * as yup from 'yup'
 import { AddProfile } from '../../../redux/actions/profile.actions';
-import { LogOut, setLoading } from '../../../redux/actions/authActions';
-import AppLoader from '../../../components/Animations/AppLoader';
-import BackSvg from '../../../components/svg/BackSvg';
-import ProfileAnimation from '../../../components/Animations/ProfileAnimation';
-// import { TouchableOpacity } from 'react-native-gesture-handler';
-import CostomFormik from '../../../components/costomFormik/CostomFormik';
-import PhoneSVG from '../../../components/svg/PhoneSVG';
-import AppInput from '../../../components/Inputs/AppInput';
-import CitySvg from '../../../components/svg/CitySvg';
-import AdressSVG from '../../../components/svg/AddressSVG';
-import PostalCodeSvg from '../../../components/svg/PostalCodeSVG';
-import LoginButton from '../../../components/Buttons/LoginButton';
-import CountrySvg from '../../../components/svg/CountrySVG';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
-// import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import { Button } from 'react-native-elements/dist/buttons/Button';
-import Destination from './Destination';
-
-
-
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-
-
-
-const initialValues = {
-  tel:'',
-  address:'',
-  city:'',
-  country:'',
-  postalCode:'',
-  bio:'',
-};
+import Fonts from '../../../assets/fonts';
+import * as yup from 'yup'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const validationSchema = yup.object({
-  tel: yup
-    .string()
-    .trim()
-    .min(8, 'Phone number must be at least 8 number')
-    .max(10, 'Phone number must be at most 8 number')
-    .required('Phone number is required'),
-  address: yup
-    .string()
-    .trim()
-    .required('Address is required'),
-  // city: yup
-  //   .string()
-  //   .trim()
-  //   .required('City is required'),
-  // country: yup
-  //   .string()
-  //   .trim()
-  //   .required('Country is required'),
-  postalCode: yup
-    .string()
-    .trim()
-    .required('Postal code is required'),
-  // bio: yup
-  //   .string()
-  //   .trim()
-  //   .required('Bio is required'),
+    tel: yup
+      .string()
+      .trim()
+      .min(8, 'Phone number must be at least 8 number')
+      .max(10, 'Phone number must be at most 8 number')
+      .required('Phone number is required'),
+    address: yup
+      .string()
+      .trim()
+      .required('Address is required'),
+    // city: yup
+    //   .string()
+    //   .trim()
+    //   .required('City is required'),
+    // country: yup
+    //   .string()
+    //   .trim()
+    //   .required('Country is required'),
+    postalCode: yup
+      .string()
+      .trim()
+      .required('Postal code is required'),
+    // bio: yup
+    //   .string()
+    //   .trim()
+    //   .required('Bio is required'),
 
-});
-const FindDriver = ({currentLocation, currentAddress}) => {
-    // console.log("gggg",currentLocation)
+  });
+
+const Destination = () => {
     const [governorates, setgovernorates] = useState([]);
     const [selectedValue, setSelectedValue] = useState('Tunis');
     const [selectedMunicipal, setMunicipal] = useState('Tunis');
@@ -90,127 +55,47 @@ const FindDriver = ({currentLocation, currentAddress}) => {
     const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
     const isLoad = useSelector(state=>state?.isLoading?.isLoading)
     const sheetRef = useRef(null);
-
-// console.log(currentAddress)
-     // --------------------Gove-------------------------------------
-     useEffect(() => {
-      axios
-        .get(`https://xgenboxv2.onrender.com/api/governorates`)
-        .then(res => {
-          setgovernorates(res.data[0]);
-        })
-        .catch(err => console.log(err));
-    }, []);
-
-    const municipales = governorates?.governorates?.filter(
-      (item, index) => item.name === selectedValue,
-    );
-    // --------------------End Gove-------------------------------------
-
-    const addImage=()=>{};
-    // console.log("image", user?.avatar ? 'data:image/png;base64,'+user?.avatar : null)
-    const setToastMsg = msg=> {
-      ToastAndroid.showWithGravity(
-        msg,
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER
-
-      )
-    }
-    const selectPhotoTapped = () => {
-      const options = {
-        title: 'Select Photo',
-        storageOptions: {
-          skipBackup: true,
-          path: 'images',
-          // allowsEditing: true
-        },
-      };
-      launchImageLibrary(options, (response) => {
-
-
-        // console.log('Response = ', response);
-        if (response.didCancel) {
-          // console.log('User cancelled image picker');
-          setToastMsg('User cancelled image picker');
-        } else if (response.error) {
-          // console.log('ImagePicker Error: ', response.error);
-          setToastMsg('ImagePicker Error: ' + response.error);
-        } else {
-          const uri = response.assets[0].uri;
-          const type = response.assets[0].type;
-          const name = response.assets[0].fileName;
-          const source = {
-            uri,
-            type,
-            name,
-          }
-          setImage(source)
-          // console.log(source)
-        }
-      });
-    }
-
-  // console.log(image? 'data:image/png;base64'+image : null)
-
     const handleCreateProfile = async (values, formikActions)=> {
-      setload(true)
+        setload(true)
 
-      dispatch(setLoading(true));
+        dispatch(setLoading(true));
 
-      // console.log(values)
-      const formData = new FormData();
-      formData.append('tel', values.tel);
-      formData.append('address', values.address);
-      formData.append('city', selectedValue);
-      formData.append('country', selectedMunicipal);
-      formData.append('postalCode', values.postalCode);
-      formData.append('bio', values?.bio ? values.bio : '');
-      formData.append('avatar', {
-        uri: image?.uri ? image?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
-        type: 'image/jpg',
-        name: new Date()+ '_profile'
-      });
-      // console.log(formData)
-
-
-      dispatch(AddProfile(formData, navigation))
-
-      // formikActions.resetForm()
-      formikActions.setSubmitting(false);
-
-      // console.log(isLoading)
-      setTimeout(() => {
-      setload(false)
-
-    }, 3000);
+        // console.log(values)
+        const formData = new FormData();
+        formData.append('tel', values.tel);
+        formData.append('address', values.address);
+        formData.append('city', selectedValue);
+        formData.append('country', selectedMunicipal);
+        formData.append('postalCode', values.postalCode);
+        formData.append('bio', values?.bio ? values.bio : '');
+        formData.append('avatar', {
+          uri: image?.uri ? image?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
+          type: 'image/jpg',
+          name: new Date()+ '_profile'
+        });
+        // console.log(formData)
 
 
-    }
+        dispatch(AddProfile(formData, navigation))
 
+        // formikActions.resetForm()
+        formikActions.setSubmitting(false);
 
-    const handleLogOut= _ => {
-      setload(true)
-      setTimeout(() => {
+        // console.log(isLoading)
+        setTimeout(() => {
         setload(false)
 
-        // console.log("logout")
-        dispatch(LogOut(navigation))
-        navigation.navigate('Login')
       }, 3000);
 
 
-    }
+      }
   return (
-    <>
-    {isLoad? <AppLoader /> : null}
-
-
     <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
 
-    {currentLocation && <CostomFormik
+
+    <CostomFormik
           initialValues={{
-    address:currentLocation && currentLocation?.latitude +'| '+currentLocation?.longitude,
+    address:"",
     destination: "", // Set an initial value for other fields if needed
     tnd: "",
     comments: ""
@@ -328,7 +213,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
         // height={Dimensions.get("screen").height}
 
         >
-       <Destination/>
+       {/* <Destination/> */}
        <Pressable
         onPress={()=>sheetRef.current.close()}
         style={{
@@ -342,13 +227,13 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
       {/* <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/> */}
     </BottomSheet>
-        </CostomFormik> }
-      </KeyboardAwareScrollView>
-      </>
+        </CostomFormik>
+        </KeyboardAwareScrollView>
   )
 }
 
-export default FindDriver
+export default Destination
+
 const styles = StyleSheet.create({
     roundedProfileImage: {
       width:75, height:75, borderWidth:3,

@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 import Fonts from '../../assets/fonts';
 import { useDispatch, useSelector } from 'react-redux';
 
-const AppInput = ({ name, placeholder,style,errorStyle, placeholderTextColor, ...rest}) => {
+const AppInput = ({ name, placeholder,style,errorStyle, placeholderTextColor,onPress, ...rest}) => {
   const errors1 = useSelector(state=>state?.errors?.errors)
     const { handleChange, touched, errors, values, handleBlur } = useFormikContext()
   return (
@@ -16,6 +16,7 @@ const AppInput = ({ name, placeholder,style,errorStyle, placeholderTextColor, ..
                 placeholderTextColor={placeholderTextColor}
               onChangeText={handleChange(name)}
               onBlur={handleBlur(name)}
+              onPressIn={onPress}
 
 
 

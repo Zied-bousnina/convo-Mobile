@@ -398,7 +398,9 @@ fullBins.forEach(bin => {
         style={styles.Webview}
       />
     <Button title="Open" onPress={() => sheetRef.current.open()} />
-       <BottomSheet ref={sheetRef}>
+       <BottomSheet ref={sheetRef}
+      //  height={Dimensions.get("screen").height}
+       >
       <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/>
     </BottomSheet>
     </SafeAreaView>
