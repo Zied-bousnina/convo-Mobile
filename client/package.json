@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@devvie/bottom-sheet": "^0.1.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/netinfo": "^9.4.1",
@@ -18,6 +19,8 @@
     "@react-navigation/drawer": "^6.6.5",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.14",
+    "@rneui/base": "github:react-native-elements/react-native-elements#base",
+    "@rneui/themed": "github:react-native-elements/react-native-elements#themed",
     "@twotalltotems/react-native-otp-input": "1.3.5",
     "axios": "^1.5.1",
     "formik": "^2.4.5",

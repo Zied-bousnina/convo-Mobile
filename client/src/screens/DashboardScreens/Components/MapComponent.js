@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Button,
   Dimensions,
   PermissionsAndroid,
   SafeAreaView,
@@ -17,18 +18,23 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBins } from '../../../redux/actions/binActions';
 // import { fetchBins } from '../../redux/actions/binActions';
+import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import FindDriver from './FindDriver';
+import axios from 'axios';
 
 const MapComponent = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentAddress, setCurrentAddress] = useState(null);
   const mapRef = useRef(null);
   const dispatch  = useDispatch()
+  const sheetRef = useRef(null);
 
   const bins = useSelector(state=>state?.fetchBins?.fetchBins)
   useEffect(() => {
     dispatch(fetchBins())
 
   }, [bins])
-  console.log("Bins",bins)
+  // console.log("Bins",bins)
 
   const binLocations = [
     {lat: 36.798, lon: 30.588, fullness: true},
@@ -92,68 +98,6 @@ const MapComponent = () => {
       full: 20,
     },
   ];
-  // const binLocations = [
-  //   {lat: 36.798, lon: 10.1717, fullness: true},
-  //   {lat: 36.78368139354993, lon: 10.16122615993541, fullness: false, full: 40},
-  //   {lat: 36.77929252301453, lon: 10.17272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.008272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.68272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.5272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.7272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.4272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252321453, lon: 10.8272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.54272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.181272819698375, fullness: true, full: 20},
-  //   {lat: 36.77929252301453, lon: 10.18272819698375, fullness: false, full: 20},
-  //   {
-  //     lat: 36.97929252301453,
-  //     lon: 10.1810272819698375,
-  //     fullness: true,
-  //     full: 20,
-  //   },
-  //   {
-  //     lat: 36.65929252301453,
-  //     lon: 10.722272819698375,
-  //     fullness: false,
-  //     full: 20,
-  //   },
-  //   {
-  //     lat: 36.8412929252301453,
-  //     lon: 10.153538272819698375,
-  //     fullness: true,
-  //     full: 20,
-  //   },
-  //   {
-  //     lat: 36.4129252301453,
-  //     lon: 10.153538272819698375,
-  //     fullness: false,
-  //     full: 20,
-  //   },
-  //   {
-  //     lat: 36.626929252301453,
-  //     lon: 10.3518272819698375,
-  //     fullness: true,
-  //     full: 20,
-  //   },
-  //   {
-  //     lat: 36.626929252301453,
-  //     lon: 10.1235238272819698375,
-  //     fullness: true,
-  //     full: 20,
-  //   },
-  //   {
-  //     lat: 36.77929252301453,
-  //     lon: 10.3531853272819698375,
-  //     fullness: true,
-  //     full: 20,
-  //   },
-  //   {
-  //     lat: 36.77929252301453,
-  //     lon: 10.155358272819698375,
-  //     fullness: true,
-  //     full: 20,
-  //   },
-  // ];
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -179,22 +123,81 @@ const MapComponent = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        // console.log(
-        //   '------------------------------------------------------------------------------------------------',
-        //   position,
-        // );
+        console.log(
+          '------------------------------------------------------------------------------------------------',
+          position,
+        );
         setCurrentLocation(position.coords);
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
+
+
   };
+  const MAX_REQUESTS_PER_HOUR = 3;
+const HOUR_IN_MILLISECONDS = 60 * 60 * 1000; // Number of milliseconds in an hour
+let requestCount = 0;
+let lastReset = Date.now(); // Initialize the last reset time to the current time
+
+const fetchData = async () => {
+  const currentTime = Date.now();
+
+  if (currentTime - lastReset >= HOUR_IN_MILLISECONDS) {
+    // If an hour has passed, reset the request count
+    requestCount = 0;
+    lastReset = currentTime;
+  }
+
+  if (requestCount >= MAX_REQUESTS_PER_HOUR) {
+    console.log("Request limit exceeded for the hour. Please try again later.");
+    return;
+  }
+
+  const options = {
+    method: 'GET',
+    url: 'https://trueway-geocoding.p.rapidapi.com/ReverseGeocode',
+    params: {
+      location: `${currentLocation.latitude},${currentLocation.longitude}`,
+      language: 'en',
+    },
+    headers: {
+      'X-RapidAPI-Key': '39e86bda9bmshc0974a764c850cap1440e6jsn8ed07a5e12ee',
+      'X-RapidAPI-Host': 'trueway-geocoding.p.rapidapi.com'
+    }
+  };
+
+  let retryCount = 0;
+
+  while (retryCount < 3) { // Limit the number of retries
+    try {
+      const response = await axios.request(options);
+      console.log('---------------------------------------------------------------');
+      setCurrentAddress(response.data);
+      requestCount++; // Increment the request count
+      break; // If the request is successful, break out of the retry loop
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        // If it's a 429 status code, wait and retry
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second (adjust as needed)
+        retryCount++;
+      } else {
+        // console.error(error);
+        break; // If it's not a 429 status code, break out of the retry loop
+      }
+    }
+  }
+};
+
+// Call the fetchData function to make the API request
+fetchData();
+
 
   // console.log('icon ', Icon.getImageSourceSync('line-chart', 60, 'green'));
   const fullBins =  binLocations.filter(bin => bin.fullness === true )[0];
   const lat = fullBins.lat
   const long = fullBins.lon
-  console.log(fullBins)
+  // console.log(fullBins)
   const html_script = `
  <!DOCTYPE html>
  <html>
@@ -368,15 +371,36 @@ fullBins.forEach(bin => {
  </body>
  </html>
  `;
+ useEffect(() => {
+  // Open the BottomSheet when the component mounts
+  sheetRef.current.open();
+}, []);
   return (
     <>
     {/* <StatusBar barStyle="dark-content" /> */}
     <SafeAreaView style={styles.Container}>
       <WebView
+      onTouchMove={
+        () => {
+          // console.log("touched")
+          sheetRef.current.close()
+        }
+      }
+      onTouchEnd={
+        () => {
+          // console.log("touched")
+          sheetRef.current.open()
+        }
+      }
+
         ref={mapRef}
         source={{html: html_script}}
         style={styles.Webview}
       />
+    <Button title="Open" onPress={() => sheetRef.current.open()} />
+       <BottomSheet ref={sheetRef}>
+      <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/>
+    </BottomSheet>
     </SafeAreaView>
   </>
   )

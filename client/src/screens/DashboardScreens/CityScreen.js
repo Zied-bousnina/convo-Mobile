@@ -7,7 +7,7 @@ const CityScreen = () => {
    <>
 
     <MapComponent/>
-      <Text>CityScreen</Text>
+      {/* <Text>CityScreen</Text> */}
     {/* </View> */}
    </>
   )

@@ -63,7 +63,7 @@ import SafetyScreen from './src/screens/DashboardScreens/SafetyScreen';
 import SettingsScreen from './src/screens/DashboardScreens/SettingsScreen';
 import FAQScreen from './src/screens/DashboardScreens/FAQScreen';
 import SupportScreen from './src/screens/DashboardScreens/SupportScreen';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -72,6 +72,7 @@ LogBox.ignoreAllLogs();//Ignore all log notifications
 
 function FirstScreenStack() {
   return (
+   
     <Stack.Navigator
       initialRouteName="FirstPage"
       screenOptions={{headerShown: false}}>
@@ -194,6 +195,7 @@ console.log("is user", user)
   }
 
   return (
+    <SafeAreaProvider>
     <>
       {!isConnected && <InternetDisconnected />}
       {/* {!isConnected && <OTPVerified/>} */}
@@ -328,6 +330,7 @@ console.log("is user", user)
 
       </NavigationContainer>
     </>
+      </SafeAreaProvider>
 
 
   );
