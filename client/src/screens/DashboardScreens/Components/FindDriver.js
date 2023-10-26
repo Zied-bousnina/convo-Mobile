@@ -30,6 +30,7 @@ import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import Destination from './Destination';
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 
 
@@ -208,7 +209,8 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
     <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
 
-    {currentLocation && <CostomFormik
+    {currentLocation !=null ?
+     <CostomFormik
           initialValues={{
     address:currentLocation && currentLocation?.latitude +'| '+currentLocation?.longitude,
     destination: "", // Set an initial value for other fields if needed
@@ -342,7 +344,23 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
       {/* <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/> */}
     </BottomSheet>
-        </CostomFormik> }
+        </CostomFormik>:
+        <SkeletonPlaceholder>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {/* <View style={{ width: 60, height: 60, borderRadius: 50 }} /> */}
+        <View style={{ marginLeft: 20, marginRight:20 }}>
+          <View style={{ width: Dimensions.get('screen').width*80, height: 40, borderRadius: 4,marginTop: 20 }} />
+          <View style={{ width: Dimensions.get('screen').width*80, height: 40, borderRadius: 4,marginTop: 20 }} />
+          <View style={{ width: Dimensions.get('screen').width*80, height: 40, borderRadius: 4,marginTop: 20 }} />
+          <View style={{ width: Dimensions.get('screen').width*80, height: 40, borderRadius: 4,marginTop: 20 }} />
+          <View
+            style={{ marginTop: 6, width: Dimensions.get("screen").width*40, height: 20, borderRadius: 4 }}
+          />
+        </View>
+
+      </View>
+    </SkeletonPlaceholder>
+         }
       </KeyboardAwareScrollView>
       </>
   )
