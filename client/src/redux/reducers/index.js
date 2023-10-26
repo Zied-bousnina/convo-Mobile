@@ -18,6 +18,7 @@ import mailSentReducer from './mailSent.reducer';
 import fetchBinsReducer from './fetchBins.reducer';
 import BinListByMunicipalReducer from './BinListByMunicipal.reducer';
 import ScoreReducer from './ScoreReducer';
+import FindDriverReducer from './FindDriverReducer';
 
 
 export default  combineReducers({
@@ -38,8 +39,9 @@ export default  combineReducers({
     mailSent : mailSentReducer,
     fetchBins : fetchBinsReducer,
     fetchBinByMunicipal : BinListByMunicipalReducer,
-    scores : ScoreReducer
+    scores : ScoreReducer,
+    ReqestFindDriver : FindDriverReducer,
 
-    
+
 
 })

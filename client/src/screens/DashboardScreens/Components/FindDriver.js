@@ -31,6 +31,7 @@ import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import Destination from './Destination';
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import { SET_LOCATION } from '../../../redux/types';
 
 
 
@@ -90,9 +91,10 @@ const FindDriver = ({currentLocation, currentAddress}) => {
     const [load, setload] = useState(false)
     const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
     const isLoad = useSelector(state=>state?.isLoading?.isLoading)
+    const RequestFindDriver = useSelector(state=>state?.ReqestFindDriver)
     const sheetRef = useRef(null);
 
-// console.log(currentAddress)
+console.log(RequestFindDriver)
      // --------------------Gove-------------------------------------
      useEffect(() => {
       axios
@@ -172,6 +174,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
         type: 'image/jpg',
         name: new Date()+ '_profile'
       });
+
       // console.log(formData)
 
 
@@ -202,6 +205,18 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
 
     }
+    useEffect(() => {
+      dispatch({
+        type:SET_LOCATION,
+        payload:{
+          latitude:currentLocation?.latitude,
+          longitude:currentLocation?.longitude
+        }
+    })
+
+    }, [currentLocation])
+
+
   return (
     <>
     {isLoad? <AppLoader /> : null}
@@ -209,10 +224,10 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
     <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
 
-    {currentLocation !=null ?
+    {RequestFindDriver?.location?.longitude !=0 && RequestFindDriver?.location?.longitude !=undefined  ?
      <CostomFormik
           initialValues={{
-    address:currentLocation && currentLocation?.latitude +'| '+currentLocation?.longitude,
+    address:RequestFindDriver?.location && RequestFindDriver?.location?.latitude +'| '+RequestFindDriver?.location?.longitude,
     destination: "", // Set an initial value for other fields if needed
     tnd: "",
     comments: ""
