@@ -22,6 +22,8 @@ import { fetchBins } from '../../../redux/actions/binActions';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import FindDriver from './FindDriver';
 import axios from 'axios';
+import { SearchBar } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 const Destination = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -29,6 +31,7 @@ const Destination = () => {
   const mapRef = useRef(null);
   const dispatch  = useDispatch()
   const [inputValue, setInputValue] = useState('');
+  const navigation = useNavigation();
   const [destination, setDestination] = useState({
     latitude: 0,
     longitude: 0,
@@ -97,22 +100,17 @@ const Destination = () => {
   };
   const webviewRef = useRef(null);
 
-  const handleSetDestination = (latitude, longitude) => {
-    // Set the new destination
-    setDestination({ latitude, longitude });
 
-    // Call the setNewDestination function in the web view
-    const jsCode = `setNewDestination(${latitude}, ${longitude});`;
-    webviewRef.current.injectJavaScript(jsCode);
-  };
 
   const [endpoint, setEndpoint] = useState('');
   const [response, setResponse] = useState('');
-  console.log(endpoint)
+  // console.log(endpoint)
 
   const handleEndpointChange = (text) => {
     setEndpoint(text);
+    // makeApiRequest()
   };
+
 
   // Function to make the API request
   const makeApiRequest = async () => {
@@ -120,13 +118,14 @@ const Destination = () => {
       const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${endpoint}.json?access_token=pk.eyJ1IjoiemllZDE0NDEiLCJhIjoiY2xvOGgyYnNuMDA3bjJrcWxrb3VvdXBlYyJ9.dPaxxre7QPTB2F_Psyt4nQ`;
       const response = await axios.get(url);
       setResponse(response.data.features[0].center);
-      console.log(response.data.features[0].center)
+      // console.log(response.data.features[0].center)
     } catch (error) {
       console.error(error);
     }
   };
-  console.log("latitude :",response[0])
-  console.log("Longitude :",response[1])
+
+  // console.log("latitude :",response[0])
+  // console.log("Longitude :",response[1])
   const html_script = `
  <!DOCTYPE html>
  <html>
@@ -277,26 +276,62 @@ const Destination = () => {
  </body>
  </html>
  `;
- console.log(destination)
+//  console.log(destination)
+ setDesti = ()=> {
+  // console.log(response)
+  dispatch({
+    type: 'SET_DESTINATION',
+    payload: {
+
+        latitude: response[0],
+        longitude: response[1],
+
+
+    },
+
+  })
+  navigation.navigate('CityPage')
+ }
 
   return (
     <>
     {/* <StatusBar barStyle="dark-content" /> */}
     <SafeAreaView style={styles.Container}>
-    <TextInput
+    {/* <TextInput
         placeholder="Enter endpoint"
         value={endpoint}
         onChangeText={handleEndpointChange}
+      /> */}
+      <SearchBar
+        placeholder="Type Here..."
+        onChangeText={handleEndpointChange}
+        value={endpoint}
       />
-      <View style={styles.ButtonContainer}>
-        <Button title="Done"
-        //  onPress={handleDone}
-        color={'#2df793'}
-        onPress={makeApiRequest}
-         />
+      <View style={styles.ButtonContainer}
+
+      >
         <Button title="Cancel"
         // onPress={handleCancel}
+        onPress={
+          () => navigation.navigate('CityPage')
+        }
         color={'#2df793'}
+         />
+         {
+          (response && endpoint?.length >0)  &&
+          <Button title="Done"
+        //  onPress={handleDone}
+
+        color={'#2df793'}
+        onPress={setDesti}
+         />
+
+         }
+
+         <Button title="search"
+        //  onPress={handleDone}
+        color={'#26cbfc'}
+        onPress={makeApiRequest}
          />
       </View>
       <WebView
@@ -307,13 +342,7 @@ const Destination = () => {
         style={styles.Webview}
         javaScriptEnabled={true}
   domStorageEnabled={true}
-        onMessage={(event) => {
-          const { type, payload } = JSON.parse(event.nativeEvent.data);
-          if (type === 'setDestination') {
-            setDestination(payload);
-            console.log(payload);
-          }
-        }}
+
       />
 
 
@@ -353,5 +382,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  ButtonContainer: {
+    flexDirection: 'row', // This makes the buttons display horizontally
+    justifyContent: 'space-around', // You can adjust this based on your layout preference
+    alignItems: 'center', // You can adjust this based on your layout preference
+    margin: 10, // Add margin as needed
   },
 });

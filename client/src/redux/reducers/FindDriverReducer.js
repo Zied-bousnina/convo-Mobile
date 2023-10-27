@@ -6,7 +6,12 @@ const initialState = {
     latitude: 0,
     longitude: 0
   },
-  destination: "", // Initialize the destination property
+  destination: {
+    latitude: 0,
+    longitude: 0,
+    postalAddress:""
+
+  }, // Initialize the destination property
   offer: "", // Initialize the offer property
   comments: "" // Initialize the comments property
 };

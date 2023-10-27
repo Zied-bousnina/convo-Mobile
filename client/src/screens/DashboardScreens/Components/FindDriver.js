@@ -216,7 +216,68 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
     }, [currentLocation])
 
+    const [latitude, setLatitude] = useState(currentLocation?.latitude);
+    const [longitude, setLongitude] = useState(currentLocation?.longitude);
+    const [address, setAddress] = useState('');
+    const [destination, setdestination] = useState('');
+
+    // console.log(currentLocation?.latitude)
+    const getGeocode = async () => {
+      try {
+        const apiKey = 'pk.eyJ1IjoiemllZDE0NDEiLCJhIjoiY2xvOGgyYnNuMDA3bjJrcWxrb3VvdXBlYyJ9.dPaxxre7QPTB2F_Psyt4nQ'; // Replace with your Mapbox API key
+        const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${currentLocation?.longitude},${currentLocation?.latitude}.json?access_token=${apiKey}`;
+
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        console.log("ff",data.features[0].place_name)
+
+        if (data.features && data.features?.length > 0) {
+          const firstFeature = data.features[0];
+          const formattedAddress = firstFeature.place_name;
+          setAddress(formattedAddress);
+        } else {
+          setAddress('Destination');
+        }
+      } catch (error) {
+        console.error('Error geocoding coordinates:', error);
+      }
+    };
+
+    const getGeocodeDestination = async () => {
+      try {
+        const apiKey = 'pk.eyJ1IjoiemllZDE0NDEiLCJhIjoiY2xvOGgyYnNuMDA3bjJrcWxrb3VvdXBlYyJ9.dPaxxre7QPTB2F_Psyt4nQ'; // Replace with your Mapbox API key
+        const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${RequestFindDriver?.destination?.latitude},${RequestFindDriver?.destination?.longitude}.json?access_token=${apiKey}`;
+
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        // console.log("ff",data.features[0].place_name)
+
+        if (data.features && data.features?.length > 0) {
+          const firstFeature = data.features[0];
+          const formattedAddress = firstFeature.place_name;
+          setdestination(formattedAddress);
+        } else {
+          setdestination('Address not found');
+        }
+      } catch (error) {
+        console.error('Error geocoding coordinates:', error);
+      }
+    };
+
+    useEffect(() => {
+      getGeocode();
+
+
+    }, [currentLocation?.longitude]);
+    console.log(RequestFindDriver)
+      RequestFindDriver?.destination && useEffect(() => {
+      getGeocodeDestination()
+    }, [RequestFindDriver?.destination?.latitude])
+
+
+// console.log(address)
     const snapPoints = useMemo(() => ['25%', '50%'], []);
+    // console.log("destination",destination)
   return (
     <>
     {isLoad? <AppLoader /> : null}
@@ -224,11 +285,11 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
     <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
 
-    {RequestFindDriver?.location?.longitude !=0 && RequestFindDriver?.location?.longitude !=undefined  ?
+    {address !="Undefined Road, 690523, Thodiyoor, Karunagappally, Kollam, Kerala, India"  ?
      <CostomFormik
           initialValues={{
-    address:RequestFindDriver?.location && RequestFindDriver?.location?.latitude +'| '+RequestFindDriver?.location?.longitude,
-    destination: "", // Set an initial value for other fields if needed
+    address:address,
+    destination: destination  ? destination: "" , // Set an initial value for other fields if needed
     tnd: "",
     comments: ""
   }}
@@ -256,7 +317,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
                   placeholder="Address"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  // value="tedt"
+                  // value=
 
 
                 />
@@ -272,9 +333,11 @@ const FindDriver = ({currentLocation, currentAddress}) => {
                   placeholder="Destination"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
+                  value={destination ? destination:""}
                   onPress={()=>
                     {
                       navigation.navigate("Destination")
+
                       // console.log("ghhhh")
                       // sheetRef.current.open()
                     }
