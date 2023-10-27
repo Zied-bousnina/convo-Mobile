@@ -1,431 +1,357 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native'
-import React, { useRef } from 'react'
-import CostomFormik from '../../../components/costomFormik/CostomFormik'
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
-import AppInput from '../../../components/Inputs/AppInput';
-import LoginButton from '../../../components/Buttons/LoginButton';
-import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import { setLoading } from '../../../redux/actions/authActions';
-import { useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Button,
+  Dimensions,
+  PermissionsAndroid,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+// import MapView from 'react-native-leaflet-view';
+// import {LatLng, LeafletView} from 'react-native-leaflet-view';
+import {WebView} from 'react-native-webview';
+import Geolocation from 'react-native-geolocation-service';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { AddProfile } from '../../../redux/actions/profile.actions';
-import Fonts from '../../../assets/fonts';
-import * as yup from 'yup'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-const validationSchema = yup.object({
-    tel: yup
-      .string()
-      .trim()
-      .min(8, 'Phone number must be at least 8 number')
-      .max(10, 'Phone number must be at most 8 number')
-      .required('Phone number is required'),
-    address: yup
-      .string()
-      .trim()
-      .required('Address is required'),
-    // city: yup
-    //   .string()
-    //   .trim()
-    //   .required('City is required'),
-    // country: yup
-    //   .string()
-    //   .trim()
-    //   .required('Country is required'),
-    postalCode: yup
-      .string()
-      .trim()
-      .required('Postal code is required'),
-    // bio: yup
-    //   .string()
-    //   .trim()
-    //   .required('Bio is required'),
-
-  });
+import { fetchBins } from '../../../redux/actions/binActions';
+// import { fetchBins } from '../../redux/actions/binActions';
+import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import FindDriver from './FindDriver';
+import axios from 'axios';
 
 const Destination = () => {
-    const [governorates, setgovernorates] = useState([]);
-    const [selectedValue, setSelectedValue] = useState('Tunis');
-    const [selectedMunicipal, setMunicipal] = useState('Tunis');
-    const dispatch = useDispatch();
-    const navigation = useNavigation();
-    const isLoading = useSelector(state=>state?.errors?.isLoading)
-    const user = useSelector(state=>state?.auth?.user)
-    const [load, setload] = useState(false)
-    const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
-    const isLoad = useSelector(state=>state?.isLoading?.isLoading)
-    const sheetRef = useRef(null);
-    const handleCreateProfile = async (values, formikActions)=> {
-        setload(true)
-
-        dispatch(setLoading(true));
-
-        // console.log(values)
-        const formData = new FormData();
-        formData.append('tel', values.tel);
-        formData.append('address', values.address);
-        formData.append('city', selectedValue);
-        formData.append('country', selectedMunicipal);
-        formData.append('postalCode', values.postalCode);
-        formData.append('bio', values?.bio ? values.bio : '');
-        formData.append('avatar', {
-          uri: image?.uri ? image?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
-          type: 'image/jpg',
-          name: new Date()+ '_profile'
-        });
-        // console.log(formData)
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentAddress, setCurrentAddress] = useState(null);
+  const mapRef = useRef(null);
+  const dispatch  = useDispatch()
+  const [inputValue, setInputValue] = useState('');
+  const [destination, setDestination] = useState({
+    latitude: 0,
+    longitude: 0,
 
 
-        dispatch(AddProfile(formData, navigation))
-
-        // formikActions.resetForm()
-        formikActions.setSubmitting(false);
-
-        // console.log(isLoading)
-        setTimeout(() => {
-        setload(false)
-
-      }, 3000);
+  })
 
 
+
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      requestLocationPermission();
+    } else {
+      getCurrentLocation();
+    }
+  }, []);
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        getCurrentLocation();
       }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log(
+          '------------------------------------------------------------------------------------------------',
+          position,
+        );
+        setCurrentLocation(position.coords);
+      },
+      error => console.log(error),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    );
+
+
+  };
+
+
+
+  // console.log('icon ', Icon.getImageSourceSync('line-chart', 60, 'green'));
+
+  // console.log(fullBins)
+  const searchAddress = async () => {
+    if (currentAddress) {
+      try {
+        const response = await Geocoder.from(currentAddress);
+        const { lat, lng } = response.results[0].geometry.location;
+        setDestination({ latitude: lat, longitude: lng });
+        mapRef.current.injectJavaScript(
+          `document.getElementById('set-destination-button').click();`,
+        );
+      } catch (error) {
+        console.error('Error while geocoding:', error);
+      }
+    }
+  };
+  const webviewRef = useRef(null);
+
+  const handleSetDestination = (latitude, longitude) => {
+    // Set the new destination
+    setDestination({ latitude, longitude });
+
+    // Call the setNewDestination function in the web view
+    const jsCode = `setNewDestination(${latitude}, ${longitude});`;
+    webviewRef.current.injectJavaScript(jsCode);
+  };
+
+  const [endpoint, setEndpoint] = useState('');
+  const [response, setResponse] = useState('');
+  console.log(endpoint)
+
+  const handleEndpointChange = (text) => {
+    setEndpoint(text);
+  };
+
+  // Function to make the API request
+  const makeApiRequest = async () => {
+    try {
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${endpoint}.json?access_token=pk.eyJ1IjoiemllZDE0NDEiLCJhIjoiY2xvOGgyYnNuMDA3bjJrcWxrb3VvdXBlYyJ9.dPaxxre7QPTB2F_Psyt4nQ`;
+      const response = await axios.get(url);
+      setResponse(response.data.features[0].center);
+      console.log(response.data.features[0].center)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  console.log("latitude :",response[0])
+  console.log("Longitude :",response[1])
+  const html_script = `
+ <!DOCTYPE html>
+ <html>
+ <head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Leaflet Example</title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.css" />
+
+     <style>
+     html, body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-size: 32px;
+      gap: 40px;
+      // flex-wrap: wrap;
+    }
+
+    .half-arc {
+      position: relative;
+      width: 100px;
+      height: 50px;
+      border-top-left-radius: 120px;
+      border-top-right-radius: 120px;
+      border-bottom: 0;
+      background: #d9d9d9;
+      box-sizing: border-box;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .half-arc:before {
+      content: "";
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 200%;
+      border-radius: 50%;
+      background-image: conic-gradient(#9c27b0, #3f51b5 calc(var(--percentage, 0) / 2), #bbb 0);
+      transition: transform .5s ease-in-out;
+      z-index: 1;
+      transform: rotate(270deg);
+    }
+
+    .half-arc:after {
+      content: "";
+      position: absolute;
+      display: block;
+      background: #dddddd;
+      z-index: 2;
+      width: calc(100% - 32px);
+      height: calc(200% - 32px);
+      border-radius: 50%;
+      top: 16px;
+      left: 16px;
+    }
+
+    .half-arc span {
+      color: #673ab7;
+      z-index: 3;
+      text-align: center;
+    }
+    .half-arc div {
+
+      flex: auto;
+      display: flex;
+      flex-direction: column;
+      padding-top: 15%;
+    }
+         #map {
+             height: 100%;
+             width: 100%;
+             position: absolute;
+             top: 0;
+             bottom: 0;
+             left: 0;
+             right: 0;
+         }
+
+
+
+     </style>
+ </head>
+ <body>
+     <div id="map"></div>
+     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+     <script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
+     <script src="https://unpkg.com/leaflet.locatecontrol@0.83.0/dist/L.Control.Locate.min.js"></script>
+
+     <script>
+     // Function to send new destination data to React Native
+      function setNewDestination(latitude, longitude) {
+        const data = { type: 'setDestination', payload: { latitude, longitude } };
+        alert(data)
+        window.ReactNativeWebView.postMessage(JSON.stringify(data));
+      }
+
+     var map = L.map('map').setView([${response[1]}, ${response[0]}], 13);
+         var destinationMarker;
+
+         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                 '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+             maxZoom: 18,
+             tileSize: 512,
+             zoomOffset: -1,
+         }).addTo(map);
+
+         // Add your current location marker
+         var currentLocationMarker = L.marker([${response[1]}, ${response[0]}]).addTo(map);
+
+
+         // Initialize the geocoder control
+         var geocoder = L.Control.Geocoder.nominatim();
+
+
+         // Add the geocoder control to the map
+         L.Control.geocoder({
+            geocoder: geocoder
+         }).addTo(map);
+
+         // Initialize the locate control
+         var locateControl = L.control.locate();
+
+
+         // Add the locate control to the map
+         locateControl.addTo(map);
+
+         // Center the map on your current location when the current location icon is clicked
+         document.getElementById('current-location').addEventListener('click', function() {
+
+             map.setView([${currentLocation?.latitude}, ${currentLocation?.longitude}], 13);
+         });
+
+         // Set a new destination when the "Set Destination" button is clicked
+
+
+
+     </script>
+ </body>
+ </html>
+ `;
+ console.log(destination)
+
   return (
-    <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
+    <>
+    {/* <StatusBar barStyle="dark-content" /> */}
+    <SafeAreaView style={styles.Container}>
+    <TextInput
+        placeholder="Enter endpoint"
+        value={endpoint}
+        onChangeText={handleEndpointChange}
+      />
+      <View style={styles.ButtonContainer}>
+        <Button title="Done"
+        //  onPress={handleDone}
+        color={'#2df793'}
+        onPress={makeApiRequest}
+         />
+        <Button title="Cancel"
+        // onPress={handleCancel}
+        color={'#2df793'}
+         />
+      </View>
+      <WebView
 
 
-    <CostomFormik
-          initialValues={{
-    address:"",
-    destination: "", // Set an initial value for other fields if needed
-    tnd: "",
-    comments: ""
-  }}
-          validationSchema={validationSchema}
-          onSubmit={handleCreateProfile}
-            >
-
-
-        <View style={styles.container}>
-          <View style={styles.loginLblCon}>
-            <Text style={styles.loginLbl}></Text>
-          </View>
-
-          <View style={styles.formCon}>
-
-
-
-          <View style={[styles.textBoxCon, {marginTop: 30}]}>
-              <View style={styles.at}>
-              <Icon1 name="record-circle" size={20} color="#26cbfc" />
-              </View>
-              <View style={styles.textCon}>
-                <AppInput
-                  name="address"
-                  placeholder="Address"
-                  style={styles.textInput}
-                  placeholderTextColor={'#aaa'}
-                  // value="tedt"
-
-
-                />
-              </View>
-            </View>
-          <View style={[styles.textBoxCon, {marginTop: 30}]}>
-              <View style={styles.at}>
-              <Icon1 name="record-circle" size={20} color="#2df793" />
-              </View>
-              <View style={styles.textCon}>
-                <AppInput
-                  name="destination"
-                  placeholder="Destination"
-                  style={styles.textInput}
-                  placeholderTextColor={'#aaa'}
-                  onPress={()=>
-                    {
-                      console.log("ghhhh")
-                      sheetRef.current.open()
-                    }
-                  }
-                />
-              </View>
-            </View>
-
-            <View style={[styles.textBoxCon, {marginTop: 30}]}>
-              <View style={styles.at}>
-              <Icon1 name="offer" size={20} color="black" />
-              </View>
-              <View style={styles.textCon}>
-                <AppInput
-                  name="tnd"
-                  placeholder="TND Offer your fare"
-                  style={styles.textInput}
-                  placeholderTextColor={'#aaa'}
-                />
-              </View>
-            </View>
-            <View style={[styles.textBoxCon, {marginTop: 30}]}>
-            <View style={styles.at}>
-            <Icon1 name="comment-text-outline" size={20} color="black" />
-              </View>
-              <View style={styles.textCon}>
-                <AppInput
-                  name="comments"
-                  placeholder="Options and comments"
-                  style={styles.textInput}
-                  placeholderTextColor={'#aaa'}
-                />
-              </View>
-            </View>
-            {/* <View style={[styles.textBoxCon, {marginTop: 30}]}>
-            <View style={styles.at}>
-                <BioSvg
-                  width={20}
-                  height={20}
-                />
-              </View>
-              <View style={styles.textCon}>
-                <AppInput
-                  name="bio"
-                  placeholder="Bio"
-                  style={styles.textInput}
-                  placeholderTextColor={'#aaa'}
-                />
-              </View>
-            </View> */}
-            <View style={styles.termsCon}>
-            </View>
-          </View>
-
-          <View style={styles.loginCon}>
-            <LoginButton
-              style={styles.LoginBtn}
-              loginBtnLbl={styles.loginBtnLbl}
-              btnName={"Find a Driver"}
-            />
-          </View>
-        </View>
-        <BottomSheet ref={sheetRef}
-        // height={Dimensions.get("screen").height}
-        closeOnDragDown={
-          true
-        }
-
-        // height={Dimensions.get("screen").height}
-
-        >
-       {/* <Destination/> */}
-       <Pressable
-        onPress={()=>sheetRef.current.close()}
-        style={{
-          backgroundColor: '#6bc7ab',
-          padding: 16,
-          alignItems: 'center',
+        ref={webviewRef}
+        source={{html: html_script}}
+        style={styles.Webview}
+        javaScriptEnabled={true}
+  domStorageEnabled={true}
+        onMessage={(event) => {
+          const { type, payload } = JSON.parse(event.nativeEvent.data);
+          if (type === 'setDestination') {
+            setDestination(payload);
+            console.log(payload);
+          }
         }}
-      >
-        <Text style={{ color: 'white', fontSize: 20 }}>Close</Text>
-      </Pressable>
+      />
 
-      {/* <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/> */}
-    </BottomSheet>
-        </CostomFormik>
-        </KeyboardAwareScrollView>
+
+    </SafeAreaView>
+  </>
   )
 }
 
 export default Destination
-
 const styles = StyleSheet.create({
-    roundedProfileImage: {
-      width:75, height:75, borderWidth:3,
-      borderColor:'white', borderRadius:50
-    },
-    mainCon: {
-      backgroundColor: '#fff',
-      flex: 1,
-
-
-    },
-    loginIcon: {
-      alignSelf: 'center',
-      marginTop: -30,
-    },
-    formCon: {
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-      marginTop: -50,
-    },
-    container: {
-      paddingHorizontal: 20,
-      marginTop: -20,
-    },
-    loginLblCon: {
-      position: 'relative',
-      bottom: 40,
-    },
-    loginLbl: {
-      color: '#000',
-      fontSize: 40,
-      fontFamily: Fonts.type.NotoSansExtraBold,
-    },
-    at: {
-      alignSelf: 'center',
-      width: '10%',
-    },
-    show: {
-      alignSelf: 'center',
-      width: '10%',
-      position: 'relative',
-      right: 20,
-      zIndex: 10,
-    },
-    textBoxCon: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-
-
-    },
-    textCon: {
-      width: '90%',
-    },
-    passCon: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-
-    },
-    textInput: {
-      borderBottomColor: '#aaa',
-      borderWidth: 1,
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderRightWidth: 0,
-      color: '#000',
-      fontSize: 16,
-      fontFamily: Fonts.type.NotoSansMedium,
-      height: 40,
-      marginTop: -10,
-    },
-    forgotAction: {
-      paddingVertical: 20,
-    },
-    registerCon: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      paddingTop: 0
-    },
-    registerLbl: {
-      color: '#2df793',
-      fontFamily: Fonts.type.NotoSansSemiBold
-    },
-    registerNew: {
-      color: '#aaa',
-      fontFamily: Fonts.type.NotoSansSemiBold,
-    },
-    forgotLbl: {
-      color: '#2df793',
-      // textAlign: 'right',
-      fontFamily: Fonts.type.NotoSansSemiBold,
-    },
-    LoginBtn: {
-      backgroundColor: '#2df793',
-      borderRadius: 20,
-    },
-    loginBtnLbl: {
-      textAlign: 'center',
-      fontSize: 16,
-      fontFamily: Fonts.type.NotoSansBlack,
-      color: '#fff',
-      paddingVertical: 10,
-    },
-    devider: {
-      borderBottomColor: '#aaa',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      marginTop: 20,
-    },
-    or: {
-      color: '#aaa',
-      textAlign: 'center',
-      backgroundColor: '#fff',
-      width: 60,
-      alignSelf: 'center',
-      fontFamily: Fonts.type.NotoSansSemiBold,
-      position: 'relative',
-      bottom: 13,
-    },
-    deviderCon: {
-      paddingVertical: 10,
-    },
-    googleIconCon: {
-      flexDirection: 'row',
-      backgroundColor: '#eee',
-      justifyContent: 'center',
-      paddingVertical: 15,
-      borderRadius: 20,
-      paddingHorizontal: 30,
-    },
-    googleLbl: {
-      color: '#000',
-      textAlign: 'center',
-      paddingHorizontal: 30,
-      fontFamily: Fonts.type.NotoSansBlack,
-    },
-    termsCon: {
-      flexDirection: 'row',
-      width: '100%',
-      flexWrap: 'wrap',
-      paddingVertical: 5,
-    },
-    termsBy: {
-      fontSize: 12,
-      color: '#aaa',
-      fontFamily: Fonts.type.NotoSansSemiBold,
-    },
-    termLbl: {
-      color: '#2df793',
-      fontFamily: Fonts.type.NotoSansSemiBold,
-      fontSize: 12,
-    },
-    avatarContainer: {
-      marginTop: 10,
-      alignItems: 'center',
-
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.8,
-      shadowRadius: 2,
-      elevation: 1,
-    },
-    avatar: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-    },
-    containerimg:{
-      elevation:2,
-      height:150,
-      width:150,
-      // width:windowWidth * 0.3,
-      // height:windowHeight * 0.2,
-      backgroundColor:'#efefef',
-      position:'relative',
-      borderRadius:999,
-      overflow:'hidden',
-    //   marginTop: '1%',
-      marginLeft:'10%',
-      // alignItems: 'center',
+  Container: {
+    flex: 1,
+    // padding: 10,
+    borderRadius: 20,
+    backgroundColor: 'grey',
+    // height:500
   },
-  uploadBtnContainer:{
-      opacity:0.7,
-      position:'absolute',
-      right:0,
-      bottom:0,
-      backgroundColor:'lightgrey',
-      width:'100%',
-      height:'25%',
+  Webview: {
+    flex: 2,
+    height: Dimensions.get('window').height
+    // borderRadius:20,
   },
-  uploadBtn:{
-      display:'flex',
-      alignItems:"center",
-      justifyContent:'center',
-      backgroundColor:'lightgrey',
-  }
-  });
+  ButtonArea: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  Button: {
+    width: 80,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: 'black',
+    alignItems: 'center',
+  },
+  ButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+});

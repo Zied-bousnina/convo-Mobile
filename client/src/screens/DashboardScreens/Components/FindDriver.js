@@ -1,5 +1,5 @@
 import {Text,View,StyleSheet,KeyboardAvoidingView, TouchableOpacity, Pressable, Dimensions, ToastAndroid, Image} from 'react-native';
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -94,7 +94,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
     const RequestFindDriver = useSelector(state=>state?.ReqestFindDriver)
     const sheetRef = useRef(null);
 
-console.log(RequestFindDriver)
+// console.log(RequestFindDriver)
      // --------------------Gove-------------------------------------
      useEffect(() => {
       axios
@@ -216,7 +216,7 @@ console.log(RequestFindDriver)
 
     }, [currentLocation])
 
-
+    const snapPoints = useMemo(() => ['25%', '50%'], []);
   return (
     <>
     {isLoad? <AppLoader /> : null}
@@ -274,8 +274,9 @@ console.log(RequestFindDriver)
                   placeholderTextColor={'#aaa'}
                   onPress={()=>
                     {
-                      console.log("ghhhh")
-                      sheetRef.current.open()
+                      navigation.navigate("Destination")
+                      // console.log("ghhhh")
+                      // sheetRef.current.open()
                     }
                   }
                 />
@@ -341,12 +342,14 @@ console.log(RequestFindDriver)
         closeOnDragDown={
           true
         }
+        // closeOnPressMask={true}
+        // snapPoints={['100%']}
 
         // height={Dimensions.get("screen").height}
 
         >
-       <Destination/>
-       <Pressable
+       {/* <Destination/> */}
+       {/* <Pressable
         onPress={()=>sheetRef.current.close()}
         style={{
           backgroundColor: '#6bc7ab',
@@ -355,7 +358,7 @@ console.log(RequestFindDriver)
         }}
       >
         <Text style={{ color: 'white', fontSize: 20 }}>Close</Text>
-      </Pressable>
+      </Pressable> */}
 
       {/* <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/> */}
     </BottomSheet>

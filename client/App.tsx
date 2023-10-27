@@ -64,6 +64,7 @@ import SettingsScreen from './src/screens/DashboardScreens/SettingsScreen';
 import FAQScreen from './src/screens/DashboardScreens/FAQScreen';
 import SupportScreen from './src/screens/DashboardScreens/SupportScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Destination from './src/screens/DashboardScreens/Components/Destination';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -72,7 +73,7 @@ LogBox.ignoreAllLogs();//Ignore all log notifications
 
 function FirstScreenStack() {
   return (
-   
+
     <Stack.Navigator
       initialRouteName="FirstPage"
       screenOptions={{headerShown: false}}>
@@ -311,6 +312,14 @@ console.log("is user", user)
         drawerItemStyle: { display: 'none' }, // Hide the item
       }}
       component={ProfileSettings}
+    />
+    <Drawer.Screen
+      name="Destination"
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+      }}
+      component={Destination}
     />
      </Drawer.Navigator>
 
