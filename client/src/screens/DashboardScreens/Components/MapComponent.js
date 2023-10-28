@@ -28,6 +28,7 @@ const MapComponent = () => {
   const mapRef = useRef(null);
   const dispatch  = useDispatch()
   const sheetRef = useRef(null);
+  const RequestFindDriver = useSelector(state=>state?.ReqestFindDriver)
 
   const bins = useSelector(state=>state?.fetchBins?.fetchBins)
   useEffect(() => {
@@ -293,8 +294,8 @@ fetchData();
      <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
      <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
      <script>
-         var map = L.map('map').setView([${currentLocation?.latitude}, ${
-    currentLocation?.longitude
+         var map = L.map('map').setView([${RequestFindDriver?.location?.latitude}, ${
+          RequestFindDriver?.location?.longitude
   }], 13);
 
          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -346,9 +347,9 @@ fullBins.forEach(bin => {
          L.Routing.control({
           waypoints: [
 
-            L.latLng(${currentLocation?.latitude}, ${currentLocation?.longitude}),
+            L.latLng(${RequestFindDriver?.location?.latitude}, ${RequestFindDriver?.location?.longitude}),
 
-            L.latLng(closestBin.lat, closestBin.lon)
+            L.latLng(${RequestFindDriver?.destination?.latitude}, ${RequestFindDriver?.destination?.longitude})
             // L.latLng(fullBins[0].lat, fullBins[0].lon)
             // L.latLng(${JSON.stringify(fullBins)}.lat, ${JSON.stringify(fullBins)}.lon)
           ]

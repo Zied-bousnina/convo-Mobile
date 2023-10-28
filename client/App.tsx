@@ -65,6 +65,8 @@ import FAQScreen from './src/screens/DashboardScreens/FAQScreen';
 import SupportScreen from './src/screens/DashboardScreens/SupportScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Destination from './src/screens/DashboardScreens/Components/Destination';
+import Location from './src/screens/DashboardScreens/Components/Location';
+import FindDriverScreen from './src/screens/DashboardScreens/Components/FindDriverScreen';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -320,6 +322,22 @@ console.log("is user", user)
         drawerItemStyle: { display: 'none' }, // Hide the item
       }}
       component={Destination}
+    />
+    <Drawer.Screen
+      name="Location"
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+      }}
+      component={Location}
+    />
+    <Drawer.Screen
+      name="FindDriverScreen"
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+      }}
+      component={FindDriverScreen}
     />
      </Drawer.Navigator>
 

@@ -42,41 +42,21 @@ const windowHeight = Dimensions.get('window').height;
 
 
 
-const initialValues = {
-  tel:'',
-  address:'',
-  city:'',
-  country:'',
-  postalCode:'',
-  bio:'',
-};
 const validationSchema = yup.object({
-  tel: yup
+  destination: yup
     .string()
     .trim()
-    .min(8, 'Phone number must be at least 8 number')
-    .max(10, 'Phone number must be at most 8 number')
-    .required('Phone number is required'),
+    .required('Destination is required'),
   address: yup
     .string()
     .trim()
     .required('Address is required'),
-  // city: yup
-  //   .string()
-  //   .trim()
-  //   .required('City is required'),
-  // country: yup
-  //   .string()
-  //   .trim()
-  //   .required('Country is required'),
-  postalCode: yup
+
+  tnd: yup
     .string()
     .trim()
-    .required('Postal code is required'),
-  // bio: yup
-  //   .string()
-  //   .trim()
-  //   .required('Bio is required'),
+    .required('Offer is required'),
+
 
 });
 const FindDriver = ({currentLocation, currentAddress}) => {
@@ -161,33 +141,35 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
       dispatch(setLoading(true));
 
-      // console.log(values)
+      console.log(values)
       const formData = new FormData();
-      formData.append('tel', values.tel);
-      formData.append('address', values.address);
-      formData.append('city', selectedValue);
-      formData.append('country', selectedMunicipal);
-      formData.append('postalCode', values.postalCode);
-      formData.append('bio', values?.bio ? values.bio : '');
-      formData.append('avatar', {
-        uri: image?.uri ? image?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
-        type: 'image/jpg',
-        name: new Date()+ '_profile'
-      });
-
-      // console.log(formData)
+      formData.append('address', RequestFindDriver?.location);
+      formData.append('destination', RequestFindDriver?.destination);
+      formData.append('comments', values?.comments ? values?.comments :'');
+      formData.append('offer', values?.tnd);
 
 
-      dispatch(AddProfile(formData, navigation))
+      console.log(formData?._parts)
+      navigation.navigate("FindDriverScreen",
+      // {
+      //   address: RequestFindDriver?.location,
+      //   destination: RequestFindDriver?.destination,
+      //   comments: values?.comments ? values?.comments :'',
+      //   offer: values?.tnd,
+      // }
+      )
+
+
+      // dispatch(AddProfile(formData, navigation))
 
       // formikActions.resetForm()
       formikActions.setSubmitting(false);
 
       // console.log(isLoading)
-      setTimeout(() => {
-      setload(false)
+    //   setTimeout(() => {
+    //   setload(false)
 
-    }, 3000);
+    // }, 3000);
 
 
     }
@@ -257,7 +239,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
           const formattedAddress = firstFeature.place_name;
           setdestination(formattedAddress);
         } else {
-          setdestination('Address not found');
+          setdestination('click to select destination');
         }
       } catch (error) {
         console.error('Error geocoding coordinates:', error);
@@ -317,7 +299,9 @@ const FindDriver = ({currentLocation, currentAddress}) => {
                   placeholder="Address"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  // value=
+                  // value=*
+                  editable = {false}
+
 
 
                 />
