@@ -135,7 +135,7 @@ function App(): JSX.Element {
     .then(value => {
       if (value) {
         const decode = jwt_decode(value);
-        console.log("ligne 96:******************************************",value)
+        // console.log("ligne 96:******************************************",value)
         // console.log(decode);
         // store.dispatch(GetRequest());
         store.dispatch(setCurrentUser(decode));
@@ -155,7 +155,7 @@ function App(): JSX.Element {
       .then(value => {
         if (value) {
           const decode = jwt_decode(value);
-          console.log("ligne 107:******************************************",value)
+          // console.log("ligne 107:******************************************",value)
           // console.log(decode);
           store.dispatch(setCurrentUser(decode));
           // store.dispatch(GetProfile());
@@ -179,7 +179,7 @@ function App(): JSX.Element {
     }
   }, []);
 
-console.log("is user", user)
+// console.log("is user", user)
   useEffect(() => {
     if (showMessage) {
       setTimeout(() => {
@@ -191,7 +191,7 @@ console.log("is user", user)
   const backgroundStyle = {
     // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-  console.log('(((((((((((((((((((((((((((((((((((',user)
+  // console.log('(((((((((((((((((((((((((((((((((((',user)
 
   if (!isConnected) {
     return <InternetDisconnected />;
@@ -333,9 +333,11 @@ console.log("is user", user)
     />
     <Drawer.Screen
       name="FindDriverScreen"
+
       options={{
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
       }}
       component={FindDriverScreen}
     />

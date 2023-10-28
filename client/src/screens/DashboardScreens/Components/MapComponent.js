@@ -124,10 +124,10 @@ const MapComponent = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        console.log(
-          '------------------------------------------------------------------------------------------------',
-          position,
-        );
+        // console.log(
+        //   '------------------------------------------------------------------------------------------------',
+        //   position,
+        // );
         setCurrentLocation(position.coords);
       },
       error => console.log(error),
@@ -173,7 +173,7 @@ const fetchData = async () => {
   while (retryCount < 3) { // Limit the number of retries
     try {
       const response = await axios.request(options);
-      console.log('---------------------------------------------------------------');
+      // console.log('---------------------------------------------------------------');
       setCurrentAddress(response.data);
       requestCount++; // Increment the request count
       break; // If the request is successful, break out of the retry loop

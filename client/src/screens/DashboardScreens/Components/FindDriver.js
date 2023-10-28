@@ -141,7 +141,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
       dispatch(setLoading(true));
 
-      console.log(values)
+      // console.log(values)
       const formData = new FormData();
       formData.append('address', RequestFindDriver?.location);
       formData.append('destination', RequestFindDriver?.destination);
@@ -149,14 +149,14 @@ const FindDriver = ({currentLocation, currentAddress}) => {
       formData.append('offer', values?.tnd);
 
 
-      console.log(formData?._parts)
+      // console.log(formData?._parts)
       navigation.navigate("FindDriverScreen",
-      // {
-      //   address: RequestFindDriver?.location,
-      //   destination: RequestFindDriver?.destination,
-      //   comments: values?.comments ? values?.comments :'',
-      //   offer: values?.tnd,
-      // }
+      {
+        address: RequestFindDriver?.location,
+        destination: RequestFindDriver?.destination,
+        comments: values?.comments ? values?.comments :'',
+        offer: values?.tnd,
+      }
       )
 
 
@@ -211,7 +211,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log("ff",data.features[0].place_name)
+        // console.log("ff",data.features[0].place_name)
 
         if (data.features && data.features?.length > 0) {
           const firstFeature = data.features[0];
@@ -251,7 +251,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
 
     }, [currentLocation?.longitude]);
-    console.log(RequestFindDriver)
+    // console.log(RequestFindDriver)
       RequestFindDriver?.destination && useEffect(() => {
       getGeocodeDestination()
     }, [RequestFindDriver?.destination?.latitude])

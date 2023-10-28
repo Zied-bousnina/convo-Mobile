@@ -67,10 +67,10 @@ const Location = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        console.log(
-          '------------------------------------------------------------------------------------------------',
-          position,
-        );
+        // console.log(
+        //   '------------------------------------------------------------------------------------------------',
+        //   position,
+        // );
         setCurrentLocation(position.coords);
       },
       error => console.log(error),

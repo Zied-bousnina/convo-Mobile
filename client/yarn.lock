@@ -6436,6 +6436,13 @@ react-leaflet@^2.6.1:
     hoist-non-react-statics "^3.3.2"
     warning "^4.0.3"
 
+react-native-animated-loader@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/react-native-animated-loader/-/react-native-animated-loader-1.0.0.tgz"
+  integrity sha512-XI4xk5SQr8BX+qUF9yL2RpoALYmMk4kt233PtOl1o7iUrR/jyXWpZ7+iwHDitV6Q+WB+obxzK6dyf/XtMPIVfQ==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-native-dropdownalert@^5.1.0:
   version "5.1.0"
   resolved "https://registry.npmjs.org/react-native-dropdownalert/-/react-native-dropdownalert-5.1.0.tgz"
