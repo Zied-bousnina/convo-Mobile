@@ -228,7 +228,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
     const getGeocodeDestination = async () => {
       try {
         const apiKey = 'pk.eyJ1IjoiemllZDE0NDEiLCJhIjoiY2xvOGgyYnNuMDA3bjJrcWxrb3VvdXBlYyJ9.dPaxxre7QPTB2F_Psyt4nQ'; // Replace with your Mapbox API key
-        const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${RequestFindDriver?.destination?.latitude},${RequestFindDriver?.destination?.longitude}.json?access_token=${apiKey}`;
+        const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${RequestFindDriver?.destination?.longitude},${RequestFindDriver?.destination?.latitude}.json?access_token=${apiKey}`;
 
         const response = await fetch(apiUrl);
         const data = await response.json();
@@ -260,6 +260,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 // console.log(address)
     const snapPoints = useMemo(() => ['25%', '50%'], []);
     // console.log("destination",destination)
+    // console.log(RequestFindDriver?.destination)
   return (
     <>
     {isLoad? <AppLoader /> : null}

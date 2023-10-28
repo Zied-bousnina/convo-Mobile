@@ -66,10 +66,7 @@ const Destination = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        console.log(
-          '------------------------------------------------------------------------------------------------',
-          position,
-        );
+
         setCurrentLocation(position.coords);
       },
       error => console.log(error),
@@ -283,8 +280,8 @@ const Destination = () => {
     type: 'SET_DESTINATION',
     payload: {
 
-        latitude: response[0],
-        longitude: response[1],
+        latitude: response[1],
+        longitude: response[0],
 
 
     },
