@@ -67,6 +67,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Destination from './src/screens/DashboardScreens/Components/Destination';
 import Location from './src/screens/DashboardScreens/Components/Location';
 import FindDriverScreen from './src/screens/DashboardScreens/Components/FindDriverScreen';
+import Dashboard from './src/screens/DashboardScreens/DriverDashboard/Dashboard';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -101,6 +102,9 @@ function App(): JSX.Element {
   const user = useSelector(state => state?.auth);
   const profile = useSelector(state => state?.profile);
   const request = useSelector(state => state?.request?.requestIsEmpty);
+  const state = useSelector(state => state);
+  // console.log(state)
+
   // -------------theme----------------------------
   const appearance = useColorScheme();
   const setAppTheme = useCallback(async () => {
@@ -340,6 +344,16 @@ function App(): JSX.Element {
         // header:"  Header",
       }}
       component={FindDriverScreen}
+    />
+    <Drawer.Screen
+      name="Driver"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={Dashboard}
     />
      </Drawer.Navigator>
 

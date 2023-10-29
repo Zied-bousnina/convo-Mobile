@@ -22,12 +22,15 @@ import ProfileSection from './Components/ProfileSection';
 import LoginButton from '../../components/Buttons/LoginButton';
 import ButtonCustom from '../../components/Buttons/ButtonCustom';
 import { SocialIcon } from 'react-native-elements'
+import { useNavigation } from '@react-navigation/native';
 
 
 const CustomSidebarMenu = (props) => {
   const [isDriverMode, setIsDriverMode] = useState(false);
+  const navigation = useNavigation()
   const toggleMode = () => {
     setIsDriverMode(!isDriverMode);
+    navigation.navigate(isDriverMode? "CityPage": "Driver")
   };
   const BASE_PATH =
     'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';

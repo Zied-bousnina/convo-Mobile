@@ -5,8 +5,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 const ProfileSection = () => {
   const navigatin = useNavigation()
+  const user= useSelector(state=>state?.auth?.user)
+  // console.log(state)
   return (
     <View style={styles.userCard}>
         <View>
@@ -14,8 +17,8 @@ const ProfileSection = () => {
 
         </View>
         <View style={styles.userInfo}>
-          <Text style={styles.userName}>zed bousnina</Text>
-          <Text style={styles.userFollowers}>Newbie</Text>
+          <Text style={styles.userName}>{user?.name}</Text>
+          <Text style={styles.userFollowers}>{user?.email}</Text>
         </View>
         <TouchableOpacity
         onPress={

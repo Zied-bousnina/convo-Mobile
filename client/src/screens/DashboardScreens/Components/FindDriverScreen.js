@@ -21,6 +21,11 @@ import { fetchBins } from '../../../redux/actions/binActions';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import FindDriver from './FindDriver';
 import axios from 'axios';
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
+import AppInput from '../../../components/Inputs/AppInput';
+import LoginButton from '../../../components/Buttons/LoginButton';
+import Fonts from '../../../assets/fonts';
+import CostomFormik from '../../../components/costomFormik/CostomFormik';
 
 const FindDriverScreen = ({route}) => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -34,6 +39,8 @@ const FindDriverScreen = ({route}) => {
     destination,
     comments,
     offer,
+    postalDestination,
+    postalAddress
 
  } =  route.params
 
@@ -228,18 +235,149 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
 
       >Finding driver...</Text>
 </View>
-   <View style={styles.centeredRow}>
-        {/* Left button */}
-        <View style={styles.button}>
-          {/* Your button content on the left */}
+  <CostomFormik
+          initialValues={{
+    // address:address,
+    // destination: destination  ? destination: "" , // Set an initial value for other fields if needed
+    tnd: "",
+    comments: ""
+  }}
+          // validationSchema={validationSchema}
+          // onSubmit={handleCreateProfile}
+            >
+
+
+        <View style={styles.container}>
+          <View style={styles.loginLblCon}>
+            <Text style={styles.loginLbl}></Text>
+          </View>
+
+          <View style={styles.formCon}>
+
+
+
+          <View style={[styles.textBoxCon, {marginTop: 30}]}>
+              <View style={styles.at}>
+              <Icon1 name="record-circle" size={20} color="#26cbfc" />
+              </View>
+              <View style={styles.textCon}>
+                <AppInput
+                  name="address"
+                  placeholder="Address"
+                  style={styles.textInput}
+                  placeholderTextColor={'#aaa'}
+                  value={postalAddress}
+                  editable = {false}
+                  color={"#26cbfc"}
+
+
+
+                />
+              </View>
+            </View>
+          <View style={[styles.textBoxCon, {marginTop: 30}]}>
+              <View style={styles.at}>
+              <Icon1 name="record-circle" size={20} color="#2df793" />
+              </View>
+              <View style={styles.textCon}>
+                <AppInput
+                  name="destination"
+                  placeholder="Destination"
+                  style={styles.textInput}
+                  placeholderTextColor={'#aaa'}
+                  value={postalDestination}
+                  editable = {false}
+                  color={"#2df793"}
+                />
+              </View>
+            </View>
+            <View style={[styles.textBoxCon, {marginTop: 30}]}>
+              <View style={styles.at}>
+              {/* <Icon1 name="record-circle" size={20} color="#2df793" /> */}
+              <Text>TND</Text>
+              </View>
+              <View style={styles.textCon}>
+                <AppInput
+                  name="TND"
+                  placeholder="TND"
+                  style={[styles.textInput, {fontWeight:"bold"}]}
+                  placeholderTextColor={'#aaa'}
+                  value={offer+", Cash"}
+                  editable = {false}
+                  color={"white"}
+                />
+              </View>
+            </View>
+
+
+            {/* <View style={[styles.textBoxCon, {marginTop: 30}]}>
+            <View style={styles.at}>
+                <BioSvg
+                  width={20}
+                  height={20}
+                />
+              </View>
+              <View style={styles.textCon}>
+                <AppInput
+                  name="bio"
+                  placeholder="Bio"
+                  style={styles.textInput}
+                  placeholderTextColor={'#aaa'}
+                />
+              </View>
+            </View> */}
+            <View style={styles.termsCon}>
+            </View>
+          </View>
+
+          <View style={styles.loginCon}>
+            <LoginButton
+              style={[styles.LoginBtn,{ marginRight: 10 }]}
+              loginBtnLbl={styles.loginBtnLbl}
+              btnName={"-0.5"}
+            />
+           <AppInput
+                  name="TND"
+                  placeholder="TND"
+                  style={[styles.textInput, {fontWeight:"bold",marginRight: 10 }]}
+                  placeholderTextColor={'#aaa'}
+                  value={"TND"+offer}
+                  editable = {false}
+                  color={"white"}
+                />
+            <LoginButton
+              style={styles.LoginBtn}
+              loginBtnLbl={styles.loginBtnLbl}
+              btnName={"+0.5"}
+            />
+          </View>
         </View>
-        {/* Middle: Current fare */}
-        <Text style={styles.currentFare}>Current Fare in TND</Text>
-        {/* Right button */}
-        <View style={styles.button}>
-          {/* Your button content on the right */}
-        </View>
-      </View>
+        <BottomSheet ref={sheetRef}
+        // height={Dimensions.get("screen").height}
+        closeOnDragDown={
+          true
+        }
+        // closeOnPressMask={true}
+        // snapPoints={['100%']}
+
+        // height={Dimensions.get("screen").height}
+
+        >
+       {/* <Destination/> */}
+       {/* <Pressable
+        onPress={()=>sheetRef.current.close()}
+        style={{
+          backgroundColor: '#6bc7ab',
+          padding: 16,
+          alignItems: 'center',
+        }}
+      >
+        <Text style={{ color: 'white', fontSize: 20 }}>Close</Text>
+      </Pressable> */}
+
+      {/* <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/> */}
+    </BottomSheet>
+        </CostomFormik>
   </View>
 
     </SafeAreaView>
@@ -257,7 +395,7 @@ const styles = StyleSheet.create({
     // height:500
   },
   finding: {
-    flex: 1,
+    // flex: 1,
     //   justifyContent: '  ',
     top:"auto",
       alignItems: 'center',
@@ -311,4 +449,204 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+  roundedProfileImage: {
+    width:75, height:75, borderWidth:3,
+    borderColor:'white', borderRadius:50
+  },
+  mainCon: {
+    backgroundColor: '#fff',
+    flex: 1,
+
+
+  },
+  loginIcon: {
+    alignSelf: 'center',
+    marginTop: -30,
+  },
+  formCon: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    marginTop: -50,
+  },
+  container: {
+    paddingHorizontal: 20,
+    marginTop: -20,
+  },
+  loginLblCon: {
+    position: 'relative',
+    bottom: 40,
+  },
+  loginLbl: {
+    color: '#000',
+    fontSize: 40,
+    fontFamily: Fonts.type.NotoSansExtraBold,
+  },
+  at: {
+    alignSelf: 'center',
+    width: '10%',
+  },
+  show: {
+    alignSelf: 'center',
+    width: '10%',
+    position: 'relative',
+    right: 20,
+    zIndex: 10,
+  },
+  textBoxCon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+
+  },
+  textCon: {
+    width: '90%',
+  },
+  passCon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+  },
+  textInput: {
+    borderBottomColor: '#aaa',
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    color: '#000',
+    fontSize: 16,
+    fontFamily: Fonts.type.NotoSansMedium,
+    height: 40,
+    marginTop: -10,
+  },
+  forgotAction: {
+    paddingVertical: 20,
+  },
+  registerCon: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: 0
+  },
+  registerLbl: {
+    color: '#2df793',
+    fontFamily: Fonts.type.NotoSansSemiBold
+  },
+  registerNew: {
+    color: '#aaa',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+  },
+  forgotLbl: {
+    color: '#2df793',
+    // textAlign: 'right',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+  },
+  LoginBtn: {
+    backgroundColor: '#2df793',
+    borderRadius: 20,
+    width:"40%"
+  },
+  loginBtnLbl: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: Fonts.type.NotoSansBlack,
+    color: '#fff',
+    paddingVertical: 10,
+  },
+  devider: {
+    borderBottomColor: '#aaa',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginTop: 20,
+  },
+  or: {
+    color: '#aaa',
+    textAlign: 'center',
+    backgroundColor: '#fff',
+    width: 60,
+    alignSelf: 'center',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+    position: 'relative',
+    bottom: 13,
+  },
+  deviderCon: {
+    paddingVertical: 10,
+  },
+  googleIconCon: {
+    flexDirection: 'row',
+    backgroundColor: '#eee',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 20,
+    paddingHorizontal: 30,
+  },
+  googleLbl: {
+    color: '#000',
+    textAlign: 'center',
+    paddingHorizontal: 30,
+    fontFamily: Fonts.type.NotoSansBlack,
+  },
+  termsCon: {
+    flexDirection: 'row',
+    width: '100%',
+    flexWrap: 'wrap',
+    paddingVertical: 5,
+  },
+  termsBy: {
+    fontSize: 12,
+    color: '#aaa',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+  },
+  termLbl: {
+    color: '#2df793',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+    fontSize: 12,
+  },
+  avatarContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  containerimg:{
+    elevation:2,
+    height:150,
+    width:150,
+    // width:windowWidth * 0.3,
+    // height:windowHeight * 0.2,
+    backgroundColor:'#efefef',
+    position:'relative',
+    borderRadius:999,
+    overflow:'hidden',
+  //   marginTop: '1%',
+    marginLeft:'10%',
+    // alignItems: 'center',
+},
+uploadBtnContainer:{
+    opacity:0.7,
+    position:'absolute',
+    right:0,
+    bottom:0,
+    backgroundColor:'lightgrey',
+    width:'100%',
+    height:'25%',
+},
+uploadBtn:{
+    display:'flex',
+    alignItems:"center",
+    justifyContent:'center',
+    backgroundColor:'lightgrey',
+},
+loginCon: {
+  flexDirection: 'row', // This sets the flexDirection to row to place items horizontally
+  justifyContent: 'center', // Center the items horizontally within the container
+  alignItems: 'center', // Center the items vertically within the container
+  marginVertical: 20, // Add vertical margin as needed
+},
 });

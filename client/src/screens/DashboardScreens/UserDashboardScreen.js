@@ -5,7 +5,7 @@ import LoginButton from '../../components/Buttons/LoginButton'
 import { useDispatch, useSelector } from 'react-redux'
 import { LogOut } from '../../redux/actions/authActions'
 import { useNavigation } from '@react-navigation/native'
-import WelcomeAnimation from '../../components/Animations/WelcomeAnimation'
+
 import { useState } from 'react'
 // import BottomNavigationCompo from '../../components/Dashboard/BottomNavigationCompo'
 

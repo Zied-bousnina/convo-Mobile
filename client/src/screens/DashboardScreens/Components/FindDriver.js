@@ -156,6 +156,8 @@ const FindDriver = ({currentLocation, currentAddress}) => {
         destination: RequestFindDriver?.destination,
         comments: values?.comments ? values?.comments :'',
         offer: values?.tnd,
+        postalAddress: address,
+        postalDestination: destination
       }
       )
 
