@@ -344,7 +344,7 @@ const LoginScreen = () => {
     marginTop: 20,
     marginBottom: 50,
   }}
->Version 1.0</Text>
+>Version 1.1</Text>
 </GestureHandlerRootView >
 
     </>
