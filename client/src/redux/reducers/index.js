@@ -19,6 +19,7 @@ import fetchBinsReducer from './fetchBins.reducer';
 import BinListByMunicipalReducer from './BinListByMunicipal.reducer';
 import ScoreReducer from './ScoreReducer';
 import FindDriverReducer from './FindDriverReducer';
+import ModeDriverPassengerReducer from './ModeDriverPassengerReducer';
 
 
 export default  combineReducers({
@@ -41,6 +42,7 @@ export default  combineReducers({
     fetchBinByMunicipal : BinListByMunicipalReducer,
     scores : ScoreReducer,
     ReqestFindDriver : FindDriverReducer,
+    DriverMode : ModeDriverPassengerReducer,
 
 
 

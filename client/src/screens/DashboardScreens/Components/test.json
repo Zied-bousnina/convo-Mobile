@@ -1,0 +1,104 @@
+{
+    "NotSuccess": {
+        "NotSuccess": false
+    },
+    "ReqestFindDriver": {
+        "comments": "",
+        "destination": {
+            "latitude": 0,
+            "longitude": 0,
+            "postalAddress": ""
+        },
+        "location": {
+            "latitude": 36.8019783,
+            "longitude": 10.9403387
+        },
+        "offer": ""
+    },
+    "access": {
+        "access": []
+    },
+    "accessListUser": {
+        "accessList": {}
+    },
+    "auth": {
+        "ifBlocked": true,
+        "isAdmin": false,
+        "isConnected": true,
+        "isLoading": false,
+        "isMunicipal": false,
+        "isPrivateCompany": false,
+        "isUser": true,
+        "isVerified": true,
+        "request": {},
+        "user": {
+            "email": "Email@test.tn",
+            "exp": 9007200953314098,
+            "iat": 1698573107,
+            "id": "653e2adeba5938004241a398",
+            "isBlocked": false,
+            "name": "test",
+            "role": "USER",
+            "verified": true
+        }
+    },
+    "bins": {
+        "bins": {}
+    },
+    "cleaningService": {
+        "requestsCleaning": {},
+        "requestsSent": {}
+    },
+    "demandesMunicipal": {
+        "AllUsers": {},
+        "usersInProgress": {}
+    },
+    "errors": {
+        "emailSent": false,
+        "errors": {},
+        "isLoading": true
+    },
+    "fetchBinByMunicipal": {
+        "BinListByMunicipal": {}
+    },
+    "fetchBins": {
+        "fetchBins": {
+            "pointBins": [Array
+            ]
+        }
+    },
+    "isLoading": {
+        "isLoading": false
+    },
+    "mail": {
+        "emailSent": false,
+        "errors": {},
+        "isLoading": true,
+        "isResend": false,
+        "isResendFailure": false,
+        "isResendLoading": false,
+        "isResendSuccess": false,
+        "isValid": true,
+        "isVerified": true
+    },
+    "mailSent": {
+        "MailSent": false
+    },
+    "profile": {
+        "profile": [],
+        "profileIsEmpty": true
+    },
+    "request": {
+        "request": {},
+        "requestIsEmpty": true
+    },
+    "scores": {
+        "score": {}
+    },
+    "someAccessUsersList": {
+        "SomeAccess": []
+    },
+    "success": {
+        "success": false
+    }
+}

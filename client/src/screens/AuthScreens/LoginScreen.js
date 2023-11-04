@@ -17,9 +17,12 @@ import LockIcon from '../../components/svg/LockIcon';
 import ShowIcon from '../../components/svg/ShowIcon';
 import LoginButton from '../../components/Buttons/LoginButton';
 import GoogleSvg from '../../components/svg/GoogleSvg';
-import { loginUser } from '../../redux/actions/authActions';
+import { getUserByEmail, loginUser } from '../../redux/actions/authActions';
 import isEmpty from '../../utils/isEmpty';
-
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 const screenHeight = Dimensions.get('window').height;
 const initialValues = {
   email: '',
@@ -161,6 +164,36 @@ const LoginScreen = () => {
 
 
   };
+  const handleGoogleLogin = async() => {
+    // Alert.alert('Google Login', 'This feature is not available yet');
+    GoogleSignin.configure({
+      webClientId: process.env.ANDROID_CLIENT_ID , // client ID of type WEB for your server(needed to verify user ID and offline access)
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+      accountName: '', // [Android] specifies an account name on the device that should be used
+         });
+         try {
+          await GoogleSignin.hasPlayServices();
+          const info = await GoogleSignin.signIn();
+          dispatch(getUserByEmail(info, navigation))
+
+
+
+          console.log(info)
+          // setUserInfo(info);
+        } catch (error) {
+          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+            // user cancelled the login flow
+          } else if (error.code === statusCodes.IN_PROGRESS) {
+            // operation (e.g. sign in) is in progress already
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            // play services not available or outdated
+          } else {
+            // some other error happened
+          }
+        }
+
+  };
   return (
     <>
     {/* {loading ? <EmailSent/> :null } */}
@@ -282,7 +315,7 @@ const LoginScreen = () => {
             </View>
             <View style={LoginStyle.googleLblCon}>
               <Pressable
-              // onPress={handleGoogleLogin}
+              onPress={handleGoogleLogin}
               >
                 <Text style={LoginStyle.googleLbl}>Login with Google</Text>
               </Pressable>

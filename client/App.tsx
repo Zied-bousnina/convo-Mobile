@@ -57,6 +57,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import Icon5 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon6 from 'react-native-vector-icons/Feather';
 import CityScreen from './src/screens/DashboardScreens/CityScreen';
 import RequestHistory from './src/screens/DashboardScreens/RequestHistory';
 import SafetyScreen from './src/screens/DashboardScreens/SafetyScreen';
@@ -68,6 +69,16 @@ import Destination from './src/screens/DashboardScreens/Components/Destination';
 import Location from './src/screens/DashboardScreens/Components/Location';
 import FindDriverScreen from './src/screens/DashboardScreens/Components/FindDriverScreen';
 import Dashboard from './src/screens/DashboardScreens/DriverDashboard/Dashboard';
+import OnlineRegistration from './src/screens/DashboardScreens/OnlineRegistration';
+import MyAccount from './src/screens/DashboardScreens/MyAccount';
+import RegistartionScreen from './src/screens/DashboardScreens/RegistartionScreen';
+import BasicInfo from './src/screens/DashboardScreens/Registartion/BasicInfo';
+import DriverLicense from './src/screens/DashboardScreens/Registartion/DriverLicense';
+import IDConfirmation from './src/screens/DashboardScreens/Registartion/IDConfirmation';
+import Professionaldrivingcard from './src/screens/DashboardScreens/Registartion/Professionaldrivingcard';
+import AgentReferralCode from './src/screens/DashboardScreens/Registartion/AgentReferralCode';
+import ExploitCard from './src/screens/DashboardScreens/Registartion/Exploi_tCard';
+import VehicleInfo from './src/screens/DashboardScreens/Registartion/VehicleInfo';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -85,16 +96,7 @@ function FirstScreenStack() {
   );
 }
 
-function SecondScreenStack() {
-  return (
-    <Stack.Navigator
-      initialRouteName="SecondPage"
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen name="SecondPage" component={SecondPage} />
-      <Stack.Screen name="ThirdPage" component={ThirdPage} />
-    </Stack.Navigator>
-  );
-}
+
 function App(): JSX.Element {
 
   const [isConnected, setIsConnected] = useState(false);
@@ -102,7 +104,9 @@ function App(): JSX.Element {
   const user = useSelector(state => state?.auth);
   const profile = useSelector(state => state?.profile);
   const request = useSelector(state => state?.request?.requestIsEmpty);
-  const state = useSelector(state => state);
+  const isDriver = useSelector(state => state?.DriverMode);
+  console.log(isDriver)
+  // const state = useSelector(state=>state?.DriverMode)
   // console.log(state)
 
   // -------------theme----------------------------
@@ -247,18 +251,38 @@ function App(): JSX.Element {
         }}
          component={CityScreen}
        />
-       <Drawer.Screen
-         name="RequestHistoryPage"
-         options={{drawerLabel: 'Request history', title: 'Request History',
-         drawerIcon: ({ focused, size }) => (
-          <Icon3
-              name="clockcircleo"
-              size={size}
-              color={focused ? '#26cbfc' : 'black'}
-          />
-      ),}}
-         component={RequestHistory}
-       />
+
+          <Drawer.Screen
+          name="RequestHistoryPage"
+          options={{drawerLabel: 'Request history', title: 'Request History',
+          drawerItemStyle: { display: 'none' },
+          drawerIcon: ({ focused, size }) => (
+           <Icon3
+               name="clockcircleo"
+               size={size}
+               color={focused ? '#26cbfc' : 'black'}
+           />
+       ),}}
+          component={RequestHistory}
+        />
+
+
+          <Drawer.Screen
+          name="MyAccountPage"
+          options={{drawerLabel: 'My account', title: 'My Account',
+          drawerItemStyle: { display: 'none' },
+          drawerIcon: ({ focused, size }) => (
+           <Icon5
+               name="account"
+               size={size}
+               color={focused ? '#26cbfc' : 'black'}
+           />
+       ),}}
+          component={MyAccount}
+        />
+
+
+
         <Drawer.Screen
          name="SafetyPage"
          options={{drawerLabel: 'Safety', title: 'Safety',
@@ -312,9 +336,24 @@ function App(): JSX.Element {
          component={SupportScreen}
        />
        <Drawer.Screen
+         name="OnlineRegistrationPage"
+         options={{drawerLabel: 'Online Registration', title: 'Online Registration',
+         drawerItemStyle: { display: 'none' },
+         drawerIcon: ({ focused, size }) => (
+          <Icon6
+              name="edit"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),
+        }}
+         component={OnlineRegistration}
+       />
+       <Drawer.Screen
       name="profileSettings"
       options={{
         drawerLabel: () => null, // Hide the label
+
         drawerItemStyle: { display: 'none' }, // Hide the item
       }}
       component={ProfileSettings}
@@ -355,7 +394,91 @@ function App(): JSX.Element {
       }}
       component={Dashboard}
     />
+    <Drawer.Screen
+      name="Registration"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={RegistartionScreen}
+      />
+      {/* //  ---------------------------------- Registration ------------------------ */}
+      <Drawer.Screen
+      name="BasicInfo"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={BasicInfo}
+    />
+     <Drawer.Screen
+      name="DriverLicense"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={DriverLicense}
+    />
+     <Drawer.Screen
+      name="IdConfirmation"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={IDConfirmation}
+    />
+     <Drawer.Screen
+      name="ProfessionalDrivingCard"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={Professionaldrivingcard}
+    />
+     <Drawer.Screen
+      name="AgentReferralCode"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={AgentReferralCode}
+    />
+     <Drawer.Screen
+      name="ExploitCard"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={ExploitCard}
+    />
+     <Drawer.Screen
+      name="VehicleInfo"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={VehicleInfo}
+    />
+     {/* </Drawer.Navigator> */}
      </Drawer.Navigator>
+
+
 
         ):(
           <Stack.Navigator

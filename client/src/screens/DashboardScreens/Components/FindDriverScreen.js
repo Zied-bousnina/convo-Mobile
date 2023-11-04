@@ -349,6 +349,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
               style={styles.LoginBtn}
               loginBtnLbl={styles.loginBtnLbl}
               btnName={"+0.5"}
+              
             />
           </View>
         </View>
