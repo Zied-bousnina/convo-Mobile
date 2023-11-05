@@ -12,13 +12,13 @@ const LoginButton = ({ name, placeholder,style,errorStyle,loginBtnLbl,btnName, .
     onPress={ isSubmitting? null : handleSubmit}
     // onPress={()=>console.log(props.values)}
     backgroundColor={ isSubmitting ? '#6bc7ab' : '#6bc7ab'}
-
+   
     // disabled={
     //   values.email   === '' || values.password === ''
     // isSubmitting
     //     ? true
     //     : false
-
+        
     // }
     >
       <Text style={loginBtnLbl}>{btnName}</Text>

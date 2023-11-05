@@ -22,44 +22,31 @@ import PostalCodeSvg from '../../../components/svg/PostalCodeSVG';
 import BioSvg from '../../../components/svg/BioSvg';
 import LoginButton from '../../../components/Buttons/LoginButton';
 import Icon from 'react-native-vector-icons/Entypo';
+import Icon2 from 'react-native-vector-icons/Fontisto';
 import Fonts from '../../../assets/fonts';
 import ProfileAnimation from '../../../components/Animations/ProfileAnimation';
 import ButtonCustom from '../../../components/Buttons/ButtonCustom';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
 const initialValues = {
-    tel:'',
-    address:'',
-    city:'',
-    country:'',
-    postalCode:'',
-    bio:'',
+    firstName:'',
+    lastName:'',
+    dateNais:'',
+    email:'',
+
   };
   const validationSchema = yup.object({
-    tel: yup
+    firstName: yup
       .string()
       .trim()
-      .min(8, 'Phone number must be at least 8 number')
-      .max(10, 'Phone number must be at most 8 number')
-      .required('Phone number is required'),
-    address: yup
+      .required("First Name is required")
+      ,
+      lastName: yup
       .string()
       .trim()
-      .required('Address is required'),
-    // city: yup
-    //   .string()
-    //   .trim()
-    //   .required('City is required'),
-    // country: yup
-    //   .string()
-    //   .trim()
-    //   .required('Country is required'),
-    postalCode: yup
-      .string()
-      .trim()
-      .required('Postal code is required'),
-    // bio: yup
-    //   .string()
-    //   .trim()
-    //   .required('Bio is required'),
+      .required('Last Name is required'),
+
+
 
   });
 
@@ -76,7 +63,8 @@ const BasicInfo = () => {
   const [load, setload] = useState(false)
   const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
   const isLoad = useSelector(state=>state?.isLoading?.isLoading)
-
+  const [date, setDate] = useState(new Date())
+  const [open, setOpen] = useState(false)
   // --------------------Gove-------------------------------------
   useEffect(() => {
     axios
@@ -145,21 +133,20 @@ const BasicInfo = () => {
 
     // console.log(values)
     const formData = new FormData();
-    formData.append('tel', values.tel);
-    formData.append('address', values.address);
-    formData.append('city', selectedValue);
-    formData.append('country', selectedMunicipal);
-    formData.append('postalCode', values.postalCode);
-    formData.append('bio', values?.bio ? values.bio : '');
+    formData.append('firstName', values.firstName);
+    formData.append('latsName', values.lastName);
+    formData.append('dateNais', date);
+
+    formData.append('email', values?.email ? values.email : '');
     formData.append('avatar', {
       uri: image?.uri ? image?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
-    // console.log(formData)
+    console.log(formData)
 
 
-    dispatch(AddProfile(formData, navigation))
+    // dispatch(AddProfile(formData, navigation))
 
     // formikActions.resetForm()
     formikActions.setSubmitting(false);
@@ -205,11 +192,6 @@ const handleSkip = ()=> {
     <KeyboardAwareScrollView>
 
 
-    <CostomFormik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleCreateProfile}
-            >
 
     <View
         style={styles.item}
@@ -219,8 +201,13 @@ const handleSkip = ()=> {
 
 
     <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
+    <CostomFormik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleCreateProfile}
+            >
     <View style={{padding: 10}}>
-          <Pressable onPress={handleLogOut}>
+          <Pressable onPress={()=>navigation.navigate("Registration")}>
             {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
             <BackSvg
               width={31}
@@ -267,12 +254,7 @@ const handleSkip = ()=> {
 
           <View style={styles.formCon}>
             <View style={styles.textBoxCon}>
-              <View style={styles.at}>
-                <PhoneSVG
-                  width={20}
-                  height={20}
-                />
-              </View>
+
               <View style={styles.textCon}>
                 <AppInput
                   name="firstName"
@@ -284,12 +266,7 @@ const handleSkip = ()=> {
             </View>
 
             <View style={styles.textBoxCon}>
-              <View style={styles.at}>
-                <PhoneSVG
-                  width={20}
-                  height={20}
-                />
-              </View>
+
               <View style={styles.textCon}>
                 <AppInput
                   name="lastName"
@@ -301,28 +278,52 @@ const handleSkip = ()=> {
             </View>
 
             <View style={styles.textBoxCon}>
-              <View style={styles.at}>
-                <PhoneSVG
-                  width={20}
-                  height={20}
-                />
-              </View>
+            <Icon2
+               name="date"
+               size={16}
+               color={  'black'}
+
+           />
+
               <View style={styles.textCon}>
+           <Pressable
+           onPress={() => setOpen(true)}
+           >
                 <AppInput
                   name="dateNais"
                   placeholder="Date of Birth"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
+                  onPress={() => setOpen(true)}
+                  value={date  ? moment(date).format('DD MMMM, YYYY'):''}
+                  editable={false}
+
+                  // autoComplete={}
+
                 />
+                 <DatePicker
+        modal
+        open={open}
+        date={date}
+
+        maximumDate={new Date(moment().add(-10, 'years'))}
+        theme='light'
+        onConfirm={(date) => {
+          setOpen(false)
+          setDate(date)
+        }}
+        onCancel={() => {
+          setOpen(false)
+        }}
+        mode='date'
+        style={styles.datePickerStyle}
+      />
+
+           </Pressable>
               </View>
             </View>
             <View style={styles.textBoxCon}>
-              <View style={styles.at}>
-                <PhoneSVG
-                  width={20}
-                  height={20}
-                />
-              </View>
+
               <View style={styles.textCon}>
                 <AppInput
                   name="email"
@@ -344,10 +345,6 @@ const handleSkip = ()=> {
 
 
         </View>
-
-      </KeyboardAwareScrollView>
-      </>
-    </View>
     <View style={styles.loginCon2}>
             <LoginButton
               style={styles.LoginBtn2}
@@ -355,7 +352,11 @@ const handleSkip = ()=> {
               btnName={"Next"}
             />
           </View>
+
         </CostomFormik>
+      </KeyboardAwareScrollView>
+      </>
+    </View>
         </KeyboardAwareScrollView>
   )
 }
@@ -380,7 +381,7 @@ const styles = StyleSheet.create({
      elevation: 4,
      backgroundColor: 'white',
      padding:20,
-     height:Dimensions.get("screen").height*0.7
+     height:Dimensions.get("screen").height*0.8
     },
     skipButton: {
         position: 'absolute',

@@ -5901,6 +5901,11 @@ mkdirp@^0.5.1, mkdirp@^0.5.4:
   dependencies:
     minimist "^1.2.6"
 
+moment@^2.29.4:
+  version "2.29.4"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
@@ -6542,6 +6547,11 @@ react-native-animated-loader@^1.0.0:
   integrity sha512-XI4xk5SQr8BX+qUF9yL2RpoALYmMk4kt233PtOl1o7iUrR/jyXWpZ7+iwHDitV6Q+WB+obxzK6dyf/XtMPIVfQ==
   dependencies:
     prop-types "^15.6.2"
+
+react-native-date-picker@^4.3.3:
+  version "4.3.3"
+  resolved "https://registry.npmjs.org/react-native-date-picker/-/react-native-date-picker-4.3.3.tgz"
+  integrity sha512-Lq2hGZkwoyCMsxi/uw4KVGu4/xdPZ8AHEx2SU5KY2mipHFpX+r4n5/gXa+rpCRkARJaTFYPZ7S59bT9KMh7fGw==
 
 react-native-dropdownalert@^5.1.0:
   version "5.1.0"

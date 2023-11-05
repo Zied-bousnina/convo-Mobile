@@ -17,10 +17,7 @@ const SettingsScreen = () => {
     dispatch(
       LogOut()
     )
-  //  setTimeout(() => {
 
-  //    navigation.navigate("Login")
-  //  }, 3000);
 
   }
   return (

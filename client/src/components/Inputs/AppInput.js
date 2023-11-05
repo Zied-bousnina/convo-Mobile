@@ -21,6 +21,7 @@ const AppInput = ({ name, placeholder,style,errorStyle, placeholderTextColor,onP
 
 
 
+
               value={values[name]}
               {...rest}
 
