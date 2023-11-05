@@ -1,20 +1,21 @@
 import { View, Text, StyleSheet, Dimensions, Image, ToastAndroid, Pressable } from 'react-native'
 import React, { useState } from 'react'
-import AppInput from '../../../components/Inputs/AppInput'
-import CostomFormik from '../../../components/costomFormik/CostomFormik'
+import AppInput from '../../../../components/Inputs/AppInput'
+import CostomFormik from '../../../../components/costomFormik/CostomFormik'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as yup from 'yup'
-import Fonts from '../../../assets/fonts';
+import Fonts from '../../../../assets/fonts';
 import Icon2 from 'react-native-vector-icons/Fontisto';
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux'
-import { setLoading } from '../../../redux/actions/authActions'
-import ButtonCustom from '../../../components/Buttons/ButtonCustom'
+import { setLoading } from '../../../../redux/actions/authActions'
+import ButtonCustom from '../../../../components/Buttons/ButtonCustom'
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker'
-import LoginButton from '../../../components/Buttons/LoginButton'
-import BackSvg from '../../../components/svg/BackSvg'
+import LoginButton from '../../../../components/Buttons/LoginButton'
+import BackSvg from '../../../../components/svg/BackSvg'
 import { useNavigation } from '@react-navigation/native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 const initialValues = {
   licenseNbr:'',
   dateExp:'',
@@ -34,7 +35,7 @@ const validationSchema = yup.object({
 
 
 });
-const Professionaldrivingcard = () => {
+const CertificateVehicle = () => {
   const user = useSelector(state=>state?.auth?.user)
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState(new Date())
@@ -141,14 +142,14 @@ const Professionaldrivingcard = () => {
     <View
     style={styles.item}
     >
-     <Pressable style={{ position: 'absolute', top: 0, left: 0,padding:10 }} onPress={() => navigation.navigate("Registration")}>
+      <TouchableOpacity style={{ position: 'absolute', top: -120, left: -10,padding:10 }} onPress={() => navigation.navigate("VehicleInfo")}>
     {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
     <BackSvg width={31} height={31} />
-  </Pressable>
+  </TouchableOpacity>
 
     <View>
 
-  <Text style={[styles.title, {top:15}]}>Professional driver card (front side)</Text>
+  <Text style={styles.title}>Certificate of vehicle registration</Text>
   <View style={styles.formCon}>
 
   <View style={styles.textBoxCon}>
@@ -158,7 +159,7 @@ const Professionaldrivingcard = () => {
   // source={{
   //   uri:image.frontDriver? image.frontDriver?.uri:"https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png"
   // }}
-  source={image.frontDriver? {uri:image.frontDriver?.uri}:require('../../../assets/images1/driveCard.png')}
+  source={image.frontDriver? {uri:image.frontDriver?.uri}:require('../../../../assets/images1/driveCard.png')}
   style={{width:Dimensions.get("screen").width*0.8, height:Dimensions.get("screen").height*0.3,marginVertical:-50}}
   resizeMode="contain"
   />
@@ -187,7 +188,7 @@ onPress={()=>selectPhotoTapped("frontDriver")}
 
     <View>
 
-  <Text style={styles.title}>Professional driver card (back side)</Text>
+  <Text style={styles.title}>Certificate of vehicle registration (back side)</Text>
   <View style={styles.formCon}>
 
   <View style={styles.textBoxCon}>
@@ -199,7 +200,7 @@ onPress={()=>selectPhotoTapped("frontDriver")}
   //   uri:image?.backDriver? image?.backDriver?.uri:"https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png"
   // }
   // }
-  source={image.backDriver? {uri:image.backDriver?.uri}:require('../../../assets/images1/driveCard.png')}
+  source={image.backDriver? {uri:image.backDriver?.uri}:require('../../../../assets/images1/driveCard.png')}
   style={{width:Dimensions.get("screen").width*0.8, height:Dimensions.get("screen").height*0.3, marginVertical:-50}}
   resizeMode="contain"
   />
@@ -223,6 +224,36 @@ onPress={()=>selectPhotoTapped("backDriver")}
 
     </View>
 
+    <View
+    style={styles.item}
+    >
+     {/* <View > */}
+
+{/* // </View> */}
+    <View>
+
+  <Text style={styles.title}>Vehicle Production Year</Text>
+  <View style={styles.formCon}>
+
+  <View style={styles.textBoxCon}>
+
+<View style={styles.textCon}>
+  <AppInput
+    name="licenseNbr"
+    placeholder=" Production Year"
+    style={styles.textInput}
+    placeholderTextColor={'#aaa'}
+  />
+</View>
+</View>
+          </View>
+
+
+
+    </View>
+
+    </View>
+
     <View style={styles.loginCon2}>
             <LoginButton
               style={styles.LoginBtn2}
@@ -235,7 +266,7 @@ onPress={()=>selectPhotoTapped("backDriver")}
   )
 }
 
-export default Professionaldrivingcard
+export default CertificateVehicle
 
 const styles = StyleSheet.create({
   item: {

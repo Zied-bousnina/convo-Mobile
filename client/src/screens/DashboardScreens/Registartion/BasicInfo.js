@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
      shadowRadius: 4,
      elevation: 4,
      backgroundColor: 'white',
-     padding:20,
+     padding:10,
      height:Dimensions.get("screen").height*0.8
     },
     skipButton: {

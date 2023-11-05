@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, Image } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Image, ToastAndroid, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import AppInput from '../../../components/Inputs/AppInput'
 import CostomFormik from '../../../components/costomFormik/CostomFormik'
@@ -10,32 +10,41 @@ import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux'
 import { setLoading } from '../../../redux/actions/authActions'
 import ButtonCustom from '../../../components/Buttons/ButtonCustom'
+import moment from 'moment';
+import DatePicker from 'react-native-date-picker'
+import LoginButton from '../../../components/Buttons/LoginButton'
+import BackSvg from '../../../components/svg/BackSvg'
+import { useNavigation } from '@react-navigation/native'
 const initialValues = {
-  firstName:'',
-  lastName:'',
-  dateNais:'',
-  email:'',
+  licenseNbr:'',
+  dateExp:'',
+
 
 };
 const validationSchema = yup.object({
-  firstName: yup
+  licenseNbr: yup
     .string()
     .trim()
-    .required("First Name is required")
-    ,
-    lastName: yup
-    .string()
-    .trim()
-    .required('Last Name is required'),
 
+    .required("License number is required")
+    .min(12)
+    .max(12)
+    .matches(/^[0-9]+$/, "Must be only digits")
+    .label('License number'),
 
 
 });
 const DriverLicense = () => {
   const user = useSelector(state=>state?.auth?.user)
-  const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
+  const [open, setOpen] = useState(false)
+  const [date, setDate] = useState(new Date())
+  const [image, setImage] = useState({
+    frontDriver:'',
+    backDriver:'',
+  });
   const [load, setload] = useState(false)
   const dispatch = useDispatch()
+  const navigation = useNavigation()
   const setToastMsg = msg=> {
     ToastAndroid.showWithGravity(
       msg,
@@ -44,7 +53,7 @@ const DriverLicense = () => {
 
     )
   }
-  const selectPhotoTapped = () => {
+  const selectPhotoTapped = (imageType) => {
     const options = {
       title: 'Select Photo',
       storageOptions: {
@@ -72,7 +81,10 @@ const DriverLicense = () => {
           type,
           name,
         }
-        setImage(source)
+        setImage({
+          ...image,
+          [imageType]:source
+        })
         // console.log(source)
       }
     });
@@ -80,20 +92,23 @@ const DriverLicense = () => {
 
 // console.log(image? 'data:image/png;base64'+image : null)
 
-  const handleCreateProfile = async (values, formikActions)=> {
+  const handleCreateDriverLicense = async (values, formikActions)=> {
     setload(true)
 
     dispatch(setLoading(true));
 
     // console.log(values)
     const formData = new FormData();
-    formData.append('firstName', values.firstName);
-    formData.append('latsName', values.lastName);
-    formData.append('dateNais', date);
+    formData.append('licenseNbr', values.licenseNbr);
+    formData.append('dateExp', date);
+    formData.append('frontDriverLicense', {
+      uri: image?.frontDriver ? image?.frontDriver : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
+      type: 'image/jpg',
+      name: new Date()+ '_profile'
+    });
 
-    formData.append('email', values?.email ? values.email : '');
-    formData.append('avatar', {
-      uri: image?.uri ? image?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
+    formData.append('backDriverLicense', {
+      uri: image?.backDriver ? image?.backDriver : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
@@ -119,12 +134,18 @@ const DriverLicense = () => {
     <CostomFormik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          // onSubmit={handleCreateProfile}
+          onSubmit={handleCreateDriverLicense}
             >
+
     <View
     style={styles.item}
     >
-
+     {/* <View > */}
+  <Pressable style={{ position: 'absolute', top: 0, left: 0,padding:10 }} onPress={() => navigation.navigate("Registration")}>
+    {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
+    <BackSvg width={31} height={31} />
+  </Pressable>
+{/* // </View> */}
     <View>
 
   <Text style={styles.title}>Driver License number</Text>
@@ -134,7 +155,7 @@ const DriverLicense = () => {
 
 <View style={styles.textCon}>
   <AppInput
-    name="DriverLicenseNumber"
+    name="licenseNbr"
     placeholder=" License Number"
     style={styles.textInput}
     placeholderTextColor={'#aaa'}
@@ -181,10 +202,11 @@ const DriverLicense = () => {
 
 <View style={styles.textCon}>
   <Image
-  source={{
-    uri:image? image?.uri:"https://png.pngtree.com/png-clipart/20220613/original/pngtree-women-driver-license-sign-png-image_7993559.png"
-  }}
-  style={{width:Dimensions.get("screen").width*0.4, height:Dimensions.get("screen").height*0.15}}
+  // source={{
+  //   uri:image.frontDriver? image.frontDriver?.uri:"https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png"
+  // }}
+  source={image.frontDriver? {uri:image.frontDriver?.uri}:require('../../../assets/images1/driveCard.png')}
+  style={{width:Dimensions.get("screen").width*0.8, height:Dimensions.get("screen").height*0.3,marginVertical:-50}}
   resizeMode="contain"
   />
 </View>
@@ -196,8 +218,8 @@ const DriverLicense = () => {
 <ButtonCustom
 style={styles.LoginBtn}
 loginBtnLbl={styles.loginBtnLbl}
-btnName={image ?"Edit Photo" : "Add a photo"}
-onPress={selectPhotoTapped}
+btnName={image.frontDriver ?"Edit Photo" : "Add a photo"}
+onPress={()=>selectPhotoTapped("frontDriver")}
 />
 </View>
 
@@ -219,10 +241,13 @@ onPress={selectPhotoTapped}
 
 <View style={styles.textCon}>
   <Image
-  source={{
-    uri:image? image?.uri:"https://png.pngtree.com/png-clipart/20220613/original/pngtree-women-driver-license-sign-png-image_7993559.png"
-  }}
-  style={{width:Dimensions.get("screen").width*0.4, height:Dimensions.get("screen").height*0.15}}
+  // source={
+  //   {
+  //   uri:image?.backDriver? image?.backDriver?.uri:"https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png"
+  // }
+  // }
+  source={image.backDriver? {uri:image.backDriver?.uri}:require('../../../assets/images1/driveCard.png')}
+  style={{width:Dimensions.get("screen").width*0.8, height:Dimensions.get("screen").height*0.3, marginVertical:-50}}
   resizeMode="contain"
   />
 </View>
@@ -234,8 +259,8 @@ onPress={selectPhotoTapped}
 <ButtonCustom
 style={styles.LoginBtn}
 loginBtnLbl={styles.loginBtnLbl}
-btnName={image ?"Edit Photo" : "Add a photo"}
-onPress={selectPhotoTapped}
+btnName={image?.backDriver ?"Edit Photo" : "Add a photo"}
+onPress={()=>selectPhotoTapped("backDriver")}
 />
 </View>
 
@@ -244,6 +269,94 @@ onPress={selectPhotoTapped}
     </View>
 
     </View>
+    <View
+    style={styles.item}
+    >
+
+    <View>
+
+  <Text style={styles.title}>Date of expiration</Text>
+  <View style={styles.formCon}>
+
+  <View style={styles.textBoxCon}>
+            <Icon2
+               name="date"
+               size={16}
+               color={  'black'}
+
+           />
+
+              <View style={styles.textCon}>
+           <Pressable
+           onPress={() => setOpen(true)}
+           >
+                <AppInput
+                  name="dateNais"
+                  placeholder="Date of Birth"
+                  style={styles.textInput}
+                  placeholderTextColor={'#aaa'}
+                  onPress={() => setOpen(true)}
+                  value={date  ? moment(date).format('DD MMMM, YYYY'):''}
+                  editable={false}
+
+                  // autoComplete={}
+
+                />
+                 <DatePicker
+        modal
+        open={open}
+        date={date}
+
+        // maximumDate={new Date(moment().add(-10, 'years'))}
+        theme='light'
+        onConfirm={(date) => {
+          setOpen(false)
+          setDate(date)
+        }}
+        onCancel={() => {
+          setOpen(false)
+        }}
+        mode='date'
+        style={styles.datePickerStyle}
+      />
+
+           </Pressable>
+              </View>
+            </View>
+
+
+
+
+
+
+
+          </View>
+
+          <Text
+            style={{
+              fontSize: 16,
+              // fontWeight: 'bold',
+              textAlign: 'left',
+              // marginTop: 20,
+              color:"#333540",
+              paddingHorizontal:5
+            }}
+          >
+            Please enter the expiration date of your document
+          </Text>
+
+
+
+    </View>
+
+    </View>
+    <View style={styles.loginCon2}>
+            <LoginButton
+              style={styles.LoginBtn2}
+              loginBtnLbl={styles.loginBtnLbl2}
+              btnName={"Done"}
+            />
+          </View>
             </CostomFormik>
     </KeyboardAwareScrollView>
   )
@@ -256,7 +369,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 10,
     marginHorizontal: 12,
     borderRadius: 8,
     margin: 0.5,
@@ -338,4 +451,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems:'center'
   },
+  LoginBtn2: {
+    marginTop: 15,
+    backgroundColor: "#2df793", // Change background color to white
+    borderRadius: 60,
+    shadowColor: "black",
+
+
+    width: Dimensions.get("screen").width * 0.8,
+    // justifyContent:"center"
+  },
+  loginBtnLbl2: {
+    textAlign: 'center',
+    fontSize: 25,
+    fontFamily: Fonts.type.NotoSansBlack,
+    color: "white",
+    paddingVertical: 10,
+  },
+  loginCon2:{
+    flex: 1, // Make sure the container takes up the full width
+    justifyContent: "center", // Center its children horizontally
+    alignItems: "center",
+    marginTop:-20,
+    marginBottom:20
+  }
 })

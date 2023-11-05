@@ -79,6 +79,9 @@ import Professionaldrivingcard from './src/screens/DashboardScreens/Registartion
 import AgentReferralCode from './src/screens/DashboardScreens/Registartion/AgentReferralCode';
 import ExploitCard from './src/screens/DashboardScreens/Registartion/Exploi_tCard';
 import VehicleInfo from './src/screens/DashboardScreens/Registartion/VehicleInfo';
+import NumberPlate from './src/screens/DashboardScreens/Registartion/Vehicule Info/NumberPlate';
+import PhotoVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/PhotoVehicle';
+import CertificateVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/CertificateVehicle';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -412,6 +415,7 @@ function App(): JSX.Element {
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
+
       }}
       component={BasicInfo}
     />
@@ -419,7 +423,8 @@ function App(): JSX.Element {
       name="DriverLicense"
 
       options={{
-        drawerLabel: () => null, // Hide the label
+        drawerLabel: "Driver License",
+        title:"Driver License", // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
       }}
@@ -442,6 +447,7 @@ function App(): JSX.Element {
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
+        title:"بطاقة القيادة المهنية"
       }}
       component={Professionaldrivingcard}
     />
@@ -452,6 +458,7 @@ function App(): JSX.Element {
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
+        title:"Agent Referral Code"
       }}
       component={AgentReferralCode}
     />
@@ -462,6 +469,7 @@ function App(): JSX.Element {
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
+        title:"بطاقة إستغلال"
       }}
       component={ExploitCard}
     />
@@ -471,11 +479,47 @@ function App(): JSX.Element {
       options={{
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
+        title:"Vehicle Info",
         // header:"  Header",
       }}
       component={VehicleInfo}
     />
      {/* </Drawer.Navigator> */}
+
+     {/* -----------------------Vehicle info */}
+     <Drawer.Screen
+      name="NumberPlat"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+        title:"Number plate"
+          }}
+      component={NumberPlate}
+    />
+     <Drawer.Screen
+      name="PhotoVehicle"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+        title:"Photo of your vehicle"
+          }}
+      component={PhotoVehicle}
+    />
+     <Drawer.Screen
+      name="CertificateVehicle"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+        title:"Certificate of Vehicle Registration"
+          }}
+      component={CertificateVehicle}
+    />
      </Drawer.Navigator>
 
 
