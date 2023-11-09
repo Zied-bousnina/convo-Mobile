@@ -26,6 +26,9 @@ import AppInput from '../../../components/Inputs/AppInput';
 import LoginButton from '../../../components/Buttons/LoginButton';
 import Fonts from '../../../assets/fonts';
 import CostomFormik from '../../../components/costomFormik/CostomFormik';
+import { Button as BTN } from '@rneui/themed';
+import { decreaseOffer, increaseOffer } from '../../../redux/actions/demandesActions';
+import { useNavigation } from '@react-navigation/native';
 
 const FindDriverScreen = ({route}) => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -33,18 +36,45 @@ const FindDriverScreen = ({route}) => {
   const mapRef = useRef(null);
   const dispatch  = useDispatch()
   const sheetRef = useRef(null);
+  const isLoad = useSelector(state=>state?.isLoading?.isLoading)
+  const [inc, setincrease] = useState(false)
+  const [dec, setdecrease] = useState(false)
+  const navigation = useNavigation()
   const RequestFindDriver = useSelector(state=>state?.ReqestFindDriver)
- const {
+  const {
     address,
     destination,
     comments,
-    offer,
+    distance,
     postalDestination,
-    postalAddress
+    postalAddress,
+    demandeId
 
- } =  route.params
+  } =  route.params
+  console.log(distance)
+  const [offer, setoffer] = useState(route.params?.offer)
+  // console.log()
+
+ const handleIncrease = ()=>{
+    // console.log("increase")
+    setdecrease(false)
+    setincrease(true)
+    setoffer(parseFloat(offer) + 0.5)
+    dispatch(increaseOffer(demandeId,navigation ))
+ }
+
+ const handleDecrease = ()=> {
+    // console.log("decrease")
+    setincrease(false)
+    setdecrease(true)
+    setoffer(parseFloat(offer) - 0.5)
+    dispatch(decreaseOffer(demandeId, navigation))
+ }
 
 
+
+
+// console.log(destinationa)
 
 
   // console.log(fullBins)
@@ -143,8 +173,8 @@ const FindDriverScreen = ({route}) => {
      <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
      <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
      <script>
-         var map = L.map('map').setView([${RequestFindDriver?.location?.latitude}, ${
-          RequestFindDriver?.location?.longitude
+         var map = L.map('map').setView([${address?.latitude}, ${
+          address?.longitude
   }], 13);
 
          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -293,6 +323,22 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
             </View>
             <View style={[styles.textBoxCon, {marginTop: 30}]}>
               <View style={styles.at}>
+              <Icon1 name="map-marker-distance" size={20} color="#f66" />
+              </View>
+              <View style={styles.textCon}>
+                <AppInput
+                  name="distance"
+                  placeholder="distance"
+                  style={styles.textInput}
+                  placeholderTextColor={'#aaa'}
+                  value={`${Math.floor(distance).toString()} KM`}
+                  editable = {false}
+                  color={"#f66"}
+                />
+              </View>
+            </View>
+            <View style={[styles.textBoxCon, {marginTop: 30}]}>
+              <View style={styles.at}>
               {/* <Icon1 name="record-circle" size={20} color="#2df793" /> */}
               <Text>TND</Text>
               </View>
@@ -331,11 +377,26 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
           </View>
 
           <View style={styles.loginCon}>
-            <LoginButton
+            {/* <LoginButton
               style={[styles.LoginBtn,{ marginRight: 10 }]}
               loginBtnLbl={styles.loginBtnLbl}
               btnName={"-0.5"}
+            /> */}
+            <View
+            style={{
+              // width:"40%",
+              // justifyContent:"center",
+              // alignItems:"center",
+              // marginLeft: 20,
+              marginRight:10
+            }}
+            >
+
+            <BTN title="-0.5" type="solid" loading={isLoad && dec}
+              buttonStyle={[styles.LoginBtn]}
+              onPress={handleDecrease}
             />
+            </View>
            <AppInput
                   name="TND"
                   placeholder="TND"
@@ -345,12 +406,18 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   editable = {false}
                   color={"white"}
                 />
-            <LoginButton
+            {/* <LoginButton
               style={styles.LoginBtn}
               loginBtnLbl={styles.loginBtnLbl}
               btnName={"+0.5"}
-              
+
+
+            /> */}
+            <BTN title="+0.5" type="solid" loading={isLoad && inc}
+              buttonStyle={styles.LoginBtn}
+              onPress={handleIncrease}
             />
+
           </View>
         </View>
         <BottomSheet ref={sheetRef}
@@ -543,7 +610,10 @@ const styles = StyleSheet.create({
   LoginBtn: {
     backgroundColor: '#2df793',
     borderRadius: 20,
-    width:"40%"
+    width:"100%",
+
+    // paddingLeft:10
+
   },
   loginBtnLbl: {
     textAlign: 'center',

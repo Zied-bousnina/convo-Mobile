@@ -1,10 +1,156 @@
 import axios from "axios"
-import { SET_DEMANDES_MUNICIPAL, SET_ERRORS, SET_REQUEST } from "../types"
+import { SET_DEMANDES_MUNICIPAL, SET_ERRORS, SET_IS_LOADING, SET_REQUEST } from "../types"
 import { createAccess } from "./accessAction"
+import { setLoading } from "./authActions"
 
 
 
 
+export const AddDemande =  (userData, navigation ) => (dispatch) => {
+  // console.log(userData)
+  // const [token, settoken] = useState('')
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+
+  axios.post(`http://192.168.1.13:3600/api/users/createDemande`, userData)
+      .then(async(res) => {
+        //////////////////////////////////////////console.log(res)
+
+
+
+
+
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+        console.log("res", res?.data?.demande?._id)
+        navigation.navigate("FindDriverScreen",{...userData, demandeId:res?.data?.demande?._id} )
+      })
+      .catch( (err) =>{
+        console.log("errrrrrrrrrrrrrrrrrr",err)
+        dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+      })
+      dispatch({
+        type:SET_IS_LOADING,
+        payload:false
+    })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+      }
+
+      )
+}
+export const increaseOffer =  (demandeId, navigation ) => (dispatch) => {
+  // console.log(userData)
+  // const [token, settoken] = useState('')
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+
+  axios.post(`http://192.168.1.13:3600/api/users/incrementOffer/${demandeId}`)
+      .then(async(res) => {
+        //////////////////////////////////////////console.log(res)
+
+
+
+
+
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+        // navigation.navigate("FindDriverScreen",userData )
+      })
+      .catch( (err) =>{
+        console.log("errrrrrrrrrrrrrrrrrr",err)
+        dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+      })
+      dispatch({
+        type:SET_IS_LOADING,
+        payload:false
+    })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+      }
+
+      )
+}
+export const decreaseOffer =  (demandeId, navigation ) => (dispatch) => {
+  // console.log(userData)
+  // const [token, settoken] = useState('')
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+
+  axios.post(`http://192.168.1.13:3600/api/users/decreaseOffer/${demandeId}`)
+      .then(async(res) => {
+        //////////////////////////////////////////console.log(res)
+
+
+
+
+
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+        // navigation.navigate("FindDriverScreen",userData )
+      })
+      .catch( (err) =>{
+        console.log("errrrrrrrrrrrrrrrrrr",err)
+        dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+      })
+      dispatch({
+        type:SET_IS_LOADING,
+        payload:false
+    })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+      }
+
+      )
+}
 
 export const findDemandeInProgress = ( navigation)=> (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/demande-municipal/findDemandeInProgress`)
@@ -13,22 +159,22 @@ export const findDemandeInProgress = ( navigation)=> (dispatch) => {
     dispatch({
       type: SET_DEMANDES_MUNICIPAL,
       payload: res.data,
-      
+
     })
-    
+
   })
-  
-  
+
+
   .catch( (err) =>{
-     
+
          dispatch({
             type: SET_ERRORS,
             payload: err?.response?.data
           })
       }
-     
-  
-      
+
+
+
   )
 
 }
@@ -44,23 +190,23 @@ export const UpadeteRequest = (data, navigation)=> (dispatch) => {
     // dispatch({
     //   type: SET_DEMANDES_MUNICIPAL,
     //   payload: res.data,
-      
+
     // })
     dispatch(createAccess({companyId: res.data?.data?.user}))
-    
+
   })
-  
-  
+
+
   .catch( (err) =>{
-     
+
          dispatch({
             type: SET_ERRORS,
             payload: err?.response?.data
           })
       }
-     
-  
-      
+
+
+
   )
 
 }
@@ -73,17 +219,17 @@ export const GetRequest =  () => (dispatch) => {
         dispatch({
           type: SET_REQUEST,
           payload: res.data
-          
+
         })
       })
       .catch( (err) =>{
       dispatch({
         type: SET_ERRORS,
         payload: err
-        
+
       })
     }
-         
+
       )
 }
 

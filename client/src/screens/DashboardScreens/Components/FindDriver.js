@@ -32,6 +32,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import Destination from './Destination';
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { SET_LOCATION } from '../../../redux/types';
+import { AddDemande } from '../../../redux/actions/demandesActions';
 
 
 
@@ -52,21 +53,17 @@ const validationSchema = yup.object({
     .trim()
     .required('Address is required'),
 
-  tnd: yup
-    .string()
-    .trim()
-    .required('Offer is required'),
+  tnd:yup.number()
+  .typeError('offer must be a number')
+  .positive('offer must be greater than zero')
+  .required('offer is required')
 
 
 });
 const FindDriver = ({currentLocation, currentAddress}) => {
-    // console.log("gggg",currentLocation)
-    const [governorates, setgovernorates] = useState([]);
-    const [selectedValue, setSelectedValue] = useState('Tunis');
-    const [selectedMunicipal, setMunicipal] = useState('Tunis');
+
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const isLoading = useSelector(state=>state?.errors?.isLoading)
     const user = useSelector(state=>state?.auth?.user)
     const [load, setload] = useState(false)
     const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
@@ -76,21 +73,11 @@ const FindDriver = ({currentLocation, currentAddress}) => {
 
 // console.log(RequestFindDriver)
      // --------------------Gove-------------------------------------
-     useEffect(() => {
-      axios
-        .get(`https://xgenboxv2.onrender.com/api/governorates`)
-        .then(res => {
-          setgovernorates(res.data[0]);
-        })
-        .catch(err => console.log(err));
-    }, []);
 
-    const municipales = governorates?.governorates?.filter(
-      (item, index) => item.name === selectedValue,
-    );
+
     // --------------------End Gove-------------------------------------
 
-    const addImage=()=>{};
+
     // console.log("image", user?.avatar ? 'data:image/png;base64,'+user?.avatar : null)
     const setToastMsg = msg=> {
       ToastAndroid.showWithGravity(
@@ -133,13 +120,14 @@ const FindDriver = ({currentLocation, currentAddress}) => {
         }
       });
     }
+    // const [distance, setdistance] = useState()
 
   // console.log(image? 'data:image/png;base64'+image : null)
 
-    const handleCreateProfile = async (values, formikActions)=> {
-      setload(true)
+    const handleCreateDemande = async (values, formikActions)=> {
+      // setload(true)
 
-      dispatch(setLoading(true));
+      // dispatch(setLoading(true));
 
       // console.log(values)
       const formData = new FormData();
@@ -148,21 +136,61 @@ const FindDriver = ({currentLocation, currentAddress}) => {
       formData.append('comments', values?.comments ? values?.comments :'');
       formData.append('offer', values?.tnd);
 
+      const getDistanceFromLatLonInKm=()=>{
+        const lat1 = RequestFindDriver?.location?.latitude;
+      const lon1 = RequestFindDriver?.location?.longitude;
+      const lat2 = RequestFindDriver?.destination?.latitude;
+      const lon2 = RequestFindDriver?.destination?.longitude;
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2-lat1);  // deg2rad below
+        var dLon = deg2rad(lon2-lon1);
+        var a =
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+          ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c; // Distance in km
+       return d
+      }
+      const deg2rad=(deg)=> {
+        return deg * (Math.PI/180)
+      }
+      const distance = getDistanceFromLatLonInKm()
 
+      // useEffect(() => {
+      //   getDistanceFromLatLonInKm
+      // }, [])
       // console.log(formData?._parts)
-      navigation.navigate("FindDriverScreen",
-      {
+      // navigation.navigate("FindDriverScreen",
+      // {
+      //   address: RequestFindDriver?.location,
+      //   destination: RequestFindDriver?.destination,
+      //   comments: values?.comments ? values?.comments :'',
+      //   offer: values?.tnd,
+      //   postalAddress: address,
+      //   postalDestination: destination
+      // }
+      // )
+      const data ={
         address: RequestFindDriver?.location,
         destination: RequestFindDriver?.destination,
         comments: values?.comments ? values?.comments :'',
         offer: values?.tnd,
         postalAddress: address,
-        postalDestination: destination
+        postalDestination: destination,
+        distance:distance
+
       }
-      )
 
+      if(RequestFindDriver?.destination?.latitude ==0){
+        setToastMsg("Please choose destination")
+        formikActions.setSubmitting(false);
+        return
+      }
+      console.log(data)
 
-      // dispatch(AddProfile(formData, navigation))
+      dispatch(AddDemande(data, navigation))
 
       // formikActions.resetForm()
       formikActions.setSubmitting(false);
@@ -279,7 +307,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
     comments: ""
   }}
           validationSchema={validationSchema}
-          onSubmit={handleCreateProfile}
+          onSubmit={handleCreateDemande}
             >
 
 
