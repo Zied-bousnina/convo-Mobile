@@ -56,6 +56,31 @@ const createDemande = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const deleteDemande = async (req, res) => {
+  const demandId = req.params.demandId; // Assuming demandId is provided as a route parameter
+
+  try {
+    // Check if the demand exists
+    const existingDemande = await demandeModels.findById(demandId);
+
+    if (!existingDemande) {
+      return res.status(404).json({ message: 'Demande not found' });
+    }
+
+    // Check if the user making the request is the owner of the demand
+    if (existingDemande.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Unauthorized access' });
+    }
+
+    // Delete the demand
+    await existingDemande.remove();
+
+    res.status(200).json({ message: 'Demande deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const findDemandsByUserId = async (req, res) => {
   const userId = req.user.id; // Assuming user ID is available in req.user.id
 
@@ -769,5 +794,6 @@ module.exports = {
   createDemande,
   findDemandsByUserId,
   incrementOffer,
-  decreaseOffer
+  decreaseOffer,
+  deleteDemande
 }
