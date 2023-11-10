@@ -40,7 +40,12 @@ const DeamndeSchema = new Schema({
 
 
 
-    }
+    },
+    distance:
+        {
+            type:String,
+
+        },
 
 }, {timestamps:true})
 

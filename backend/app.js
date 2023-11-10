@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 const mongoose = require('mongoose')
 const passport = require('passport');
 const userRoutes = require('./routes/userRoutes.js');
+const BasicInfoRoutes = require('./routes/BasicInfo.js');
 const connectDB = require('./config/db.js');
 const formData = require('express-form-data');
 const morgan = require('morgan');
@@ -45,6 +46,7 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err=>console.log(err))
 app.use('/api', indexRouter);
 app.use('/api/users', userRoutes);
+app.use('/api/basicInfo', BasicInfoRoutes);
 
 
 module.exports = app;
