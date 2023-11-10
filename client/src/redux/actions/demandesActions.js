@@ -1,5 +1,5 @@
 import axios from "axios"
-import { SET_DEMANDES_MUNICIPAL, SET_ERRORS, SET_IS_LOADING, SET_REQUEST } from "../types"
+import { SET_DEMANDES, SET_DEMANDES_MUNICIPAL, SET_ERRORS, SET_IS_LOADING, SET_REQUEST } from "../types"
 import { createAccess } from "./accessAction"
 import { setLoading } from "./authActions"
 
@@ -150,6 +150,78 @@ export const decreaseOffer =  (demandeId, navigation ) => (dispatch) => {
       }
 
       )
+}
+export const FindRequestDemande = ( navigation)=> (dispatch) => {
+  axios.get(`http://192.168.1.13:3600/api/users/findDemandsByUserId`)
+  .then(async(res) => {
+    // console.log(">>>>>>>>>>>>>>>>>>>",res.data)
+    dispatch({
+      type: SET_DEMANDES,
+      payload: res.data,
+
+    })
+
+  })
+
+
+  .catch( (err) =>{
+
+         dispatch({
+            type: SET_ERRORS,
+            payload: err?.response?.data
+          })
+      }
+
+
+
+  )
+
+}
+export const DeleteDEmande = ( idDemande)=> (dispatch) => {
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+  axios.delete(`http://192.168.1.13:3600/api/users/delete/${idDemande}`)
+  .then(async(res) => {
+    // console.log(">>>>>>>>>>>>>>>>>>>",res.data)
+
+    dispatch({
+      type:SET_IS_LOADING,
+      payload:false
+  })
+    setTimeout(() => {
+      dispatch(
+        setLoading(false)
+      )
+
+    }, 3000);
+
+  })
+
+
+  .catch( (err) =>{
+
+    dispatch({
+      type: SET_ERRORS,
+      payload: err?.response?.data
+  })
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:false
+})
+    setTimeout(() => {
+      dispatch(
+        setLoading(false)
+      )
+
+    }, 3000);
+      }
+
+
+
+  )
+
 }
 
 export const findDemandeInProgress = ( navigation)=> (dispatch) => {
