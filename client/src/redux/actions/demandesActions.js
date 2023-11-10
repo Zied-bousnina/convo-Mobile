@@ -14,7 +14,7 @@ export const AddDemande =  (userData, navigation ) => (dispatch) => {
     payload:true
 })
 
-  axios.post(`http://192.168.1.13:3600/api/users/createDemande`, userData)
+  axios.post(`https://convoyage.onrender.com/api/users/createDemande`, userData)
       .then(async(res) => {
         //////////////////////////////////////////console.log(res)
 
@@ -63,7 +63,7 @@ export const increaseOffer =  (demandeId, navigation ) => (dispatch) => {
     payload:true
 })
 
-  axios.post(`http://192.168.1.13:3600/api/users/incrementOffer/${demandeId}`)
+  axios.post(`https://convoyage.onrender.com/api/users/incrementOffer/${demandeId}`)
       .then(async(res) => {
         //////////////////////////////////////////console.log(res)
 
@@ -111,7 +111,7 @@ export const decreaseOffer =  (demandeId, navigation ) => (dispatch) => {
     payload:true
 })
 
-  axios.post(`http://192.168.1.13:3600/api/users/decreaseOffer/${demandeId}`)
+  axios.post(`https://convoyage.onrender.com/api/users/decreaseOffer/${demandeId}`)
       .then(async(res) => {
         //////////////////////////////////////////console.log(res)
 
@@ -152,7 +152,7 @@ export const decreaseOffer =  (demandeId, navigation ) => (dispatch) => {
       )
 }
 export const FindRequestDemande = ( navigation)=> (dispatch) => {
-  axios.get(`http://192.168.1.13:3600/api/users/findDemandsByUserId`)
+  axios.get(`https://convoyage.onrender.com/api/users/findDemandsByUserId`)
   .then(async(res) => {
     // console.log(">>>>>>>>>>>>>>>>>>>",res.data)
     dispatch({
@@ -170,6 +170,11 @@ export const FindRequestDemande = ( navigation)=> (dispatch) => {
             type: SET_ERRORS,
             payload: err?.response?.data
           })
+          dispatch({
+            type: SET_DEMANDES,
+            payload: [],
+
+          })
       }
 
 
@@ -182,9 +187,9 @@ export const DeleteDEmande = ( idDemande)=> (dispatch) => {
     type:SET_IS_LOADING,
     payload:true
 })
-  axios.delete(`http://192.168.1.13:3600/api/users/delete/${idDemande}`)
+  axios.delete(`https://convoyage.onrender.com/api/users/delete/${idDemande}`)
   .then(async(res) => {
-    // console.log(">>>>>>>>>>>>>>>>>>>",res.data)
+    console.log(">>>>>>>>>>>>>>>>>>>",res.data)
 
     dispatch({
       type:SET_IS_LOADING,

@@ -28,6 +28,7 @@ import ProfileAnimation from '../../../components/Animations/ProfileAnimation';
 import ButtonCustom from '../../../components/Buttons/ButtonCustom';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
+import { AddBasicInfo } from '../../../redux/actions/userActions';
 const initialValues = {
     firstName:'',
     lastName:'',
@@ -134,8 +135,8 @@ const BasicInfo = () => {
     // console.log(values)
     const formData = new FormData();
     formData.append('firstName', values.firstName);
-    formData.append('latsName', values.lastName);
-    formData.append('dateNais', date);
+    formData.append('lastName', values.lastName);
+    formData.append('dateNais', date.toDateString());
 
     formData.append('email', values?.email ? values.email : '');
     formData.append('avatar', {
@@ -146,7 +147,7 @@ const BasicInfo = () => {
     console.log(formData)
 
 
-    // dispatch(AddProfile(formData, navigation))
+    dispatch(AddBasicInfo(formData, navigation))
 
     // formikActions.resetForm()
     formikActions.setSubmitting(false);

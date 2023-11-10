@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button, ButtonGroup, withTheme, Text } from '@rneui/themed';
 import ListRequest from './Components/ListRequest'
 import { useDispatch, useSelector } from 'react-redux'
-import { FindRequestDemande } from '../../redux/actions/demandesActions'
+import { DeleteDEmande, FindRequestDemande } from '../../redux/actions/demandesActions'
 import { useNavigation } from '@react-navigation/native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
@@ -11,6 +11,7 @@ import Fonts from '../../assets/fonts';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppInput from '../../components/Inputs/AppInput'
 import LoginButton from '../../components/Buttons/LoginButton'
+import AppLoader from '../../components/Animations/AppLoader';
 
 const RequestHistory = () => {
 
@@ -18,9 +19,10 @@ const RequestHistory = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const sheetRef = useRef(null);
-const [selectedItem, setselectedItem] = useState({})
+  const [selectedItem, setselectedItem] = useState({})
 const [selectedIndex, setSelectedIndex] = useState(0);
 const [selectedIndexes, setSelectedIndexes] = useState([0, 2, 3]);
+const isLoad = useSelector(state=>state?.isLoading?.isLoading)
   useEffect(() => {
     dispatch(FindRequestDemande(navigation))
 
@@ -28,12 +30,22 @@ const [selectedIndexes, setSelectedIndexes] = useState([0, 2, 3]);
   // console.log("Requests_______________________", requests)
 
   // useEffect(() => {
-  //   sheetRef.current.open()
+  //   sheetRef.current.close()
   // }, [])
+  const actionDelete = async () => {
+    console.log(selectedItem?._id);
+    sheetRef.current.close();
+
+    // Dispatch the DeleteDEmande action
+    await dispatch(DeleteDEmande(selectedItem?._id));
+
+    // Fetch the updated list after deletion
+    await dispatch(FindRequestDemande(navigation));
+  };
 
   return (
     <>
-
+ {isLoad? <AppLoader /> : null}
    <ScrollView>
 
 
@@ -101,7 +113,7 @@ setselectedItem(e)
 
    </ScrollView>
    <BottomSheet ref={sheetRef}
-        height={Dimensions.get("screen").height*0.3}
+        height={Dimensions.get("screen").height*0.48}
         closeOnDragDown={
           true
         }
@@ -116,12 +128,13 @@ setselectedItem(e)
             <Button
               title={'Ride details'}
               buttonStyle={{
-                backgroundColor: '#2df793',
-                // color:"black"
+                backgroundColor: '#a4ea2d',
+                // color:"#253545"
 
               }}
               titleStyle={{
-                color:"black",
+                color:"#253545",
+                fontSize:20
               }}
               containerStyle={{
                 width: Dimensions.get("screen").width*0.9,
@@ -130,16 +143,18 @@ setselectedItem(e)
                 borderRadius:10,
 
               }}
+              onPress={()=>navigation.navigate("RideDetails", { data:selectedItem} )}
             />
             <Button
               title={'Repeat request'}
               buttonStyle={{
-                backgroundColor: '#2df793',
-                // color:"black"
+                backgroundColor: '#a4ea2d',
+                // color:"#253545"
 
               }}
               titleStyle={{
-                color:"black",
+                color:"#253545",
+                fontSize:20
               }}
               containerStyle={{
                 width: Dimensions.get("screen").width*0.9,
@@ -152,12 +167,13 @@ setselectedItem(e)
             <Button
               title={'Return route'}
               buttonStyle={{
-                backgroundColor: '#2df793',
-                // color:"black"
+                backgroundColor: '#a4ea2d',
+                // color:"#253545"
 
               }}
               titleStyle={{
-                color:"black",
+                color:"#253545",
+                fontSize:20
               }}
               containerStyle={{
                 width: Dimensions.get("screen").width*0.9,
@@ -170,12 +186,13 @@ setselectedItem(e)
             <Button
               title={'Delete'}
               buttonStyle={{
-                backgroundColor: '#cccc',
-                // color:"black"
+                backgroundColor: '#f5f4f4',
+                // color:"#253545"
 
               }}
               titleStyle={{
-                color:"red",
+                color:"#c34949",
+                fontSize:20
               }}
               containerStyle={{
                 width: Dimensions.get("screen").width*0.9,
@@ -184,16 +201,18 @@ setselectedItem(e)
                 borderRadius:10,
 
               }}
+              onPress={actionDelete}
             />
             <Button
               title={'close'}
               buttonStyle={{
-                backgroundColor: '#cccc',
-                // color:"black"
+                backgroundColor: '#f5f4f4',
+                // color:"#253545"
 
               }}
               titleStyle={{
-                color:"black",
+                color:"#253545",
+                fontSize:20
               }}
               containerStyle={{
                 width: Dimensions.get("screen").width*0.9,
@@ -231,7 +250,8 @@ export default RequestHistory
 const styles = StyleSheet.create({
   contentView: {
     flex: 1,
-    height:500
+    height:500,
+    backgroundColor:"white"
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -240,6 +260,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginVertical: 20,
+    backgroundColor:"white"
   },
   subHeader: {
     backgroundColor : "#2089dc",

@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  Button,
+
   Dimensions,
   PermissionsAndroid,
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  Text,
+
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -14,7 +14,7 @@ import {
 // import {LatLng, LeafletView} from 'react-native-leaflet-view';
 import {WebView} from 'react-native-webview';
 import Geolocation from 'react-native-geolocation-service';
-import Icon from 'react-native-vector-icons/AntDesign';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBins } from '../../../redux/actions/binActions';
 // import { fetchBins } from '../../redux/actions/binActions';
@@ -29,151 +29,24 @@ import CostomFormik from '../../../components/costomFormik/CostomFormik';
 import { Button as BTN } from '@rneui/themed';
 import { decreaseOffer, increaseOffer } from '../../../redux/actions/demandesActions';
 import { useNavigation } from '@react-navigation/native';
-
-const FindDriverScreen = ({route}) => {
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [currentAddress, setCurrentAddress] = useState(null);
-  const mapRef = useRef(null);
-  const dispatch  = useDispatch()
-  const sheetRef = useRef(null);
-  const isLoad = useSelector(state=>state?.isLoading?.isLoading)
-  const [inc, setincrease] = useState(false)
-  const [dec, setdecrease] = useState(false)
+import { Text, Card, Button, Icon } from '@rneui/themed';
+import Icon2 from 'react-native-vector-icons/AntDesign';
+const RideDetails = ({route}) => {
   const navigation = useNavigation()
-  const RequestFindDriver = useSelector(state=>state?.ReqestFindDriver)
   const {
-    address,
-    destination,
-    comments,
-    distance,
-    postalDestination,
-    postalAddress,
-    demandeId
+    data
 
   } =  route.params
-  console.log(distance)
-  const [offer, setoffer] = useState(route.params?.offer)
-  // console.log()
-
- const handleIncrease = ()=>{
-    // console.log("increase")
-    setdecrease(false)
-    setincrease(true)
-    setoffer(parseFloat(offer) + 0.5)
-    dispatch(increaseOffer(demandeId,navigation ))
- }
-
- const handleDecrease = ()=> {
-    // console.log("decrease")
-    setincrease(false)
-    setdecrease(true)
-    setoffer(parseFloat(offer) - 0.5)
-    dispatch(decreaseOffer(demandeId, navigation))
- }
-
-
-
-
-// console.log(destinationa)
-
-
-  // console.log(fullBins)
-  const html_script = `
- <!DOCTYPE html>
- <html>
- <head>
-     <meta charset="utf-8" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Leaflet Example</title>
-     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-     <style>
-     html, body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-size: 32px;
-      gap: 40px;
-      // flex-wrap: wrap;
-    }
-
-
-         #map {
-             height: 100%;
-             width: 100%;
-             position: absolute;
-             top: 0;
-             bottom: 0;
-             left: 0;
-             right: 0;
-         }
-
-
-
-     </style>
- </head>
- <body>
-     <div id="map"></div>
-     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-     <script>
-         var map = L.map('map').setView([${address?.latitude}, ${
-          address?.longitude
-  }], 13);
-
-         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                 '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-             maxZoom: 18,
-             tileSize: 512,
-             zoomOffset: -1,
-         }).addTo(map);
-        //  <img src="https://img.icons8.com/ios-filled/50/40C057/delete--v1.png"/>
-
-         // Define a custom icon for the markers
-
-
-
-
-
-
-   // Find closest full bin
-let closestBin = null;
-let closestDistance = Infinity;
-const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
-
-
-         L.Routing.control({
-          waypoints: [
-
-            L.latLng(${address?.latitude}, ${address?.longitude}),
-
-            L.latLng(${destination?.latitude}, ${destination?.longitude})
-
-          ]
-        }).addTo(map);
-
-
-
-     </script>
- </body>
- </html>
- `;
-
+  console.log(data)
   return (
     <>
-    {/* <StatusBar barStyle="dark-content" /> */}
-    <SafeAreaView style={styles.Container}>
-    <TouchableOpacity
+ <TouchableOpacity
     onPress={()=>{
-      navigation.goBack()
+      navigation.navigate("RequestHistoryPage")
     }}
      style={[ { position: 'absolute',
     top: 10, // Adjust as needed
-    left: 50,
+    left: 10,
     zIndex: 10,
     elevation: 2,
     backgroundColor: 'white',
@@ -185,37 +58,35 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
     shadowRadius: 2,
 
     }]}>
-       <Icon name="back" size={40} color="#2df793" />
+       <Icon2 name="back" size={30} color="black" />
     </TouchableOpacity>
-      <WebView
 
+    <View
+    style={{
+      marginTop:20,
+    }}
+    >
 
-        ref={mapRef}
-        source={{html: html_script}}
-        style={styles.Webview}
-      />
-  <View style={styles.blackOverlay}>
-  <View
-    style={styles.finding}
->
+       <Card
+          style={{
 
-     {/* <AnimatedLoader
-      visible={true}
-      overlayColor="rgba(255,255,255,0.75)"
-      animationStyle={styles.lottie}
-      speed={1}
+            width: '100%',
+            height: 500,
+            borderRadius: 20,
+            // overflow: 'hidden',
+            backgroundColor: 'red',
+          }}
+       >
 
-      >
-    </AnimatedLoader> */}
-      <Text
-        style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: '#2df793',
+          {/* <Card.Image
+            style={{ padding: 0 }}
+            source={{
+              uri:
+                'https://awildgeographer.files.wordpress.com/2015/02/john_muir_glacier.jpg',
             }}
+          /> */}
 
-      >Finding driver...</Text>
-</View>
+
   <CostomFormik
           initialValues={{
     // address:address,
@@ -247,7 +118,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   placeholder="Address"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  value={postalAddress}
+                  value={data?.postalAddress}
                   editable = {false}
                   color={"#26cbfc"}
 
@@ -266,7 +137,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   placeholder="Destination"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  value={postalDestination}
+                  value={data?.postalDestination}
                   editable = {false}
                   color={"#2df793"}
                 />
@@ -282,7 +153,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   placeholder="distance"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  value={`${Math.floor(distance).toString()} KM`}
+                  value={`${Math.floor(parseFloat(data?.distance)).toString()} KM`}
                   editable = {false}
                   color={"#f66"}
                 />
@@ -298,10 +169,10 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   name="TND"
                   placeholder="TND"
                   style={[styles.textInput, {fontWeight:"bold"}]}
-                  placeholderTextColor={'#aaa'}
-                  value={offer+", Cash"}
+                  placeholderTextColor={'black'}
+                  value={data?.offer+", Cash"}
                   editable = {false}
-                  color={"white"}
+                  color={"black"}
                 />
               </View>
             </View>
@@ -327,84 +198,18 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
             </View>
           </View>
 
-          <View style={styles.loginCon}>
-            {/* <LoginButton
-              style={[styles.LoginBtn,{ marginRight: 10 }]}
-              loginBtnLbl={styles.loginBtnLbl}
-              btnName={"-0.5"}
-            /> */}
-            <View
-            style={{
-              // width:"40%",
-              // justifyContent:"center",
-              // alignItems:"center",
-              // marginLeft: 20,
-              marginRight:10
-            }}
-            >
 
-            <BTN title="-0.5" type="solid" loading={isLoad && dec}
-              buttonStyle={[styles.LoginBtn]}
-              onPress={handleDecrease}
-            />
-            </View>
-           <AppInput
-                  name="TND"
-                  placeholder="TND"
-                  style={[styles.textInput, {fontWeight:"bold",marginRight: 10 }]}
-                  placeholderTextColor={'#aaa'}
-                  value={"TND"+offer}
-                  editable = {false}
-                  color={"white"}
-                />
-            {/* <LoginButton
-              style={styles.LoginBtn}
-              loginBtnLbl={styles.loginBtnLbl}
-              btnName={"+0.5"}
-
-
-            /> */}
-            <BTN title="+0.5" type="solid" loading={isLoad && inc}
-              buttonStyle={styles.LoginBtn}
-              onPress={handleIncrease}
-            />
-
-          </View>
         </View>
-        <BottomSheet ref={sheetRef}
-        // height={Dimensions.get("screen").height}
-        closeOnDragDown={
-          true
-        }
-        // closeOnPressMask={true}
-        // snapPoints={['100%']}
 
-        // height={Dimensions.get("screen").height}
-
-        >
-       {/* <Destination/> */}
-       {/* <Pressable
-        onPress={()=>sheetRef.current.close()}
-        style={{
-          backgroundColor: '#6bc7ab',
-          padding: 16,
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: 'white', fontSize: 20 }}>Close</Text>
-      </Pressable> */}
-
-      {/* <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/> */}
-    </BottomSheet>
         </CostomFormik>
-  </View>
 
-    </SafeAreaView>
-  </>
+        </Card>
+    </View>
+    </>
   )
 }
 
-export default FindDriverScreen
+export default RideDetails
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
@@ -445,8 +250,8 @@ const styles = StyleSheet.create({
   },
   blackOverlay: {
     flex: 1,
-    backgroundColor: 'black',
-    opacity: 0.7, // You can adjust the opacity as needed
+    // backgroundColor: 'black',
+    // opacity: 0.7, // You can adjust the opacity as needed
     position: 'absolute',
     top: '50%', // Position in the middle of the screen vertically
     left: 0,

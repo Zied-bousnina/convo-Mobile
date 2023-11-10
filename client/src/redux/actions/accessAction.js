@@ -17,7 +17,7 @@ export const createAccess =  (userData, navigation ) => (dispatch) => {
     type:SET_IS_SECCESS,
     payload:false
   })
-    
+
     axios.post(`https://xgenboxv2.onrender.com/api/access/createAccess`, userData)
         .then(async(res) => {
             dispatch({
@@ -25,7 +25,7 @@ export const createAccess =  (userData, navigation ) => (dispatch) => {
                 payload: {}
             })
             // console.log(res)
-            
+
             dispatch({
               type:SET_IS_LOADING,
               payload:false
@@ -40,18 +40,18 @@ export const createAccess =  (userData, navigation ) => (dispatch) => {
               payload:false
             })
           }, 3000);
-           
-           
-            
+
+
+
 
         })
-        
-        
+
+
         .catch( (err) =>{
             // console.log(err)
             setTimeout(() => {
                 // Make API call or other asynchronous operation
-          
+
                 dispatch(setLoading(false));
               }, 2000);
                dispatch({
@@ -68,9 +68,9 @@ export const createAccess =  (userData, navigation ) => (dispatch) => {
                 payload:false
               })
             }
-           
-        
-            
+
+
+
         )
 }
 
@@ -78,7 +78,7 @@ export const GetCurrentAccess =  () => (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/access/currentAccess`)
       .then(async(res) => {
         console.log("ligne 51",res.data)
-        
+
         dispatch({
           type: SET_CURRENT_ACCESS,
           payload: res.data
@@ -89,10 +89,10 @@ export const GetCurrentAccess =  () => (dispatch) => {
       // dispatch({
       //   type: SET_PROFILES,
       //   payload: res.data
-        
+
       // })
     }
-         
+
       )
 }
 

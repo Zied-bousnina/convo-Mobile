@@ -29,6 +29,8 @@ import { SET_IS_DRIVER_MODE } from '../../redux/types';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon5 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon6 from 'react-native-vector-icons/Feather';
+import { TouchableOpacity } from 'react-native';
+import { FindRequestDemande } from '../../redux/actions/demandesActions';
 const CustomSidebarMenu = (props) => {
   const [isDriverMode, setIsDriverMode] = useState(false);
   const navigation = useNavigation()
@@ -80,7 +82,7 @@ const CustomSidebarMenu = (props) => {
             isDriverMode? (
               <>
 
-              <Pressable
+              <TouchableOpacity
   onPress={()=>navigation.navigate("MyAccountPage")}
   style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
   <Icon5
@@ -91,8 +93,8 @@ const CustomSidebarMenu = (props) => {
   <Text style={{ marginLeft: 10, fontSize: 16, color: 'black'  }}>
     My Account
   </Text>
-</Pressable>
- <Pressable
+</TouchableOpacity>
+ <TouchableOpacity
   onPress={()=>navigation.navigate("OnlineRegistrationPage")}
   style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
   <Icon6
@@ -103,12 +105,16 @@ const CustomSidebarMenu = (props) => {
   <Text style={{ marginLeft: 10, fontSize: 16, color: 'black'  }}>
   Online Registration
   </Text>
-</Pressable>
+</TouchableOpacity>
 
               </>
               ) :(
-                <Pressable
-            onPress={()=>navigation.navigate("RequestHistoryPage")}
+                <TouchableOpacity
+            onPress={()=>{
+              dispatch(FindRequestDemande(navigation))
+              navigation.navigate("RequestHistoryPage")
+
+            }}
              style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
   <Icon3
     name="clockcircleo"
@@ -118,7 +124,7 @@ const CustomSidebarMenu = (props) => {
   <Text style={{ marginLeft: 10, fontSize: 16, color: 'black'  }}>
     Request History
   </Text>
-</Pressable>
+</TouchableOpacity>
 
 
 )

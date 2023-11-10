@@ -82,6 +82,9 @@ import VehicleInfo from './src/screens/DashboardScreens/Registartion/VehicleInfo
 import NumberPlate from './src/screens/DashboardScreens/Registartion/Vehicule Info/NumberPlate';
 import PhotoVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/PhotoVehicle';
 import CertificateVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/CertificateVehicle';
+import { FindRequestDemande } from './src/redux/actions/demandesActions';
+import RideDetails from './src/screens/DashboardScreens/Components/RideDetails';
+import { findBasicInfoByUserId } from './src/redux/actions/userActions';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -150,7 +153,12 @@ function App(): JSX.Element {
         // console.log(decode);
         // store.dispatch(GetRequest());
         store.dispatch(setCurrentUser(decode));
+        store.dispatch(findBasicInfoByUserId());
         // store.dispatch(GetProfile());
+
+          // store.dispatch(FindRequestDemande())
+
+
         // store.dispatch(GetCurrentAccess())
         SetAuthToken(value); // Corrected typo here
       }
@@ -169,6 +177,7 @@ function App(): JSX.Element {
           // console.log("ligne 107:******************************************",value)
           // console.log(decode);
           store.dispatch(setCurrentUser(decode));
+
           // store.dispatch(GetProfile());
           // store.dispatch(GetRequest());
           // store.dispatch(CreateScore());
@@ -519,6 +528,17 @@ function App(): JSX.Element {
         title:"Certificate of Vehicle Registration"
           }}
       component={CertificateVehicle}
+    />
+     <Drawer.Screen
+      name="RideDetails"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+        title:"Ride details"
+          }}
+      component={RideDetails}
     />
      </Drawer.Navigator>
 
