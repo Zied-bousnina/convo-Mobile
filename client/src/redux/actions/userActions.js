@@ -275,7 +275,22 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
 
       )
 }
+export const AddCurrentLocation =  (userData, navigation ) => (dispatch) => {
+  // console.log(userData)
 
+
+  axios.post(`https://convoyage.onrender.com/api/users/AddAddress`, userData,)
+      .then(async(res) => {
+        console.log("LOaction Added", res?.data)
+
+      })
+      .catch( (err) =>{
+        console.log("Location err", err)
+
+      }
+
+      )
+}
 export const findBasicInfoByUserId =() => ()=>{
   axios.get(`https://convoyage.onrender.com/api/basicInfo/findBasicProfileById`)
       .then(async(res) => {
@@ -298,3 +313,50 @@ export const findBasicInfoByUserId =() => ()=>{
       )
 }
 
+export const ChangeStatus = (data)=> (dispatch)=>{
+
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+dispatch({
+  type:SET_IS_SECCESS,
+  payload:false
+})
+  axios.post(`https://convoyage.onrender.com/api/users/SetUserStatus`,data)
+      .then(async(res) => {
+
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+
+      dispatch({
+        type:SET_IS_SECCESS,
+        payload:true
+      })
+
+      setTimeout(() => {
+        dispatch({
+          type:SET_IS_SECCESS,
+          payload:false
+        })
+      }, 3000);
+      })
+      .catch( (err) =>{
+        dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+      })
+      dispatch({
+        type:SET_IS_LOADING,
+        payload:false
+    })
+    dispatch({
+      type:SET_IS_SECCESS,
+      payload:false
+    })
+    }
+
+      )
+}

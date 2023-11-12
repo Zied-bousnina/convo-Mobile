@@ -1,9 +1,12 @@
 import { View, Text, ActivityIndicator } from 'react-native'
 import React from 'react'
 import Switch from 'react-native-switch-toggles';
+import { useDispatch } from 'react-redux';
+import { ChangeStatus } from '../../../redux/actions/userActions';
 
 const RideRequests = () => {
     const [isEnabled, setIsEnabled] = React.useState(false);
+    const dispatch = useDispatch()
   return (
     <>
     <View
@@ -24,17 +27,26 @@ const RideRequests = () => {
 
 
     value={isEnabled}
-    onChange={(value) => setIsEnabled(value)}
-    activeThumbColor={'#d23a35'}
-    inactiveThumbColor={'#6ab04c'}
+    onChange={(value) => {
+      console.log(value)
+      setIsEnabled(value)
+      dispatch(ChangeStatus({
+        onligne:value
+
+      }))
+
+    }}
+    inactiveThumbColor={'#d23a35'}
+    // inactiveThumbColor={'#6ab04c'}
+    activeThumbColor={'#6ab04c'}
     activeTrackColor={'#ffffff'}
     inactiveTrackColor={'#ffffff'}
 
     renderInactiveThumbIcon={() => (
-      <Text style={{ fontSize: 14, color: 'black' }}>Online</Text>
+      <Text style={{ fontSize: 14, color: 'black' }}>Offline</Text>
     )}
     renderActiveThumbIcon={() => (
-      <Text style={{ fontSize: 14, color: 'black' }}>Offline</Text>
+      <Text style={{ fontSize: 14, color: 'black' }}>Online</Text>
     )}
     renderOffIndicator={() => (
       <Text style={{ fontSize: 12, color: 'black' }}></Text>

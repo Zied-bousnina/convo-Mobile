@@ -21,6 +21,8 @@ import { fetchBins } from '../../../redux/actions/binActions';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import FindDriver from './FindDriver';
 import axios from 'axios';
+import { AddCurrentLocation } from '../../../redux/actions/userActions';
+import { useNavigation } from '@react-navigation/native';
 
 const MapComponent = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -29,6 +31,7 @@ const MapComponent = () => {
   const dispatch  = useDispatch()
   const sheetRef = useRef(null);
   const RequestFindDriver = useSelector(state=>state?.ReqestFindDriver)
+  const navigation = useNavigation()
 
   const bins = useSelector(state=>state?.fetchBins?.fetchBins)
   useEffect(() => {
@@ -129,6 +132,13 @@ const MapComponent = () => {
         //   position,
         // );
         setCurrentLocation(position.coords);
+        // console.log("position.coor", position.coords)
+        dispatch(AddCurrentLocation({
+          address:{
+            latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+          }
+        }, navigation))
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -151,7 +161,7 @@ const fetchData = async () => {
   }
 
   if (requestCount >= MAX_REQUESTS_PER_HOUR) {
-    console.log("Request limit exceeded for the hour. Please try again later.");
+    // console.log("Request limit exceeded for the hour. Please try again later.");
     return;
   }
 
