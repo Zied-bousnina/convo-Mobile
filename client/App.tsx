@@ -224,7 +224,7 @@ function App(): JSX.Element {
       {/* {!isConnected && <OTPVerified/>} */}
 
       <NavigationContainer>
-      {user.isConnected ? (
+      {user.isConnected && user.isDriver ? (
        <Drawer.Navigator
        screenOptions={{
          activeTintColor: '#e91e63',

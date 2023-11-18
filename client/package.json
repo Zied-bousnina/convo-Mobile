@@ -48,6 +48,7 @@
     "react-native-skeleton-placeholder": "^5.2.4",
     "react-native-svg": "^13.14.0",
     "react-native-swipe-list-view": "^3.2.9",
+    "react-native-switch-toggle": "^2.2.1",
     "react-native-switch-toggles": "^1.0.1",
     "react-native-vector-icons": "^10.0.0",
     "react-native-webview": "^13.6.2",

@@ -1,11 +1,11 @@
 import { View, Text, ScrollView, Dimensions } from 'react-native'
-import React, { useEffect, useRef } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 import { Button, Icon } from 'react-native-elements'
 import { ListItem } from '@rneui/themed';
 import { useDispatch } from 'react-redux';
 import { DeleteDEmande } from '../../../redux/actions/demandesActions';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-const ListRequest = (data) => {
+const ListRequest = memo((data, key) => {
     const originalDateString = data?.data?.createdAt;
     const date = new Date(originalDateString);
     const month = date.toLocaleString('default', { month: 'short' });
@@ -15,9 +15,9 @@ const ListRequest = (data) => {
     const sheetRef = useRef(null);
     const actionDelete = () => {
       dispatch(DeleteDEmande(data?.data?._id))
-    };
+    }
 
-
+console.log(key)
     return (
         <>
 
@@ -64,7 +64,7 @@ const ListRequest = (data) => {
 
         </>
     );
-  };
+  })
 
 
 export default ListRequest

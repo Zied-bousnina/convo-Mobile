@@ -5,17 +5,15 @@ import { SET_ERRORS, SET_USER, SET_LOADING } from "../types"
 const initialState = {
     isConnected: false,
     isLoading: false,
-   
-    isAdmin: false,
-    isMunicipal: false,
-    isUser: false,
+    isDriver: false,
     isVerified: false,
-    isPrivateCompany: false,
+    driverIsVerified:false,
+
     ifBlocked:true,
     user: {},
-    request: {}
-    
-    
+
+
+
 }
 
 export default function(state = initialState, action) {
@@ -26,14 +24,15 @@ export default function(state = initialState, action) {
                 isConnected: !isEmpty(action.payload),
                 user: action.payload,
                 isLoading: isEmpty(action.payload),
-                isAdmin: action.payload?.role === "ADMIN",
-                isMunicipal: action.payload?.role === "MUNICIPAL",
-                isUser: action.payload?.role === "USER",
-                isPrivateCompany: action.payload?.role === "PRIVATE_COMPANY",
+                driverIsVerified:action.payload.driverIsVerified,
+
+
+                isDriver: action.payload?.role === "DRIVER",
+
                 isVerified: action.payload?.verified,
 
             }
-        
+
         default:
             return state
     }

@@ -22,6 +22,7 @@ import FindDriverReducer from './FindDriverReducer';
 import ModeDriverPassengerReducer from './ModeDriverPassengerReducer';
 import DemandeDriverRedicers from './DemandeDriver.redicers';
 import BasicInfoReducers from './BasicInfoReducers';
+import userReducers from './userReducers';
 
 
 export default  combineReducers({
@@ -47,6 +48,7 @@ export default  combineReducers({
     DriverMode : ModeDriverPassengerReducer,
     DemandeDriver : DemandeDriverRedicers,
     BasicInfo : BasicInfoReducers,
+    currentUser : userReducers,
 
 
 

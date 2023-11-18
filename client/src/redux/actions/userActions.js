@@ -1,5 +1,5 @@
 import axios from "axios"
-import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_ERRORS, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
+import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_ERRORS, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
 import { setLoading } from "./authActions"
 
 export const GetCurrentAccessList =  () => (dispatch) => {
@@ -356,6 +356,28 @@ dispatch({
       type:SET_IS_SECCESS,
       payload:false
     })
+    }
+
+      )
+}
+
+export const getUsersById =() => (dispatch)=>{
+  axios.get(`https://convoyage.onrender.com/api/users/getUsersById`)
+      .then(async(res) => {
+        // console.log("ligne 9",res.data.user)
+
+        dispatch({
+          type: SET_CURRENT_USER,
+          payload: res.data?.user
+        })
+      })
+      .catch( (err) =>{
+        // console.log(err)
+      // dispatch({
+      //   type: SET_PROFILES,
+      //   payload: res.data
+
+      // })
     }
 
       )
