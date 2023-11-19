@@ -15,34 +15,69 @@ import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
 import {StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import { useCallback } from 'react';
+import PushNotification from "react-native-push-notification";
+import { formatDistanceToNow } from 'date-fns';
+
+
 const RideRequests = () => {
-  const user = useSelector(state => state?.currentUser?.user);
-  const missions = useSelector(state => state?.missions?.missions);
-  const [isEnabled, setIsEnabled] = useState(user?.driverIsVerified);
+  const [on, Off] = useState(false);
+  const user = useSelector(({ currentUser }) => currentUser?.user);
+  const missions = useSelector(({ missions }) => missions?.missions);
+  const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
   const [selectedItem, setselectedItem] = useState({});
+  const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
   const sheetRef = useRef(null);
   const navigation = useNavigation();
-  const [on, Off] = useState(false);
   const dispatch = useDispatch();
+  const sendNotification = (mission) => {
+    // console.log("New Mission:", mission);
+
+    PushNotification.localNotification({
+      channelId: "channel-id", // (required)
+      // channelName: "My channel", // (required)
+      title: "New Mission",
+      message: `A new mission is in progress\nDistance: ${parseInt(missions[missions?.length-1]?.distance)}KM \nDate Depart: ${missions[missions?.length-1]?.dateDepart ? missions[missions?.length-1]?.dateDepart.toString() : ''}\nDriver Auto: ${missions[missions?.length-1]?.driverIsAuto ? 'Yes' : 'No'}`,
+      allowWhileIdle: false,
+      // channelDescription: "A channel to categorize your notifications", // (optional) default: undefined.
+      // playSound: false, // (optional) default: true
+      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+      // importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+    });
+  };
+  useEffect(() => {
+    if(
+      missions?.length != cuuerentLength
+    ){
+      setcuuerentLength(missions?.length)
+      sendNotification()
+    }
+    },[missions, cuuerentLength])
+
+
+
+
+  const enable = useCallback(() => {
+    if (user?.onligne) {
+      setIsEnabled(true);
+    }
+  }, [user?.onligne]);
+
 
   useEffect(() => {
     dispatch(getUsersById());
     dispatch(GetMissions());
-    if (user?.onligne) {
-      Off(true);
-      setIsEnabled(true);
-    }
-  }, [dispatch, missions, user]);
+    enable();
+    // sendNotification()
+  }, [dispatch, missions, user, enable]);
 
-  // console.log("'''''''''''''''''''''''",missions)
-
-  const changestatus = value => {
-    if (!user.driverIsVerified) {
-      ToastAndroid.CENTER;
+  const changestatus = useCallback((value) => {
+    if (!user?.driverIsVerified) {
       ToastAndroid.showWithGravity(
         'You are not verified yet',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER
       );
       setIsEnabled(false);
       navigation.navigate('OnlineRegistrationPage');
@@ -54,11 +89,9 @@ const RideRequests = () => {
     dispatch(
       ChangeStatus({
         onligne: !isEnabled,
-      }),
+      })
     );
-    // console.log(!isEnabled)
-  };
-
+  }, [dispatch, isEnabled, navigation, user?.driverIsVerified]);
   return (
     <>
       <View
@@ -215,7 +248,11 @@ const RideRequests = () => {
       <BottomSheet
         ref={sheetRef}
         height={Dimensions.get('screen').height * 0.48}
-        closeOnDragDown={true}>
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        closeOnPressBack={true}
+
+        >
         <View style={styles.contentView}>
           <View style={styles.buttonsContainer}>
             <Button

@@ -19,6 +19,7 @@ import {
   Text,
   useColorScheme,
   View,
+  Platform
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { useEffect } from 'react';
@@ -82,7 +83,7 @@ import VehicleInfo from './src/screens/DashboardScreens/Registartion/VehicleInfo
 import NumberPlate from './src/screens/DashboardScreens/Registartion/Vehicule Info/NumberPlate';
 import PhotoVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/PhotoVehicle';
 import CertificateVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/CertificateVehicle';
-import { FindRequestDemande } from './src/redux/actions/demandesActions';
+import { FindRequestDemande, GetMissions } from './src/redux/actions/demandesActions';
 import RideDetails from './src/screens/DashboardScreens/Components/RideDetails';
 import { findBasicInfoByUserId } from './src/redux/actions/userActions';
 const Stack = createNativeStackNavigator();
@@ -90,7 +91,9 @@ const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
 
-
+// import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import PushNotification from "react-native-push-notification";
+import { Pressable } from 'react-native';
 function FirstScreenStack() {
   return (
 
@@ -104,13 +107,98 @@ function FirstScreenStack() {
 
 
 function App(): JSX.Element {
+  PushNotification.configure({
+    // (optional) Called when Token is generated (iOS and Android)
+    onRegister: function (token) {
+      console.log("TOKEN:", token);
+    },
 
+    // (required) Called when a remote is received or opened, or local notification is opened
+    onNotification: function (notification) {
+      console.log("NOTIFICATION:", notification);
+
+      // process the notification
+
+      // (required) Called when a remote is received or opened, or local notification is opened
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
+    },
+
+    // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+    onAction: function (notification) {
+      console.log("ACTION:", notification.action);
+      console.log("NOTIFICATION:", notification);
+
+      // process the action
+    },
+
+    // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+    onRegistrationError: function(err) {
+      console.error(err.message, err);
+    },
+
+    // IOS ONLY (optional): default: all - Permissions to register.
+    permissions: {
+      alert: true,
+      badge: true,
+      sound: true,
+    },
+
+    // Should the initial notification be popped automatically
+    // default: true
+    popInitialNotification: true,
+
+    /**
+     * (optional) default: true
+     * - Specified if permissions (ios) and token (android and ios) will requested or not,
+     * - if not, you must call PushNotificationsHandler.requestPermissions() later
+     * - if you are not using remote notification or do not have Firebase installed, use this:
+     *     requestPermissions: Platform.OS === 'ios'
+     */
+    requestPermissions: true,
+    requestPermissions: Platform.OS === 'ios'
+  });
+  const missions = useSelector(({ missions }) => missions?.missions);
+  const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
+  const [selectedItem, setselectedItem] = useState({});
+  const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
   const [isConnected, setIsConnected] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const user = useSelector(state => state?.auth);
   const profile = useSelector(state => state?.profile);
   const request = useSelector(state => state?.request?.requestIsEmpty);
   const isDriver = useSelector(state => state?.DriverMode);
+
+  const sendNotification = (mission) => {
+    // console.log("New Mission:", mission);
+
+    PushNotification.localNotification({
+      channelId: "channel-id", // (required)
+      // channelName: "My channel", // (required)
+      title: "New Mission",
+      message: `A new mission is in progress\nDistance: ${parseInt(missions[missions?.length-1]?.distance)}KM \nDate Depart: ${missions[missions?.length-1]?.dateDepart ? missions[missions?.length-1]?.dateDepart.toString() : ''}\nDriver Auto: ${missions[missions?.length-1]?.driverIsAuto ? 'Yes' : 'No'}
+
+
+      `,
+
+
+      // channelDescription: "A channel to categorize your notifications", // (optional) default: undefined.
+      playSound: true, // (optional) default: true
+      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+      // importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      allowWhileIdle: true
+    });
+  };
+  useEffect(() => {
+    if(
+      missions?.length != cuuerentLength && user.isConnected
+    ){
+      setcuuerentLength(missions?.length)
+      sendNotification()
+    }
+    },[missions, cuuerentLength])
+
+
   console.log(isDriver)
   // const state = useSelector(state=>state?.DriverMode)
   // console.log(state)
@@ -145,6 +233,9 @@ function App(): JSX.Element {
   }, []);
 
   useEffect(() => {
+        store.dispatch(GetMissions());
+  }, [missions,cuuerentLength])
+  useEffect(() => {
     AsyncStorage.getItem('jwtToken')
     .then(value => {
       if (value) {
@@ -154,6 +245,7 @@ function App(): JSX.Element {
         // store.dispatch(GetRequest());
         store.dispatch(setCurrentUser(decode));
         store.dispatch(findBasicInfoByUserId());
+        store.dispatch(GetMissions());
         // store.dispatch(GetProfile());
 
           // store.dispatch(FindRequestDemande())
@@ -219,6 +311,7 @@ function App(): JSX.Element {
 
   return (
     <SafeAreaProvider>
+
     <>
       {!isConnected && <InternetDisconnected />}
       {/* {!isConnected && <OTPVerified/>} */}
