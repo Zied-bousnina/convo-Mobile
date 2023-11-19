@@ -23,6 +23,7 @@ import ModeDriverPassengerReducer from './ModeDriverPassengerReducer';
 import DemandeDriverRedicers from './DemandeDriver.redicers';
 import BasicInfoReducers from './BasicInfoReducers';
 import userReducers from './userReducers';
+import MissionsReducers from './Missions.reducers';
 
 
 export default  combineReducers({
@@ -49,6 +50,7 @@ export default  combineReducers({
     DemandeDriver : DemandeDriverRedicers,
     BasicInfo : BasicInfoReducers,
     currentUser : userReducers,
+    missions : MissionsReducers,
 
 
 
