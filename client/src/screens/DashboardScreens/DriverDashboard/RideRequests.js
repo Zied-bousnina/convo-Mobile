@@ -50,7 +50,11 @@ const RideRequests = () => {
     if(
       missions?.length != cuuerentLength
     ){
-      setcuuerentLength(missions?.length)
+      setcuuerentLength(
+        prev=>{
+          return missions?.length
+        }
+      )
       sendNotification()
     }
     },[missions, cuuerentLength])
@@ -60,12 +64,17 @@ const RideRequests = () => {
 
   const enable = useCallback(() => {
     if (user?.onligne) {
-      setIsEnabled(true);
+      setIsEnabled(
+        prev => {
+          return true
+        }
+      );
     }
   }, [user?.onligne]);
 
 
   useEffect(() => {
+    console.log("render")
     dispatch(getUsersById());
     dispatch(GetMissions());
     enable();

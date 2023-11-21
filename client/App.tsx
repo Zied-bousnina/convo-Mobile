@@ -1,65 +1,34 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-import 'react-native-gesture-handler';
 
+import 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useCallback } from 'react';
-import type {PropsWithChildren} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
-  View,
   Platform
 } from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 import LogInScreen from './src/screens/AuthScreens/LoginScreen';
-import InternetDisconnected from './src/components/Animations/InternetDisconnected';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-import { save } from './src/Storage';
+
 import SignUpScreen from './src/screens/AuthScreens/SignUpScreen';
 import VerifyEmailScreen from './src/screens/AuthScreens/VerifyEmailScreen';
 import { LogBox } from 'react-native';
 import ForgotPasswordScreen from './src/screens/AuthScreens/ForgotPasswordScreen';
-import UserDashboardScreen from './src/screens/DashboardScreens/UserDashboardScreen';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from 'jwt-decode';
-
 import { LogOut, setCurrentUser } from './src/redux/actions/authActions';
 import { SetAuthToken } from './src/utils/SetAuthToken';
 import store from './src/redux/store/store';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import SecondPage from './src/screens/DashboardScreens/SideBarComponents/SecondPage';
-import FirstPage from './src/screens/DashboardScreens/SideBarComponents/FirstPage';
-import ThirdPage from './src/screens/DashboardScreens/SideBarComponents/ThirdPage';
 import CustomSidebarMenu from './src/screens/DashboardScreens/CustomSidebarMenu';
 import ProfileSettings from './src/screens/DashboardScreens/ProfileSettings';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import Icon5 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon6 from 'react-native-vector-icons/Feather';
-import CityScreen from './src/screens/DashboardScreens/CityScreen';
 import RequestHistory from './src/screens/DashboardScreens/RequestHistory';
 import SafetyScreen from './src/screens/DashboardScreens/SafetyScreen';
 import SettingsScreen from './src/screens/DashboardScreens/SettingsScreen';
@@ -83,50 +52,37 @@ import VehicleInfo from './src/screens/DashboardScreens/Registartion/VehicleInfo
 import NumberPlate from './src/screens/DashboardScreens/Registartion/Vehicule Info/NumberPlate';
 import PhotoVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/PhotoVehicle';
 import CertificateVehicle from './src/screens/DashboardScreens/Registartion/Vehicule Info/CertificateVehicle';
-import { FindRequestDemande, GetMissions } from './src/redux/actions/demandesActions';
+import {  GetMissions } from './src/redux/actions/demandesActions';
 import RideDetails from './src/screens/DashboardScreens/Components/RideDetails';
 import { findBasicInfoByUserId } from './src/redux/actions/userActions';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
-
-// import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
-import { Pressable } from 'react-native';
-function FirstScreenStack() {
-  return (
-
-    <Stack.Navigator
-      initialRouteName="FirstPage"
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen name="FirstPage" component={UserDashboardScreen} />
-    </Stack.Navigator>
-  );
-}
-
-
+import { useColorScheme } from 'react-native';
+import { get, save } from './src/Storage';
 function App(): JSX.Element {
   PushNotification.configure({
     // (optional) Called when Token is generated (iOS and Android)
     onRegister: function (token) {
-      console.log("TOKEN:", token);
+      // console.log("TOKEN:", token);
     },
 
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
-      console.log("NOTIFICATION:", notification);
+      // console.log("NOTIFICATION:", notification);
 
       // process the notification
 
       // (required) Called when a remote is received or opened, or local notification is opened
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
+      // notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
 
     // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
     onAction: function (notification) {
-      console.log("ACTION:", notification.action);
-      console.log("NOTIFICATION:", notification);
+      // console.log("ACTION:", notification.action);
+      // console.log("NOTIFICATION:", notification);
 
       // process the action
     },
@@ -158,34 +114,17 @@ function App(): JSX.Element {
     requestPermissions: Platform.OS === 'ios'
   });
   const missions = useSelector(({ missions }) => missions?.missions);
-  const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
-  const [selectedItem, setselectedItem] = useState({});
   const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
-  const [isConnected, setIsConnected] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
   const user = useSelector(state => state?.auth);
-  const profile = useSelector(state => state?.profile);
-  const request = useSelector(state => state?.request?.requestIsEmpty);
-  const isDriver = useSelector(state => state?.DriverMode);
-
   const sendNotification = (mission) => {
-    // console.log("New Mission:", mission);
-
     PushNotification.localNotification({
       channelId: "channel-id", // (required)
       // channelName: "My channel", // (required)
       title: "New Mission",
-      message: `A new mission is in progress\nDistance: ${parseInt(missions[missions?.length-1]?.distance)}KM \nDate Depart: ${missions[missions?.length-1]?.dateDepart ? missions[missions?.length-1]?.dateDepart.toString() : ''}\nDriver Auto: ${missions[missions?.length-1]?.driverIsAuto ? 'Yes' : 'No'}
-
-
-      `,
-
-
-      // channelDescription: "A channel to categorize your notifications", // (optional) default: undefined.
+      message: `A new mission is in progress\nDistance: ${parseInt(missions[missions?.length-1]?.distance)}KM \nDate Depart: ${missions[missions?.length-1]?.dateDepart ? missions[missions?.length-1]?.dateDepart.toString() : ''}\nDriver Auto: ${missions[missions?.length-1]?.driverIsAuto ? 'Yes' : 'No'}`,
       playSound: true, // (optional) default: true
-      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-      // importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      soundName: "default",
+      vibrate: true,
       allowWhileIdle: true
     });
   };
@@ -197,12 +136,26 @@ function App(): JSX.Element {
       sendNotification()
     }
     },[missions, cuuerentLength])
-
-
-  console.log(isDriver)
-  // const state = useSelector(state=>state?.DriverMode)
-  // console.log(state)
-
+  useEffect(() => {
+    AsyncStorage.getItem('jwtToken')
+    .then(value => {
+      if (value) {
+        const decode = jwt_decode(value);
+        store.dispatch(setCurrentUser(decode));
+        store.dispatch(findBasicInfoByUserId());
+        store.dispatch(GetMissions());
+        SetAuthToken(value); // Corrected typo here
+      }
+    })
+    .catch(err => {
+    });
+    const activeExpires = new Date(user?.user?.iat);
+    const currentDate = new Date();
+    if (currentDate > activeExpires) {
+      AsyncStorage.removeItem('jwtToken');
+      store.dispatch(LogOut())
+    }
+  }, [])
   // -------------theme----------------------------
   const appearance = useColorScheme();
   const setAppTheme = useCallback(async () => {
@@ -221,99 +174,11 @@ function App(): JSX.Element {
   }, [setAppTheme]);
 
   // -------------theme----------------------------
-
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsConnected(state.isConnected);
-      setShowMessage(true);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-        store.dispatch(GetMissions());
-  }, [missions,cuuerentLength])
-  useEffect(() => {
-    AsyncStorage.getItem('jwtToken')
-    .then(value => {
-      if (value) {
-        const decode = jwt_decode(value);
-        // console.log("ligne 96:******************************************",value)
-        // console.log(decode);
-        // store.dispatch(GetRequest());
-        store.dispatch(setCurrentUser(decode));
-        store.dispatch(findBasicInfoByUserId());
-        store.dispatch(GetMissions());
-        // store.dispatch(GetProfile());
-
-          // store.dispatch(FindRequestDemande())
-
-
-        // store.dispatch(GetCurrentAccess())
-        SetAuthToken(value); // Corrected typo here
-      }
-    })
-    .catch(err => {
-      // console.log(err);
-    });
-  }, [])
-
-  useEffect(() => {
-
-    AsyncStorage.getItem('jwtToken')
-      .then(value => {
-        if (value) {
-          const decode = jwt_decode(value);
-          // console.log("ligne 107:******************************************",value)
-          // console.log(decode);
-          store.dispatch(setCurrentUser(decode));
-
-          // store.dispatch(GetProfile());
-          // store.dispatch(GetRequest());
-          // store.dispatch(CreateScore());
-          SetAuthToken(value); // Corrected typo here
-        }
-      })
-      .catch(err => {
-        // console.log(err);
-      });
-
-    const activeExpires = new Date(user?.user?.iat);
-    const currentDate = new Date();
-    // console.log(`activeExpires-----------------------------------------------------------------------------------`,
-    //  activeExpires < currentDate);
-    if (currentDate > activeExpires) {
-      AsyncStorage.removeItem('jwtToken');
-      store.dispatch(LogOut())
-      // store.dispatch(setCurrentUser({}));
-    }
-  }, []);
-
-// console.log("is user", user)
-  useEffect(() => {
-    if (showMessage) {
-      setTimeout(() => {
-        setShowMessage(false);
-      }, 1000); // Delay for 1 second
-    }
-  }, [showMessage]);
-
-  const backgroundStyle = {
-    // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-  // console.log('(((((((((((((((((((((((((((((((((((',user)
-
-  if (!isConnected) {
-    return <InternetDisconnected />;
-  }
-
   return (
     <SafeAreaProvider>
 
     <>
-      {!isConnected && <InternetDisconnected />}
+      {/* {!isConnected && <InternetDisconnected />} */}
       {/* {!isConnected && <OTPVerified/>} */}
 
       <NavigationContainer>
@@ -346,6 +211,7 @@ function App(): JSX.Element {
        <Drawer.Screen
          name="CityPage"
          options={{drawerLabel: 'City', title: 'City',
+
          drawerIcon: ({ focused, size }) => (
           <Icon2
               name="car-side"
@@ -354,7 +220,7 @@ function App(): JSX.Element {
           />
       ),
         }}
-         component={CityScreen}
+         component={Dashboard}
        />
 
           <Drawer.Screen
