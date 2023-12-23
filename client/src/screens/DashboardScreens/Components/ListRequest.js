@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { View, Text, ScrollView, Dimensions } from 'react-native'
 import React, { memo, useEffect, useRef } from 'react'
 import { Button, Icon } from 'react-native-elements'
@@ -5,6 +6,7 @@ import { ListItem } from '@rneui/themed';
 import { useDispatch } from 'react-redux';
 import { DeleteDEmande } from '../../../redux/actions/demandesActions';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import { uniqueId } from "lodash";
 const ListRequest = memo((data, key) => {
     const originalDateString = data?.data?.createdAt;
     const date = new Date(originalDateString);
@@ -23,8 +25,8 @@ const ListRequest = memo((data, key) => {
 
 
         <ListItem.Swipeable
-        // onPress={()=>{onPress}}
-          key={data?.data?._id}
+        onPress={()=>{console.log(data?.data?._id)}}
+          key={uniqueId}
           leftWidth={80}
           rightWidth={90}
           minSlideWidth={40}
@@ -39,6 +41,7 @@ const ListRequest = memo((data, key) => {
               icon={{ name: "delete-outline" }}
               onPress={()=>{
                 actionDelete()
+// eslint-disable-next-line prettier/prettier
 
               }}
             />

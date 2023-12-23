@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {View, ActivityIndicator, ToastAndroid, Pressable} from 'react-native';
+import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList} from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
@@ -18,46 +18,19 @@ import {ScrollView} from 'react-native-gesture-handler';
 import { useCallback } from 'react';
 import PushNotification from "react-native-push-notification";
 import { formatDistanceToNow } from 'date-fns';
-
-
+import { uniqueId } from "lodash";
+import { FlashList } from "@shopify/flash-list";
+// import { FlatList } from "react-native-bidirectional-infinite-scroll";
 const RideRequests = () => {
-  const [on, Off] = useState(false);
+
   const user = useSelector(({ currentUser }) => currentUser?.user);
-  const missions = useSelector(({ missions }) => missions?.missions);
+
   const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
   const [selectedItem, setselectedItem] = useState({});
-  const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
+
   const sheetRef = useRef(null);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const sendNotification = (mission) => {
-    // console.log("New Mission:", mission);
-
-    PushNotification.localNotification({
-      channelId: "channel-id", // (required)
-      // channelName: "My channel", // (required)
-      title: "New Mission",
-      message: `A new mission is in progress\nDistance: ${parseInt(missions[missions?.length-1]?.distance)}KM \nDate Depart: ${missions[missions?.length-1]?.dateDepart ? missions[missions?.length-1]?.dateDepart.toString() : ''}\nDriver Auto: ${missions[missions?.length-1]?.driverIsAuto ? 'Yes' : 'No'}`,
-      allowWhileIdle: false,
-      // channelDescription: "A channel to categorize your notifications", // (optional) default: undefined.
-      // playSound: false, // (optional) default: true
-      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-      // importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-    });
-  };
-  useEffect(() => {
-    if(
-      missions?.length != cuuerentLength
-    ){
-      setcuuerentLength(
-        prev=>{
-          return missions?.length
-        }
-      )
-      sendNotification()
-    }
-    },[missions, cuuerentLength])
 
 
 
@@ -74,12 +47,12 @@ const RideRequests = () => {
 
 
   useEffect(() => {
-    console.log("render")
+    // console.log("render")
     dispatch(getUsersById());
-    dispatch(GetMissions());
+
     enable();
     // sendNotification()
-  }, [dispatch, missions, user, enable]);
+  }, [dispatch, user, enable]);
 
   const changestatus = useCallback((value) => {
     if (!user?.driverIsVerified) {
@@ -101,6 +74,75 @@ const RideRequests = () => {
       })
     );
   }, [dispatch, isEnabled, navigation, user?.driverIsVerified]);
+  const PAGE_LIMIT = 5;
+  // const dispatch = useDispatch();
+  const item_list = useSelector((state) => state.missions.missions.items);
+  const isLoading = useSelector((state) => state.missions.isLoading);
+  const page = useSelector((state) => state.missions.missions.page);
+  const count = useSelector((state) => state.missions.missions.count);
+  // console.log(count)
+
+  useEffect(() => {
+    dispatch(
+      GetMissions({
+        page: 0,
+        limit: PAGE_LIMIT,
+        skip: 0 * PAGE_LIMIT,
+      }),
+    );
+  }, [dispatch]);
+
+  const renderItem = useCallback(({ item }) => <ListRequest key={uniqueId()} data={item} />,[])
+
+  const loadItemsStart =async  () => {
+    console.log("load")
+    console.log("load",page)
+    console.log(page * PAGE_LIMIT -PAGE_LIMIT)
+
+    if (page * PAGE_LIMIT >=0  && !isLoading) {
+      dispatch(
+        GetMissions({
+          page: page,
+          limit: PAGE_LIMIT,
+          skip: page * PAGE_LIMIT -PAGE_LIMIT,
+        }),
+      );
+    }
+  };
+  const loadItemsEnd =async  () => {
+    console.log("load")
+    console.log("load",page)
+    console.log(page * PAGE_LIMIT)
+
+    if (page * PAGE_LIMIT < count && !isLoading) {
+      dispatch(
+        GetMissions({
+          page: page,
+          limit: PAGE_LIMIT,
+          skip: page * PAGE_LIMIT,
+        }),
+      );
+    }
+  };
+  const renderLoader = () => {
+    return page * PAGE_LIMIT < count ? (
+
+      <View
+        style={{
+          // flex: 1,
+          // justifyContent: 'center',
+          // alignItems: 'center',
+          marginButtom: 30,
+        }}
+      >
+        <ActivityIndicator size="large" color="red" />
+      </View>
+    ) : null;
+  };
+  const keyExtractor = useCallback((item)=> item._id.toString(),[]);
+  const getItemLayout = (data, index) => (
+    {length: PAGE_LIMIT, offset: PAGE_LIMIT * index, index}
+)
   return (
     <>
       <View
@@ -110,6 +152,7 @@ const RideRequests = () => {
           justifyContent: 'center',
           alignItems: 'center',
           // marginTop:10,
+
         }}>
         <SwitchToggle
           size={60}
@@ -126,6 +169,7 @@ const RideRequests = () => {
           backgroundColorOff="#ffffff"
           containerStyle={{
             marginTop: 16,
+
             width: 200,
             height: 48,
             borderRadius: 25,
@@ -186,7 +230,7 @@ const RideRequests = () => {
           )}
         />
       </View>
-      {missions?.length !=0 ? (
+      {item_list?.length !=0 ? (
         <>
           <View
             style={{
@@ -197,22 +241,66 @@ const RideRequests = () => {
               marginTop: 10,
             }}>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: '#999'}}>
-              You have {missions?.length} missions
+              You have {count} missions
             </Text>
           </View>
-          <ScrollView>
-            {missions ?
-              missions?.map((e, index) => (
-                <Pressable
-                  onPress={() => {
-                    sheetRef.current.open();
-                    console.log(e);
-                    setselectedItem(e);
-                  }}
-                  key={index}>
-                  <ListRequest key={index} data={e} />
-                </Pressable>
-              )):(
+          {/* <ScrollView> */}
+            {item_list &&isEnabled ?
+
+               <FlashList
+              showsVerticalScrollIndicator={true}
+        data={item_list}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        ListFooterComponent={renderLoader}
+        onEndReached={async () => await loadItemsEnd()}
+        getItemLayout={getItemLayout}
+        onEndReachedThreshold={0}
+        // style={{ marginBottom: 50 }}
+        contentContainerStyle={{
+
+          // marginBottom: 50
+        }}
+        maxToRenderPerBatch={5}
+        removeClippedSubviews={true}
+        windowSize={5}
+        initialNumToRender={5}
+        estimatedItemSize={
+          500
+        }
+        // inverted
+
+      />
+
+
+      /* <FlatList
+           data={item_list}
+           inverted
+    renderItem={renderItem}
+    keyExtractor={()=>uniqueId()}
+    onStartReached={async()=>{
+      console.log("start")
+       loadItemsStart() */
+    // }} // required, should return a promise
+    // onEndReached={async()=>{
+
+    //   console.log("end")
+    //     loadItemsEnd()
+    // }
+
+    // } // required, should return a promise
+    // showDefaultLoadingIndicators={true} // optional
+    // onStartReachedThreshold={10} // optional
+    // onEndReachedThreshold={10} // optional
+    // activityIndicatorColor={'black'} // optional
+    // HeaderLoadingIndicator={() => { /** Your loading indicator */ }} // optional
+    // FooterLoadingIndicator={() => { /** Your loading indicator */ }} // optional
+    // enableAutoscrollToTop={false} // optional | default - false
+    // You can use any other prop on react-native's FlatList
+/* /> */
+
+
+              :(
                 <View
           style={{
             flex: 1,
@@ -232,7 +320,7 @@ const RideRequests = () => {
           </Text>
         </View>
               )}
-          </ScrollView>
+          {/* </ScrollView> */}
         </>
       ) : (
         <View
