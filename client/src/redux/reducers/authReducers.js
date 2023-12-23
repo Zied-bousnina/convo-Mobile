@@ -5,7 +5,7 @@ import { SET_ERRORS, SET_USER, SET_LOADING } from "../types"
 const initialState = {
     isConnected: false,
     isLoading: false,
-    isDriver: false,
+    isDriver: true,
     isVerified: false,
     driverIsVerified:false,
 

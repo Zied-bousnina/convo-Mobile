@@ -92,7 +92,7 @@ const RideRequests = () => {
     );
   }, [dispatch]);
 
-  const renderItem = useCallback(({ item }) => <ListRequest key={uniqueId()} data={item} />,[])
+  const renderItem = useCallback(({ item }) => <ListRequest disable key={uniqueId()} data={item} />,[])
 
   const loadItemsStart =async  () => {
     console.log("load")

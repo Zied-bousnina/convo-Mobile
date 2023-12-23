@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 
 import 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -62,6 +63,7 @@ LogBox.ignoreAllLogs();//Ignore all log notifications
 import PushNotification from "react-native-push-notification";
 import { useColorScheme } from 'react-native';
 import { get, save } from './src/Storage';
+import MissionDetails from './src/screens/DashboardScreens/DriverDashboard/MissionDetails';
 function App(): JSX.Element {
   PushNotification.configure({
     // (optional) Called when Token is generated (iOS and Android)
@@ -208,6 +210,16 @@ function App(): JSX.Element {
         }}
          component={FirstScreenStack}
        /> */}
+        <Drawer.Screen
+      name="Driver"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={Dashboard}
+    />
        <Drawer.Screen
          name="CityPage"
          options={{drawerLabel: 'City', title: 'City',
@@ -356,15 +368,16 @@ function App(): JSX.Element {
       component={FindDriverScreen}
     />
     <Drawer.Screen
-      name="Driver"
+      name="MissionDetails"
 
       options={{
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
       }}
-      component={Dashboard}
+      component={MissionDetails}
     />
+
     <Drawer.Screen
       name="Registration"
 

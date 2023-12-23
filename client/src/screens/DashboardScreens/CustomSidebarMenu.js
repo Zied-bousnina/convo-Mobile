@@ -1,59 +1,27 @@
+/* eslint-disable prettier/prettier */
 // Custom Navigation Drawer / Sidebar with Image and Icon in Menu Options
 // https://aboutreact.com/custom-navigation-drawer-sidebar-with-image-and-icon-in-menu-options/
 
-import React, { useEffect, useState } from 'react';
-import { Button, ThemeProvider } from 'react-native-elements';
+import React from 'react';
 import {
   SafeAreaView,
   View,
   StyleSheet,
-  Image,
   Text,
-  Linking,
-  Pressable,
 } from 'react-native';
 import Fonts from '../../../src/assets/fonts';
 import {
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem,
 } from '@react-navigation/drawer';
 import ProfileSection from './Components/ProfileSection';
-import LoginButton from '../../components/Buttons/LoginButton';
-import ButtonCustom from '../../components/Buttons/ButtonCustom';
 import { SocialIcon } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { SET_IS_DRIVER_MODE } from '../../redux/types';
-
-import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon5 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon6 from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native';
-import { FindRequestDemande } from '../../redux/actions/demandesActions';
 const CustomSidebarMenu = (props) => {
-  const [isDriverMode, setIsDriverMode] = useState(false);
   const navigation = useNavigation()
-  const dispatch = useDispatch()
-
-
-  const toggleMode = () => {
-    dispatch(
-      {
-        type: SET_IS_DRIVER_MODE,
-        payload: !isDriverMode
-      }
-
-    )
-    setIsDriverMode(!isDriverMode);
-    navigation.navigate(isDriverMode? "CityPage": "Driver")
-  };
-  const state = useSelector(state=>state?.DriverMode)
-  // console.log("sate", state)
-  const BASE_PATH =
-    'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';
-  const proileImage = 'react_logo.png';
-
   return (
     <SafeAreaView style={{flex: 1}}>
       {/*Top Large Image */}
@@ -78,8 +46,6 @@ const CustomSidebarMenu = (props) => {
 
 
 
-          {
-            isDriverMode? (
               <>
 
               <TouchableOpacity
@@ -108,36 +74,16 @@ const CustomSidebarMenu = (props) => {
 </TouchableOpacity>
 
               </>
-              ) :(
-                <TouchableOpacity
-            onPress={()=>{
-              dispatch(FindRequestDemande(navigation))
-              navigation.navigate("RequestHistoryPage")
 
-            }}
-             style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-  <Icon3
-    name="clockcircleo"
-    size={20}
-    color={ 'black' }
-  />
-  <Text style={{ marginLeft: 10, fontSize: 16, color: 'black'  }}>
-    Request History
-  </Text>
-</TouchableOpacity>
-
-
-)
-          }
           </View>
 
       <View style={styles.loginCon}>
-            <ButtonCustom
+            {/* <ButtonCustom
               style={styles.LoginBtn}
               loginBtnLbl={styles.loginBtnLbl}
               btnName={isDriverMode ? "Passenger Mode" : "Driver Mode"}
           onPress={toggleMode}
-              />
+              /> */}
 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
 <SocialIcon
   type='facebook'

@@ -11,7 +11,7 @@ console.disableYellowBox = true;
 
 const RNRedux = () => (
     // <AntdProvider>
-    
+
 
       <Provider store = { store }>
         <App />
