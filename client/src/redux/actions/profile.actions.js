@@ -11,8 +11,7 @@ import { CreateScore } from "./scoreAction";
 
 
 export const AddProfile =  (userData, navigation ) => (dispatch) => {
-  // console.log(userData)
-  // const [token, settoken] = useState('')
+
   dispatch({
     type:SET_IS_LOADING,
     payload:true
@@ -22,7 +21,7 @@ export const AddProfile =  (userData, navigation ) => (dispatch) => {
       // settoken(value)
     }
   }).catch((err) => {
-    // console.log("errrrrrrrrrrrr",err);
+
   });
   axios.post(`https://xgenboxv2.onrender.com/api/profile/upload-profile`, userData, {
     headers: {
@@ -33,14 +32,14 @@ export const AddProfile =  (userData, navigation ) => (dispatch) => {
 
   })
       .then(async(res) => {
-        //////////////////////////////////////////console.log(res)
+
 
         dispatch(CreateScore())
-        
+
         dispatch({
           type: SET_PROFILES,
           payload: res.data
-          
+
         })
         dispatch(
           setLoading(true)
@@ -53,11 +52,11 @@ export const AddProfile =  (userData, navigation ) => (dispatch) => {
           dispatch(
             setLoading(false)
           )
-          
+
         }, 3000);
       })
       .catch( (err) =>{
-        console.log("errrrrrrrrrrrrrrrrrr",err)
+
         dispatch({
           type: SET_ERRORS,
           payload: err?.response?.data
@@ -70,37 +69,32 @@ export const AddProfile =  (userData, navigation ) => (dispatch) => {
           dispatch(
             setLoading(false)
           )
-          
+
         }, 3000);
       }
-         
-      ) 
+
+      )
 }
 
 export const GetProfile =  () => (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/profile`)
       .then(async(res) => {
-        // console.log(res.data)
+
         dispatch({
           type: SET_PROFILES,
           payload: res.data
-          
+
         })
       })
       .catch( (err) =>{
-        // console.log(err)
-      // dispatch({
-      //   type: SET_PROFILES,
-      //   payload: res.data
-        
-      // })
+
     }
-         
+
       )
 }
 
 export const EditProfile1 =  (userData, navigation ) => (dispatch) => {
-  console.log(userData)
+
   // const [token, settoken] = useState('')
   dispatch({
     type:SET_IS_LOADING,
@@ -111,7 +105,7 @@ export const EditProfile1 =  (userData, navigation ) => (dispatch) => {
       // settoken(value)
     }
   }).catch((err) => {
-    // console.log("errrrrrrrrrrrr",err);
+
   });
   axios.put(`https://xgenboxv2.onrender.com/api/profile/EditProfile`, userData, {
     headers: {
@@ -122,14 +116,14 @@ export const EditProfile1 =  (userData, navigation ) => (dispatch) => {
 
   })
       .then(async(res) => {
-        console.log(res)
+
 
         dispatch(CreateScore())
-        
+
         dispatch({
           type: SET_PROFILES,
           payload: res.data
-          
+
         })
         dispatch(
           setLoading(true)
@@ -142,11 +136,11 @@ export const EditProfile1 =  (userData, navigation ) => (dispatch) => {
           dispatch(
             setLoading(false)
           )
-          
+
         }, 3000);
       })
       .catch( (err) =>{
-        console.log("errrrrrrrrrrrrrrrrrr",err)
+
         dispatch({
           type: SET_ERRORS,
           payload: err?.response?.data
@@ -159,9 +153,9 @@ export const EditProfile1 =  (userData, navigation ) => (dispatch) => {
           dispatch(
             setLoading(false)
           )
-          
+
         }, 3000);
       }
-         
-      ) 
+
+      )
 }

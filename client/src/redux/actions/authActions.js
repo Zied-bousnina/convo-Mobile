@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import axios from 'axios'
 import { SET_CURRENT_ACCESS, SET_EMAIL_SENT, SET_ERRORS, SET_IS_LOADING, SET_IS_SECCESS, SET_LOADING, SET_NOT_SUCCESS, SET_PROFILES, SET_REQUEST, SET_USER, SET_VALID, SET_VERIFIED, SET_mail_SENT } from '../types'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,7 +13,7 @@ import { GetCurrentAccess } from './accessAction';
 
 
 export const registerUser =  (userData, navigation ) => (dispatch) => {
-    // console.log(userData.role)
+
 
     dispatch({
         type: SET_ERRORS,
@@ -151,7 +152,7 @@ export const verifyEmail = (userData, navigation)=>(dispatch)=> {
                 payload: {}
             })
         }).catch(async (err) => {
-            // console.log("No", err)
+
 
             dispatch({
                 type:SET_IS_LOADING,
@@ -202,7 +203,7 @@ export const deleteaccount = (userData, navigation)=>(dispatch)=> {
                 type: SET_EMAIL_SENT,
                 payload: true
             });
-            // console.log("yes", res)
+
 
             dispatch( {
                 type: SET_USER,
@@ -232,7 +233,7 @@ export const deleteaccount = (userData, navigation)=>(dispatch)=> {
 
 
         .catch(async (err) => {
-            // console.log("No", err)
+
 
 
             setTimeout(() => {
@@ -301,7 +302,7 @@ export const resendOtp = (email)=>dispatch=> {
 
         })
         .catch(async (err) => {
-            // console.log(err)
+
             dispatch({
                 type:SET_IS_LOADING,
                 payload:false
@@ -332,7 +333,7 @@ export const resendOtp = (email)=>dispatch=> {
 export const resendOTPDeleteAccount = (email)=>dispatch=> {
     axios.post(`https://xgenboxv2.onrender.com/api/users/resendOTPDeleteAccount`, email)
     .then(async(res) => {
-        // console.log(res)
+
             dispatch({
                 type: SET_EMAIL_SENT,
                 payload: true
@@ -355,7 +356,7 @@ export const resendOTPDeleteAccount = (email)=>dispatch=> {
 
         })
         .catch(async (err) => {
-            // console.log(err)
+
             setTimeout(() => {
                 dispatch({
                     type: SET_ERRORS,
@@ -371,8 +372,7 @@ export const resendOTPDeleteAccount = (email)=>dispatch=> {
 }
 
 export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
-    // console.log(userData)
-    // const [token, settoken] = useState('')
+
     dispatch({
         type:SET_IS_LOADING,
         payload:true
@@ -382,7 +382,7 @@ export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
         // settoken(value)
       }
     }).catch((err) => {
-    //   console.log(err);
+
     });
     axios.post(`https://xgenboxv2.onrender.com/api/demande-municipal`, userData, {
       headers: {
@@ -393,10 +393,7 @@ export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
 
     })
         .then(async(res) => {
-            // console.log("authActions file ligne 308:", res)
-            // dispatch(LogOut())
-            // dispatch(GetRequest())
-            // console.log(res)
+
             dispatch({
                 type:SET_IS_LOADING,
                 payload:false
@@ -414,7 +411,7 @@ export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
 
         })
         .catch( (err) =>{
-        //   console.log(err)
+
         dispatch(LogOut())
           dispatch({
             type: SET_ERRORS,
@@ -447,9 +444,7 @@ export const setCurrentUser = (decoded) => {
 
 
 export const loginUser = (userData) => dispatch => {
-    // console.log("--------------userData-----------------------------")
-    console.log("--------------------------------------",userData)
-    // console.log("---------------userData----------------------------")
+
     dispatch({
         type: SET_ERRORS,
         payload: []
@@ -465,9 +460,7 @@ export const loginUser = (userData) => dispatch => {
             // Save to localStorage
             const { token } = res.data
             // Set token to localStorage
-            // console.log("--------------userData-----------------------------")
-    // console.log("--------------------------------------",res.data)
-    // console.log("---------------userData----------------------------")
+
             // dispatch(GetRequest())
             // dispatch(GetProfile())
             // dispatch(GetCurrentAccess())
@@ -480,10 +473,11 @@ export const loginUser = (userData) => dispatch => {
             SetAuthToken(token)
             // Decode token to get user data
             const decode = jwt_decode(token)
-        // console.log(decode)
+
             const decoded = jwt_decode(token)
             // Set current user
             dispatch(setCurrentUser(decoded))
+
             dispatch({
                 type: SET_ERRORS,
                 payload: []
@@ -498,7 +492,7 @@ export const loginUser = (userData) => dispatch => {
         })
         .catch(err =>
            {
-            // console.log(err)
+
             dispatch({
                 type: SET_ERRORS,
                 payload: err?.response?.data
@@ -543,15 +537,13 @@ export const LogOut = (navigation)=>dispatch=>{
 export const getUserByEmail = (info,navigation)=>dispatch=>{
     const {idToken,user } = info
     const {email, familyName, givenName, id, photo } = info.user
-    // console.log(photo)
+
 
 const data = {email, name:familyName+' '+givenName,avatar:photo, googleId:id, tokenId:idToken}
-    // console.log(data.email )
-    // email, name, googleId, tokenId
-    // console.log("email", info.user.email)
+
     axios.get(`https://xgenboxv2.onrender.com/api/users/getUserByEmail/${info.user.email}`)
     .then(res => {
-        // console.log(res)
+
         dispatch({
             type: SET_USER,
             payload: res?.data
@@ -564,27 +556,20 @@ const data = {email, name:familyName+' '+givenName,avatar:photo, googleId:id, to
     })
     .catch(err =>
        {
-        // console.log("err in authAction.js line 366",err)
-        // dispatch({
-        //     type: SET_ERRORS,
-        //     payload: err?.response?.data
-        // })
+
         dispatch(registerGoogleUser(data))
     }
     )
 }
 
 export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
-    // console.log("userData", userData)
-    // console.log(userData.name)
     axios.post(`https://xgenboxv2.onrender.com/api/users/registerGoogleUser`, userData)
         .then(async(res) => {
             dispatch({
                 type: SET_ERRORS,
                 payload: {}
             })
-            // console.log(res)
-            // dispatch(loginUser())
+
             AsyncStorage.setItem('jwtToken', res.data.token)
 
 
@@ -592,9 +577,9 @@ export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
             SetAuthToken(res.data.token)
             // Decode token to get user data
             const decode = jwt_decode(res.data.token)
-        // console.log(decode)
+
             const decoded = jwt_decode(res.data.token)
-        // console.log("decoded", decoded)
+
 
             // Set current user
             dispatch(setCurrentUser(decoded))
@@ -618,19 +603,7 @@ export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
 
 
         .catch( (err) =>{
-            // console.log(err)
-        //     AsyncStorage.setItem('jwtToken', token)
 
-
-        //     // Set token to Auth header
-        //     SetAuthToken(token)
-        //     // Decode token to get user data
-        //     const decode = jwt_decode(token)
-        // console.log(decode)
-        // console.log("decoded", decoded)
-        //     const decoded = jwt_decode(token)
-        //     // Set current user
-        //     dispatch(setCurrentUser(decoded))
             dispatch(GetProfile())
                dispatch({
                   type: SET_ERRORS,
@@ -644,7 +617,7 @@ export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
 }
 
 export const forgotPassword = (email)=>dispatch=> {
-    // console.log("-------------------------------------",email)
+
     dispatch({
         type: SET_ERRORS,
         payload: {}
@@ -660,12 +633,12 @@ export const forgotPassword = (email)=>dispatch=> {
     })
     axios.post(`https://convoyage.onrender.com/api/users/forgot-password`, {email})
     .then(async(res) => {
-        // console.log(res)
+
             dispatch({
                 type: SET_EMAIL_SENT,
                 payload: true
             });
-            // dispatch(setLoading(true));
+
             setTimeout(() => {
 
 
@@ -690,8 +663,7 @@ export const forgotPassword = (email)=>dispatch=> {
 
         })
         .catch(async (err) => {
-            // console.log(err)
-            // setTimeout(() => {
+
                 dispatch({
                     type: SET_ERRORS,
                     payload: err?.response?.data

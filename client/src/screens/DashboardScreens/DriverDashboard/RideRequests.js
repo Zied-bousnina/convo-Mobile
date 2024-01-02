@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList} from 'react-native';
+import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAndroid, Platform} from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
-import {ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
+import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useNavigation} from '@react-navigation/native';
 import {GetMissions} from '../../../redux/actions/demandesActions';
@@ -20,7 +21,11 @@ import PushNotification from "react-native-push-notification";
 import { formatDistanceToNow } from 'date-fns';
 import { uniqueId } from "lodash";
 import { FlashList } from "@shopify/flash-list";
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // import { FlatList } from "react-native-bidirectional-infinite-scroll";
+// import { SkeletonPlaceholder } from 'react-native-skeleton-placeholder';
+import Geolocation from 'react-native-geolocation-service';
+import { socket } from '../../../../socket';
 const RideRequests = () => {
 
   const user = useSelector(({ currentUser }) => currentUser?.user);
@@ -31,9 +36,42 @@ const RideRequests = () => {
   const sheetRef = useRef(null);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const currentUser2 = useSelector(state=>state?.auth)
+
+  const [userConnected_id, setuserConnected_id] = useState()
+  useEffect(() => {
+    // Handle connection
+    socket.on('connect', () => {
+
+      // // if(currentUser){
+
+
+if(
+  currentUser2
+){
+
+  socket.emit('clientData', { user:currentUser2?.user?.id });
+  socket.emit('add-user', currentUser2?.user?.id);
+  setuserConnected_id(currentUser2?.user?.id)
+}
+
+      // }
+    });
+
+    // Handle disconnection
+    socket.on('disconnect', () => {
 
 
 
+        // socket.emit('clientData2', { user:userConnected_id });
+
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const enable = useCallback(() => {
     if (user?.onligne) {
@@ -52,19 +90,20 @@ const RideRequests = () => {
 
     enable();
     // sendNotification()
-  }, [dispatch, user, enable]);
+  }, [dispatch, user?.length, enable]);
+
 
   const changestatus = useCallback((value) => {
-    if (!user?.driverIsVerified) {
-      ToastAndroid.showWithGravity(
-        'You are not verified yet',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-      setIsEnabled(false);
-      navigation.navigate('OnlineRegistrationPage');
-      return;
-    }
+    // if (!user?.driverIsVerified) {
+    //   ToastAndroid.showWithGravity(
+    //     'You are not verified yet',
+    //     ToastAndroid.LONG,
+    //     ToastAndroid.CENTER
+    //   );
+    //   setIsEnabled(false);
+    //   navigation.navigate('OnlineRegistrationPage');
+    //   return;
+    // }
 
     setIsEnabled(value);
 
@@ -74,15 +113,73 @@ const RideRequests = () => {
       })
     );
   }, [dispatch, isEnabled, navigation, user?.driverIsVerified]);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentAddress, setCurrentAddress] = useState(null);
+  // const navigation = useNavigation()
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        getCurrentLocation();
+      }
+    } catch (err) {
+
+    }
+  };
+
+  const getCurrentLocation = useCallback(() => {
+    Geolocation.getCurrentPosition(
+      position => {
+
+        setCurrentLocation(position.coords);
+
+        dispatch(AddCurrentLocation({
+          address:{
+            latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+          }
+        }, navigation))
+        if(isEnabled) {
+          socket.emit('locationUpdate', {userId:currentUser2?.user?.id,
+          location:{
+            latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+
+          }});
+
+        }else{
+          socket.emit('offline_client', currentUser2?.user?.id)
+
+        }
+        // console.log("position", position?.coords)
+      },
+      error => console.log(error),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    );
+
+
+  });
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      requestLocationPermission();
+    } else {
+      getCurrentLocation();
+    }
+  }, [getCurrentLocation, requestLocationPermission]);
+
+
   const PAGE_LIMIT = 5;
   // const dispatch = useDispatch();
   const item_list = useSelector((state) => state.missions.missions.items);
   const isLoading = useSelector((state) => state.missions.isLoading);
   const page = useSelector((state) => state.missions.missions.page);
   const count = useSelector((state) => state.missions.missions.count);
-  // console.log(count)
+
 
   useEffect(() => {
+    console.log("render2")
     dispatch(
       GetMissions({
         page: 0,
@@ -90,14 +187,12 @@ const RideRequests = () => {
         skip: 0 * PAGE_LIMIT,
       }),
     );
-  }, [dispatch]);
+  }, [dispatch,count  ]);
 
   const renderItem = useCallback(({ item }) => <ListRequest disable key={uniqueId()} data={item} />,[])
 
   const loadItemsStart =async  () => {
-    console.log("load")
-    console.log("load",page)
-    console.log(page * PAGE_LIMIT -PAGE_LIMIT)
+
 
     if (page * PAGE_LIMIT >=0  && !isLoading) {
       dispatch(
@@ -110,9 +205,7 @@ const RideRequests = () => {
     }
   };
   const loadItemsEnd =async  () => {
-    console.log("load")
-    console.log("load",page)
-    console.log(page * PAGE_LIMIT)
+
 
     if (page * PAGE_LIMIT < count && !isLoading) {
       dispatch(
@@ -124,6 +217,20 @@ const RideRequests = () => {
       );
     }
   };
+  const sendNotification = (mission) => {
+    PushNotification.localNotification({
+      channelId: "channel-id", // (required)
+      // channelName: "My channel", // (required)
+      title: "New Mission",
+      message: `A new mission is in progress\nDistance: ${parseInt(item_list[item_list?.length-1]?.distance)}KM \nDate Depart: ${item_list[item_list?.length-1]?.dateDepart ? item_list[item_list?.length-1]?.dateDepart.toString() : ''}\nDriver Auto: ${item_list[item_list?.length-1]?.driverIsAuto ? 'Yes' : 'No'}`,
+      playSound: true, // (optional) default: true
+      soundName: "default",
+      vibrate: true,
+      allowWhileIdle: true
+    });
+  };
+  sendNotification()
+
   const renderLoader = () => {
     return page * PAGE_LIMIT < count ? (
 
@@ -132,14 +239,14 @@ const RideRequests = () => {
           // flex: 1,
           // justifyContent: 'center',
           // alignItems: 'center',
-          marginButtom: 30,
+          // marginButtom: 30,
         }}
       >
         <ActivityIndicator size="large" color="red" />
       </View>
     ) : null;
   };
-  const keyExtractor = useCallback((item)=> item._id.toString(),[]);
+  const keyExtractor = useCallback((item, i)=> `${i}-${item._id}`,[]);
   const getItemLayout = (data, index) => (
     {length: PAGE_LIMIT, offset: PAGE_LIMIT * index, index}
 )
@@ -158,11 +265,11 @@ const RideRequests = () => {
           size={60}
           value={isEnabled && false}
           onChange={value => {
-            console.log(value);
+
             changestatus(value);
           }}
           switchOn={true}
-          onPress={() => Off(!on)}
+          // onPress={() => Off(!on)}
           circleColorOff="#d23a35"
           circleColorOn="#6ab04c"
           backgroundColorOn="#ffffff"
@@ -241,7 +348,7 @@ const RideRequests = () => {
               marginTop: 10,
             }}>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: '#999'}}>
-              You have {count} missions
+              You have {count} mission
             </Text>
           </View>
           {/* <ScrollView> */}
@@ -249,6 +356,19 @@ const RideRequests = () => {
 
                <FlashList
               showsVerticalScrollIndicator={true}
+              SkeletonPlaceholder={
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item
+                    width={Dimensions.get('window').width}
+                    height={500}
+                    borderRadius={10}
+                    marginBottom={10}
+
+                  />
+
+                </SkeletonPlaceholder>
+
+              }
         data={item_list}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
@@ -263,10 +383,16 @@ const RideRequests = () => {
         }}
         maxToRenderPerBatch={5}
         removeClippedSubviews={true}
-        windowSize={5}
+        // windowSize={5}
         initialNumToRender={5}
         estimatedItemSize={
           500
+        }
+        onRefresh={
+          async () => await loadItemsStart()
+        }
+        refreshing={
+          isLoading
         }
         // inverted
 
@@ -279,12 +405,12 @@ const RideRequests = () => {
     renderItem={renderItem}
     keyExtractor={()=>uniqueId()}
     onStartReached={async()=>{
-      console.log("start")
+
        loadItemsStart() */
     // }} // required, should return a promise
     // onEndReached={async()=>{
 
-    //   console.log("end")
+
     //     loadItemsEnd()
     // }
 

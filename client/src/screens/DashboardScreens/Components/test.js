@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { Component, useRef, useState } from 'react';
 import { StyleSheet, View, Button, Text, Dimensions } from 'react-native';
 import AnimatedLoader from 'react-native-animated-loader';

@@ -1,0 +1,19 @@
+{
+    "data": {
+        "__v": 0,
+        "_id": "655b57df15fc130041296634",
+        "address": {
+            "display_name": "عين الصفصاف, معتمدية بئر مشارقة, Zaghouan Governorate, Tunisia",
+            "latitude": "36.49348018653797",
+            "longitude": "10.117976781435708"
+        },
+        "createdAt": "2023-11-20T12:58:07.714Z",
+        "destination": {
+            "display_name": "وادي الخضراء, معتمدية الفحص, Zaghouan Governorate, Tunisia",
+            "latitude": "36.329716183099805",
+            "longitude": "9.988085612305333"
+        },
+        "distance": "21.60325238503127",
+        "driverIsAuto": true,
+        "postalAddress": "عين الصفصاف, معتمدية بئر مشارقة, Zaghouan Governorate,
+Tunisia", "postalDestination": "وادي الخضراء, معتمدية الفحص, Zaghouan Governorate, Tunisia", "status": "in progress", "updatedAt": "2023-11-20T12: 58: 07.714Z", "user": "6552999be6e0f30042d67a91"}, "disable": true}

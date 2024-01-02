@@ -32,8 +32,8 @@ export default function (state = initialState, action)  {
 
         // Identify unique items based on the _id property
         const uniqueItems = [
-          ...currentItems,
           ...newItems.filter(newItem => !currentItems.some(currentItem => currentItem._id === newItem._id)),
+          ...currentItems,
         ];
 
         return {
@@ -42,7 +42,7 @@ export default function (state = initialState, action)  {
           isSuccess: true,
           missions: {
             ...state.missions,
-            items:         [...state.missions.items, ...action.payload.response_data?.missions],
+            items:      uniqueItems,
             // uniqueItems,
             count: parseInt(action.payload.response_data.count),
             page: parseInt(action.payload.query.page) + 1,

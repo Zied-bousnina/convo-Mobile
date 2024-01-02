@@ -24,6 +24,7 @@ import DemandeDriverRedicers from './DemandeDriver.redicers';
 import BasicInfoReducers from './BasicInfoReducers';
 import userReducers from './userReducers';
 import MissionsReducers from './Missions.reducers';
+import CurrentUserReducer from './CurrentUser.reducer';
 
 
 export default  combineReducers({
@@ -51,6 +52,7 @@ export default  combineReducers({
     BasicInfo : BasicInfoReducers,
     currentUser : userReducers,
     missions : MissionsReducers,
+    currentUser2: CurrentUserReducer
 
 
 

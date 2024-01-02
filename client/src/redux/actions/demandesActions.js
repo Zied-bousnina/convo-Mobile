@@ -20,8 +20,7 @@ import { createSelector } from 'reselect';
 // import { GetMissions } from './demandesActions';
 
 export const AddDemande = (userData, navigation) => dispatch => {
-  // console.log(userData)
-  // const [token, settoken] = useState('')
+
   dispatch({
     type: SET_IS_LOADING,
     payload: true,
@@ -30,7 +29,7 @@ export const AddDemande = (userData, navigation) => dispatch => {
   axios
     .post('https://convoyage.onrender.com/api/users/createDemande', userData)
     .then(async res => {
-      //////////////////////////////////////////console.log(res)
+
 
       dispatch({
         type: SET_IS_LOADING,
@@ -39,14 +38,15 @@ export const AddDemande = (userData, navigation) => dispatch => {
       setTimeout(() => {
         dispatch(setLoading(false));
       }, 3000);
-      console.log('res', res?.data?.demande?._id);
+
       navigation.navigate('FindDriverScreen', {
         ...userData,
         demandeId: res?.data?.demande?._id,
       });
     })
     .catch(err => {
-      console.log('errrrrrrrrrrrrrrrrrr', err);
+
+
       dispatch({
         type: SET_ERRORS,
         payload: err?.response?.data,
@@ -61,8 +61,7 @@ export const AddDemande = (userData, navigation) => dispatch => {
     });
 };
 export const increaseOffer = (demandeId, navigation) => dispatch => {
-  // console.log(userData)
-  // const [token, settoken] = useState('')
+
   dispatch({
     type: SET_IS_LOADING,
     payload: true,
@@ -73,7 +72,7 @@ export const increaseOffer = (demandeId, navigation) => dispatch => {
       `https://convoyage.onrender.com/api/users/incrementOffer/${demandeId}`,
     )
     .then(async res => {
-      //////////////////////////////////////////console.log(res)
+
 
       dispatch({
         type: SET_IS_LOADING,
@@ -85,7 +84,83 @@ export const increaseOffer = (demandeId, navigation) => dispatch => {
       // navigation.navigate("FindDriverScreen",userData )
     })
     .catch(err => {
-      console.log('errrrrrrrrrrrrrrrrrr', err);
+
+      dispatch({
+        type: SET_ERRORS,
+        payload: err?.response?.data,
+      });
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+    });
+};
+export const AccepteMission = (demandeId, navigation) => dispatch => {
+
+  dispatch({
+    type: SET_IS_LOADING,
+    payload: true,
+  });
+
+  axios
+    .post(
+      `http://192.168.1.16:3600/api/users/AccepteMission/${demandeId}`,
+    )
+    .then(async res => {
+
+
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+      // navigation.navigate("FindDriverScreen",userData )
+    })
+    .catch(err => {
+
+      dispatch({
+        type: SET_ERRORS,
+        payload: err?.response?.data,
+      });
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+    });
+};
+export const RefuseMission = (demandeId, navigation) => dispatch => {
+
+  dispatch({
+    type: SET_IS_LOADING,
+    payload: true,
+  });
+
+  axios
+    .post(
+      `http://192.168.1.16:3600/api/users/RefuseMission/${demandeId}`,
+    )
+    .then(async res => {
+
+
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+      // navigation.navigate("FindDriverScreen",userData )
+    })
+    .catch(err => {
+
       dispatch({
         type: SET_ERRORS,
         payload: err?.response?.data,
@@ -100,8 +175,7 @@ export const increaseOffer = (demandeId, navigation) => dispatch => {
     });
 };
 export const decreaseOffer = (demandeId, navigation) => dispatch => {
-  // console.log(userData)
-  // const [token, settoken] = useState('')
+
   dispatch({
     type: SET_IS_LOADING,
     payload: true,
@@ -110,7 +184,7 @@ export const decreaseOffer = (demandeId, navigation) => dispatch => {
   axios
     .post(`https://convoyage.onrender.com/api/users/decreaseOffer/${demandeId}`)
     .then(async res => {
-      //////////////////////////////////////////console.log(res)
+
 
       dispatch({
         type: SET_IS_LOADING,
@@ -122,7 +196,7 @@ export const decreaseOffer = (demandeId, navigation) => dispatch => {
       // navigation.navigate("FindDriverScreen",userData )
     })
     .catch(err => {
-      console.log('errrrrrrrrrrrrrrrrrr', err);
+
       dispatch({
         type: SET_ERRORS,
         payload: err?.response?.data,
@@ -140,8 +214,7 @@ export const FindRequestDemande = navigation => dispatch => {
   axios
     .get('https://convoyage.onrender.com/api/users/findDemandsByUserId')
     .then(async res => {
-      // console.log(">>>>>>>>>>>>>>>>>>>",res.data)
-      // eslint-disable-next-line prettier/prettier
+
       dispatch({
         type: SET_DEMANDES,
         payload: res.data,
@@ -167,7 +240,7 @@ export const DeleteDEmande = idDemande => dispatch => {
   axios
     .delete(`https://convoyage.onrender.com/api/users/delete/${idDemande}`)
     .then(async res => {
-      console.log('>>>>>>>>>>>>>>>>>>>', res.data);
+
 
       dispatch({
         type: SET_IS_LOADING,
@@ -199,7 +272,7 @@ export const findDemandeInProgress = navigation => dispatch => {
       'https://xgenboxv2.onrender.com/api/demande-municipal/findDemandeInProgress',
     )
     .then(async res => {
-      // console.log(">>>>>>>>>>>>>>>>>>>",res.data)
+
       dispatch({
         type: SET_DEMANDES_MUNICIPAL,
         payload: res.data,
@@ -215,20 +288,14 @@ export const findDemandeInProgress = navigation => dispatch => {
 };
 
 export const UpadeteRequest = (data, navigation) => dispatch => {
-  // console.log(data)
+
   axios
     .put(
       `https://xgenboxv2.onrender.com/api/demande-municipal/AcceptDemande/${data.id}`,
       {status: data.status},
     )
     .then(async res => {
-      // console.log(res.data)
-      // console.log(">>>>>>>>>>>>>>>>>>> ligne 41: ",res.data?.data?.user)
-      // dispatch({
-      //   type: SET_DEMANDES_MUNICIPAL,
-      //   payload: res.data,
 
-      // })
       dispatch(createAccess({companyId: res.data?.data?.user}));
     })
 
@@ -241,11 +308,11 @@ export const UpadeteRequest = (data, navigation) => dispatch => {
 };
 
 export const GetRequest = () => dispatch => {
-  // console.log("send requset")
+
   axios
     .get('https://xgenboxv2.onrender.com/api/demande-municipal')
     .then(async res => {
-      // console.log("demande action:",res)
+
       dispatch({
         type: SET_REQUEST,
         payload: res.data,
@@ -259,6 +326,24 @@ export const GetRequest = () => dispatch => {
     });
 };
 
+export const GetMission = () => dispatch => {
+
+  axios
+    .get(`http://192.168.1.16:3600/api/users/findMissionsByUser?limit=5&skip=5`)
+    .then(async res => {
+
+      dispatch({
+        type: SET_REQUEST,
+        payload: res.data,
+      });
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err,
+      });
+    });
+};
 
 const getProducts = async (data) => {
   try {
@@ -266,7 +351,7 @@ const getProducts = async (data) => {
       `http://192.168.1.16:3600/api/users/findMissionsByUser?limit=${data.limit}&skip=${data.skip}`
     );
 
-    console.log(response.data)
+
     return response.data;
   } catch (error) {
     throw error.response.data.message || error.toString();
@@ -291,7 +376,7 @@ export const GetMissions = (data) => {
     dispatch(getProductsPending());
     try {
       const response = await getProducts(data);
-      // console.log(response)
+
       dispatch(getProductsFulfilled({ response_data: response, query: data }));
     } catch (error) {
       const message = error.response?.data?.message || error.toString();
@@ -300,21 +385,3 @@ export const GetMissions = (data) => {
   };
 };
 
-// export const GetMissions = () => dispatch => {
-//   // console.log("send requset")
-//   axios
-//     .get('http://192.168.1.16:3600/api/users/findMissionsByUser?limit=10&skip=58')
-//     .then(async res => {
-//       // console.log("demande action:",res.data)
-//       dispatch({
-//         type: SET_MISSIONS,
-//         payload: res.data,
-//       });
-//     })
-//     .catch(err => {
-//       dispatch({
-//         type: SET_ERRORS,
-//         payload: err,
-//       });
-//     });
-// };

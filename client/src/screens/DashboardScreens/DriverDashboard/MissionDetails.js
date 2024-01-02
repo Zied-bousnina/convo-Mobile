@@ -28,8 +28,9 @@ import LoginButton from '../../../components/Buttons/LoginButton';
 import Fonts from '../../../assets/fonts';
 import CostomFormik from '../../../components/costomFormik/CostomFormik';
 import { Button as BTN } from '@rneui/themed';
-import { decreaseOffer, increaseOffer } from '../../../redux/actions/demandesActions';
+import { AccepteMission, RefuseMission, decreaseOffer, increaseOffer } from '../../../redux/actions/demandesActions';
 import { useNavigation } from '@react-navigation/native';
+import HorizontalLinearStepper from '../Components/Stepper';
 
 const MissionDetails = ({route}) => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -61,7 +62,7 @@ const MissionDetails = ({route}) => {
     setdecrease(false)
     setincrease(true)
     setoffer(parseFloat(offer) + 0.5)
-    dispatch(increaseOffer(demandeId,navigation ))
+    dispatch(AccepteMission(demandeId,navigation ))
  }
 
  const handleDecrease = ()=> {
@@ -69,7 +70,7 @@ const MissionDetails = ({route}) => {
     setincrease(false)
     setdecrease(true)
     setoffer(parseFloat(offer) - 0.5)
-    dispatch(decreaseOffer(demandeId, navigation))
+    dispatch(RefuseMission(demandeId, navigation))
  }
 
 
@@ -208,14 +209,15 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
 
       >
     </AnimatedLoader> */}
-      <Text
+      {/* <Text
         style={{
             fontSize: 20,
             fontWeight: 'bold',
             color: '#2df793',
             }}
 
-      >Finding driver...</Text>
+      >Finding driver...</Text> */}
+      {/* <HorizontalLinearStepper/> */}
 </View>
   <CostomFormik
           initialValues={{
@@ -287,14 +289,15 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   editable = {false}
                   color={"#f66"}
                 />
+
               </View>
             </View>
             <View style={[styles.textBoxCon, {marginTop: 30}]}>
               <View style={styles.at}>
               {/* <Icon1 name="record-circle" size={20} color="#2df793" /> */}
-              <Text>TND</Text>
+              {/* <Text>TND</Text> */}
               </View>
-              <View style={styles.textCon}>
+              {/* <View style={styles.textCon}>
                 <AppInput
                   name="TND"
                   placeholder="TND"
@@ -304,7 +307,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   editable = {false}
                   color={"white"}
                 />
-              </View>
+              </View> */}
             </View>
 
 
@@ -344,12 +347,18 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
             }}
             >
 
-            <BTN title="-0.5" type="solid" loading={isLoad && dec}
-              buttonStyle={[styles.LoginBtn]}
+            <BTN title="rejeté" type="solid" loading={isLoad && dec}
+              buttonStyle={[styles.LoginBtn], {
+                backgroundColor: '#f66',
+                borderRadius: 20,
+                width:"100%",
+                // paddingLeft:10
+
+              }}
               onPress={handleDecrease}
             />
             </View>
-           <AppInput
+           {/* <AppInput
                   name="TND"
                   placeholder="TND"
                   style={[styles.textInput, {fontWeight:"bold",marginRight: 10 }]}
@@ -357,7 +366,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   value={"TND"+offer}
                   editable = {false}
                   color={"white"}
-                />
+                /> */}
             {/* <LoginButton
               style={styles.LoginBtn}
               loginBtnLbl={styles.loginBtnLbl}
@@ -365,7 +374,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
 
 
             /> */}
-            <BTN title="+0.5" type="solid" loading={isLoad && inc}
+            <BTN title="accepté" type="solid" loading={isLoad && inc}
               buttonStyle={styles.LoginBtn}
               onPress={handleIncrease}
             />

@@ -1,11 +1,14 @@
+/* eslint-disable prettier/prettier */
 import axios from "axios"
-import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_ERRORS, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
+import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_USER2, SET_ERRORS, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
 import { setLoading } from "./authActions"
+import { socket } from "../../../socket"
 
 export const GetCurrentAccessList =  () => (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/users/access/getCurrentAccessList`)
       .then(async(res) => {
-        // console.log("ligne 6",res.data?.accessList)
+
+
 
         dispatch({
           type: SET_CURRENT_ACCESS_LIST,
@@ -18,12 +21,7 @@ export const GetCurrentAccessList =  () => (dispatch) => {
       })
       })
       .catch( (err) =>{
-        // console.log(err)
-      // dispatch({
-      //   type: SET_PROFILES,
-      //   payload: res.data
 
-      // })
     }
 
       )
@@ -33,7 +31,8 @@ export const GetCurrentAccessList =  () => (dispatch) => {
 export const GetAllusersWhoHaveAtLeastOneSameAccessCode =() => (dispatch)=>{
   axios.get(`https://xgenboxv2.onrender.com/api/users/access/getAllUserWhoHasASameAccessBin`)
       .then(async(res) => {
-        // console.log("ligne 6",res.data?.accessList)
+
+
 
         dispatch({
           type: SET_SOME_ACCESS_LIST_USERS,
@@ -41,12 +40,7 @@ export const GetAllusersWhoHaveAtLeastOneSameAccessCode =() => (dispatch)=>{
         })
       })
       .catch( (err) =>{
-        // console.log(err)
-      // dispatch({
-      //   type: SET_PROFILES,
-      //   payload: res.data
 
-      // })
     }
 
       )
@@ -216,8 +210,7 @@ dispatch({
 
 
 export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
-  console.log(userData)
-  // const [token, settoken] = useState('')
+
   dispatch({
     type:SET_IS_LOADING,
     payload:true
@@ -232,7 +225,6 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
 
   })
       .then(async(res) => {
-        //////////////////////////////////////////console.log(res)
 
         // dispatch(CreateScore())
 
@@ -256,7 +248,7 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
         }, 3000);
       })
       .catch( (err) =>{
-        console.log("errrrrrrrrrrrrrrrrrr",err)
+
         dispatch({
           type: SET_ERRORS,
           payload: err?.response?.data
@@ -276,25 +268,25 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
       )
 }
 export const AddCurrentLocation =  (userData, navigation ) => (dispatch) => {
-  // console.log(userData)
+
 
 
   axios.post(`https://convoyage.onrender.com/api/users/AddAddress`, userData,)
       .then(async(res) => {
-        console.log("LOaction Added", res?.data)
+
 
       })
       .catch( (err) =>{
-        console.log("Location err", err)
+
 
       }
 
       )
 }
-export const findBasicInfoByUserId =() => ()=>{
+export const findBasicInfoByUserId =(dispatch) => ()=>{
   axios.get(`https://convoyage.onrender.com/api/basicInfo/findBasicProfileById`)
       .then(async(res) => {
-        console.log("ligne 6",res.data)
+
 
         dispatch({
           type: SET_BASIC_INFO,
@@ -302,17 +294,48 @@ export const findBasicInfoByUserId =() => ()=>{
         })
       })
       .catch( (err) =>{
-        // console.log(err)
-      // dispatch({
-      //   type: SET_PROFILES,
-      //   payload: res.data
 
-      // })
     }
 
       )
 }
+export const GetCurrentUser = (navigation)=>dispatch=>{
 
+  axios.get(`https://convoyage.onrender.com/api/users/users/currentUser`)
+  .then(res => {
+      // console.log(res)
+      dispatch({
+          type: SET_CURRENT_USER2,
+          payload: res?.data
+      })
+console.log(res?.data?.user?._id)
+socket.on('connect', () => {
+  console.log('Connected to server');
+  // if(currentUser){
+
+
+
+      // socket.emit('clientData', { message: "res?.data?.user?._id" });
+
+  // }
+});
+
+      // dispatch(registerGoogleUser(data))
+
+      // dispatch(loginUser(data))
+  })
+  .catch(err =>
+     {
+      // console.log("err in authAction.js line 366",err)
+      dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+      })
+      // dispatch(registerGoogleUser(data))
+      throw err
+  }
+  )
+}
 export const ChangeStatus = (data)=> (dispatch)=>{
 
   dispatch({
@@ -364,7 +387,7 @@ dispatch({
 export const getUsersById =() => (dispatch)=>{
   axios.get(`https://convoyage.onrender.com/api/users/getUsersById`)
       .then(async(res) => {
-        // console.log("ligne 9",res.data.user)
+
 
         dispatch({
           type: SET_CURRENT_USER,
@@ -372,12 +395,7 @@ export const getUsersById =() => (dispatch)=>{
         })
       })
       .catch( (err) =>{
-        // console.log(err)
-      // dispatch({
-      //   type: SET_PROFILES,
-      //   payload: res.data
 
-      // })
     }
 
       )

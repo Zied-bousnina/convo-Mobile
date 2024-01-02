@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {Text,View,StyleSheet,KeyboardAvoidingView, TouchableOpacity, Pressable, Dimensions, ToastAndroid, Image} from 'react-native';
 import React, { useMemo, useRef } from 'react'
 import { useState, useEffect } from 'react';
@@ -226,7 +227,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
         }
     })
 
-    }, [currentLocation])
+    }, [currentLocation?.latitude])
 
     const [latitude, setLatitude] = useState(currentLocation?.latitude);
     const [longitude, setLongitude] = useState(currentLocation?.longitude);
@@ -280,7 +281,7 @@ const FindDriver = ({currentLocation, currentAddress}) => {
       getGeocode();
 
 
-    }, [currentLocation?.longitude]);
+    }, [currentLocation.longitude, getGeocode]);
     // console.log(RequestFindDriver)
       RequestFindDriver?.destination && useEffect(() => {
       getGeocodeDestination()

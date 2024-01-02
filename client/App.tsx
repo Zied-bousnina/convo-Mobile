@@ -64,6 +64,8 @@ import PushNotification from "react-native-push-notification";
 import { useColorScheme } from 'react-native';
 import { get, save } from './src/Storage';
 import MissionDetails from './src/screens/DashboardScreens/DriverDashboard/MissionDetails';
+import InternetDisconnected from './src/components/Animations/InternetDisconnected';
+import NetInfo from '@react-native-community/netinfo';
 function App(): JSX.Element {
   PushNotification.configure({
     // (optional) Called when Token is generated (iOS and Android)
@@ -118,6 +120,7 @@ function App(): JSX.Element {
   const missions = useSelector(({ missions }) => missions?.missions);
   const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
   const user = useSelector(state => state?.auth);
+
   const sendNotification = (mission) => {
     PushNotification.localNotification({
       channelId: "channel-id", // (required)
@@ -131,6 +134,7 @@ function App(): JSX.Element {
     });
   };
   useEffect(() => {
+    sendNotification()
     if(
       missions?.length != cuuerentLength && user.isConnected
     ){
@@ -159,6 +163,8 @@ function App(): JSX.Element {
     }
   }, [])
   // -------------theme----------------------------
+  const [isConnected, setIsConnected] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   const appearance = useColorScheme();
   const setAppTheme = useCallback(async () => {
     const IS_FIRST = await get('IS_FIRST');
@@ -176,6 +182,63 @@ function App(): JSX.Element {
   }, [setAppTheme]);
 
   // -------------theme----------------------------
+  useEffect(() => {
+    AsyncStorage.getItem('jwtToken')
+      .then(value => {
+        if (value) {
+          const decode = jwt_decode(value);
+          store.dispatch(setCurrentUser(decode));
+
+          SetAuthToken(value);
+        }
+      })
+      .catch(err => {
+      });
+
+    const activeExpires = new Date(user?.user?.iat);
+    const currentDate = new Date();
+    // console.log(`activeExpires-----------------------------------------------------------------------------------`,
+    //  activeExpires < currentDate);
+    if (currentDate > activeExpires) {
+      AsyncStorage.removeItem('jwtToken');
+      store.dispatch(LogOut())
+      // store.dispatch(setCurrentUser({}));
+    }
+  }, []);
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+      setShowMessage(true);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (showMessage) {
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 1000); // Delay for 1 second
+    }
+  }, [showMessage]);
+
+  // console.log('isConnected', isConnected);
+  // console.log(showMessage);
+  // console.log(isConnected);
+// console.log(user)
+  if (!isConnected) {
+    return <InternetDisconnected />;
+  }
   return (
     <SafeAreaProvider>
 

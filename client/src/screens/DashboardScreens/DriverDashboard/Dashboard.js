@@ -1,4 +1,6 @@
-import { View, Text, StyleSheet, useColorScheme } from 'react-native'
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
+import { View, Text, StyleSheet, useColorScheme, PermissionsAndroid, Platform } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -12,10 +14,26 @@ import Destination from '../Components/Destination'
 import RideRequests from './RideRequests'
 import MyIncome from './MyIncome'
 import Rating from './Rating'
+import { socket } from '../../../../socket'
+import { useDispatch, useSelector } from 'react-redux'
+import { AddCurrentLocation, GetCurrentUser } from '../../../redux/actions/userActions'
+import Geolocation from 'react-native-geolocation-service';
+import { useNavigation } from '@react-navigation/native'
 const Tab = createBottomTabNavigator();
 const Dashboard = () => {
-    const [themeValue, setThemeValue] = useState('');
-    const themes = useColorScheme();
+  const currentUser = useSelector(state=>state?.currentUser2?.users?.user)
+  const currentUser2 = useSelector(state=>state?.auth)
+
+  const [themeValue, setThemeValue] = useState('');
+  const themes = useColorScheme();
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(GetCurrentUser())
+      // dispatch(removeSeenMsg([]))
+      // dispatch(addUnseenmsg(currentUser?.Newsocket))
+
+    }, [dispatch,currentUser?.Newsocket?.length])
+
     const themeOperations = theme => {
         switch (theme) {
           case 'dark':
@@ -59,7 +77,7 @@ const Dashboard = () => {
         save('Theme', theme);
         save('IsDefault', isDefault);
         setThemeValue(theme);
-        // console.log('storage', theme)
+
       }, []);
 
       useEffect(() => {
@@ -70,6 +88,51 @@ const Dashboard = () => {
 
       // ------------------End theme-----------------------
 
+        // ---------------------- SocketIO--------------------------------------
+        const [userConnected_id, setuserConnected_id] = useState()
+  useEffect(() => {
+    // Handle connection
+    socket.on('connect', () => {
+
+      // // if(currentUser){
+
+
+if(
+  currentUser2
+){
+
+
+  socket.emit('clientData', { user:currentUser2?.user?.id });
+  socket.emit('add-user', currentUser2?.user?.id);
+  setuserConnected_id(currentUser2?.user?.id)
+}
+
+      // }
+    });
+
+    // Handle disconnection
+    socket.on('disconnect', () => {
+
+
+
+        // socket.emit('clientData2', { user:userConnected_id });
+
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+  const handleCheckConnection = () => {
+
+    // Emit a custom event to check the connection status
+    socket.emit('check_connection', (status) => {
+
+    });
+  };
+
+  // ----------------------End SocketIO-----------------------------------
 
   return (
     <>

@@ -8,7 +8,8 @@ import { setLoading } from './authActions';
 
 
 export const createAccess =  (userData, navigation ) => (dispatch) => {
-    // console.log(userData)
+
+
     dispatch({
       type:SET_IS_LOADING,
       payload:true
@@ -24,7 +25,8 @@ export const createAccess =  (userData, navigation ) => (dispatch) => {
                 type: SET_ERRORS,
                 payload: {}
             })
-            // console.log(res)
+
+
 
             dispatch({
               type:SET_IS_LOADING,
@@ -48,7 +50,8 @@ export const createAccess =  (userData, navigation ) => (dispatch) => {
 
 
         .catch( (err) =>{
-            // console.log(err)
+
+
             setTimeout(() => {
                 // Make API call or other asynchronous operation
 
@@ -77,7 +80,8 @@ export const createAccess =  (userData, navigation ) => (dispatch) => {
 export const GetCurrentAccess =  () => (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/access/currentAccess`)
       .then(async(res) => {
-        console.log("ligne 51",res.data)
+
+
 
         dispatch({
           type: SET_CURRENT_ACCESS,
@@ -85,12 +89,8 @@ export const GetCurrentAccess =  () => (dispatch) => {
         })
       })
       .catch( (err) =>{
-        // console.log(err)
-      // dispatch({
-      //   type: SET_PROFILES,
-      //   payload: res.data
 
-      // })
+
     }
 
       )
