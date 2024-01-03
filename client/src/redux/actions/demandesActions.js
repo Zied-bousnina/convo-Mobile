@@ -107,7 +107,7 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `http://192.168.1.16:3600/api/users/AccepteMission/${demandeId}`,
+      `https://convoyage.onrender.com/api/users/AccepteMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -145,7 +145,7 @@ export const RefuseMission = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `http://192.168.1.16:3600/api/users/RefuseMission/${demandeId}`,
+      `https://convoyage.onrender.com/api/users/RefuseMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -329,7 +329,7 @@ export const GetRequest = () => dispatch => {
 export const GetMission = () => dispatch => {
 
   axios
-    .get(`http://192.168.1.16:3600/api/users/findMissionsByUser?limit=5&skip=5`)
+    .get(`https://convoyage.onrender.com/api/users/findMissionsByUser?limit=5&skip=5`)
     .then(async res => {
 
       dispatch({
@@ -348,7 +348,7 @@ export const GetMission = () => dispatch => {
 const getProducts = async (data) => {
   try {
     const response = await axios.get(
-      `http://192.168.1.16:3600/api/users/findMissionsByUser?limit=${data.limit}&skip=${data.skip}`
+      `https://convoyage.onrender.com/api/users/findMissionsByUser?limit=${data.limit}&skip=${data.skip}`
     );
 
 
