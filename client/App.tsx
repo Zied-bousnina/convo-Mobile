@@ -66,6 +66,7 @@ import { get, save } from './src/Storage';
 import MissionDetails from './src/screens/DashboardScreens/DriverDashboard/MissionDetails';
 import InternetDisconnected from './src/components/Animations/InternetDisconnected';
 import NetInfo from '@react-native-community/netinfo';
+import AcceptationScreen from './src/screens/DashboardScreens/DriverDashboard/AcceptationScreen';
 function App(): JSX.Element {
   PushNotification.configure({
     // (optional) Called when Token is generated (iOS and Android)
@@ -282,6 +283,16 @@ function App(): JSX.Element {
         // header:"  Header",
       }}
       component={Dashboard}
+    />
+        <Drawer.Screen
+      name="AcceptationScreen"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={AcceptationScreen}
     />
        <Drawer.Screen
          name="CityPage"

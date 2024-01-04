@@ -119,7 +119,22 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
       setTimeout(() => {
         dispatch(setLoading(false));
       }, 3000);
-      // navigation.navigate("FindDriverScreen",userData )
+      // console.log("accept",res.data)
+      navigation.navigate("AcceptationScreen",{
+        demandeId:res?.data?.demand?._id,
+        distance:res?.data?.demand?.distance,
+        address:res?.data?.demand?.address,
+        destination:res?.data?.demand?.destination,
+        comments:res?.data?.demand?.comments,
+        // offer:data?.data?.offer,
+        status:res?.data?.demand?.status,
+        postalAddress:res?.data?.demand?.postalAddress,
+        postalDestination:res?.data?.demand?.postalDestination,
+        // postalCode:data?.data?.postalCode,
+        // postalDestinationCode:data?.data?.postalDestinationCode,
+
+      })
+      // navigation.navigate("AcceptationScreen",userData )
     })
     .catch(err => {
 
@@ -157,6 +172,7 @@ export const RefuseMission = (demandeId, navigation) => dispatch => {
       setTimeout(() => {
         dispatch(setLoading(false));
       }, 3000);
+      navigation.navigate("Driver" )
       // navigation.navigate("FindDriverScreen",userData )
     })
     .catch(err => {

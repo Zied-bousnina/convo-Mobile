@@ -26,9 +26,11 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // import { SkeletonPlaceholder } from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
+import { Button as BTN, Icon, MD3Colors } from 'react-native-paper';
 const RideRequests = () => {
 
   const user = useSelector(({ currentUser }) => currentUser?.user);
+  const [enRoute, setenRoute] = useState(true)
 
   const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
   const [selectedItem, setselectedItem] = useState({});
@@ -217,6 +219,30 @@ if(
       );
     }
   };
+
+  const enRouteAction = ()=> {
+    // setenRoute(!enRoute)
+    if(enRoute){
+      setenRoute(false)
+      socket.emit('enRoute', {userId:currentUser2?.user?.id,
+      location:{
+        latitude: currentLocation?.latitude,
+      longitude: currentLocation?.longitude}})
+      ToastAndroid
+      .showWithGravityAndOffset(
+        'en route mode is off',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+        )
+    }else {
+
+      sheetRef
+      .current.open()
+    }
+
+      }
   const sendNotification = (mission) => {
     PushNotification.localNotification({
       channelId: "channel-id", // (required)
@@ -251,7 +277,8 @@ if(
     {length: PAGE_LIMIT, offset: PAGE_LIMIT * index, index}
 )
   return (
-    <>
+    <View style={{ flex: 1 }}>
+
       <View
         style={{
           // flex: 1,
@@ -261,6 +288,7 @@ if(
           // marginTop:10,
 
         }}>
+
         <SwitchToggle
           size={60}
           value={isEnabled && false}
@@ -337,6 +365,34 @@ if(
           )}
         />
       </View>
+      <View  style={{
+          position: 'absolute',
+          bottom: 90,
+          right: 16,
+          // backgroundColor: '#007BFF', // Customize the background color as needed
+          padding: 10,
+          borderRadius: 5,
+          zIndex:9999
+        }}>
+      <BTN
+      icon={`${!enRoute? 'map':''}`} mode="contained" onPress={() =>{
+        enRouteAction()
+
+      }}>
+{
+  enRoute &&
+ <> looking for en route request
+ <Icon
+    source="close"
+    color={MD3Colors.error50}
+    size={20}
+  /></>
+}
+
+    {/* Press me */}
+  </BTN>
+      </View>
+
       {item_list?.length !=0 ? (
         <>
           <View
@@ -468,112 +524,61 @@ if(
           </Text>
         </View>
       )}
-      <BottomSheet
-        ref={sheetRef}
-        height={Dimensions.get('screen').height * 0.48}
-        closeOnDragDown={true}
-        closeOnPressMask={true}
-        closeOnPressBack={true}
 
-        >
-        <View style={styles.contentView}>
-          <View style={styles.buttonsContainer}>
-            <Button
-              title={'Ride details'}
-              buttonStyle={{
-                backgroundColor: '#a4ea2d',
-                // color:"#253545"
-              }}
-              titleStyle={{
-                color: '#253545',
-                fontSize: 20,
-              }}
-              containerStyle={{
-                width: Dimensions.get('screen').width * 0.9,
-                marginHorizontal: 50,
-                marginVertical: 10,
-                borderRadius: 10,
-              }}
-              onPress={() =>
-                navigation.navigate('RideDetails', {data: selectedItem})
-              }
-            />
-            <Button
-              title={'Repeat request'}
-              buttonStyle={{
-                backgroundColor: '#a4ea2d',
-                // color:"#253545"
-              }}
-              titleStyle={{
-                color: '#253545',
-                fontSize: 20,
-              }}
-              containerStyle={{
-                width: Dimensions.get('screen').width * 0.9,
-                marginHorizontal: 50,
-                marginVertical: 10,
-                borderRadius: 10,
-              }}
-            />
-            <Button
-              title={'Return route'}
-              buttonStyle={{
-                backgroundColor: '#a4ea2d',
-                // color:"#253545"
-              }}
-              titleStyle={{
-                color: '#253545',
-                fontSize: 20,
-              }}
-              containerStyle={{
-                width: Dimensions.get('screen').width * 0.9,
-                marginHorizontal: 50,
-                marginVertical: 10,
-                borderRadius: 10,
-              }}
-            />
-            <Button
-              title={'Delete'}
-              buttonStyle={{
-                backgroundColor: '#f5f4f4',
-                // color:"#253545"
-              }}
-              titleStyle={{
-                color: '#c34949',
-                fontSize: 20,
-              }}
-              containerStyle={{
-                width: Dimensions.get('screen').width * 0.9,
-                marginHorizontal: 50,
-                marginVertical: 10,
-                borderRadius: 10,
-              }}
-              // onPress={actionDelete}
-            />
-            <Button
-              title={'close'}
-              buttonStyle={{
-                backgroundColor: '#f5f4f4',
-                // color:"#253545"
-              }}
-              titleStyle={{
-                color: '#253545',
-                fontSize: 20,
-              }}
-              containerStyle={{
-                width: Dimensions.get('screen').width * 0.9,
-                marginHorizontal: 50,
-                marginVertical: 10,
-                borderRadius: 10,
-              }}
-              onPress={() => {
-                sheetRef.current.close();
-              }}
-            />
-          </View>
-        </View>
-      </BottomSheet>
-    </>
+      <BottomSheet
+  ref={sheetRef}
+  height={Dimensions.get('screen').height * 0.3}
+  closeOnDragDown={true}
+  closeOnPressMask={true}
+  closeOnPressBack={true}
+>
+  <View style={styles.contentView}>
+    {/* Title at the top center */}
+    <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginTop: 10 }}>
+      En Route Requests
+    </Text>
+
+    <View style={styles.buttonsContainer}>
+      <Button
+        title={'Go'}
+        buttonStyle={{
+          backgroundColor: '#a4ea2d',
+          // color:"#253545"
+        }}
+        titleStyle={{
+          color: '#253545',
+          fontSize: 20,
+        }}
+        containerStyle={{
+          width: Dimensions.get('screen').width * 0.9,
+          marginHorizontal: 50,
+          marginVertical: 10,
+          borderRadius: 10,
+        }}
+        onPress={() =>
+         { setenRoute(true)
+          socket.emit('enRoute', {userId:currentUser2?.user?.id,
+      location:{
+        latitude: currentLocation?.latitude,
+      longitude: currentLocation?.longitude}})
+      ToastAndroid
+      .showWithGravityAndOffset(
+        'en route mode is on',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+        )
+          sheetRef.current.close()}
+        }
+      />
+    </View>
+  </View>
+</BottomSheet>
+
+
+
+    </View>
   );
 };
 
