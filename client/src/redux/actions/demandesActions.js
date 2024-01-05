@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import axios from 'axios';
 import {
+  ACCEPTED_MISSIONS,
   FETCH_PRODUCTS_FAILURE,
   FETCH_PRODUCTS_REQUEST,
   FETCH_PRODUCTS_SUCCESS,
@@ -18,6 +19,7 @@ import {createAccess} from './accessAction';
 import {setLoading} from './authActions';
 import { createSelector } from 'reselect';
 // import { GetMissions } from './demandesActions';
+import {API_URL} from '@env';
 
 export const AddDemande = (userData, navigation) => dispatch => {
 
@@ -27,7 +29,7 @@ export const AddDemande = (userData, navigation) => dispatch => {
   });
 
   axios
-    .post('https://convoyage.onrender.com/api/users/createDemande', userData)
+    .post(`${API_URL}/api/users/createDemande`, userData)
     .then(async res => {
 
 
@@ -69,7 +71,7 @@ export const increaseOffer = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `https://convoyage.onrender.com/api/users/incrementOffer/${demandeId}`,
+      `${API_URL}/api/users/incrementOffer/${demandeId}`,
     )
     .then(async res => {
 
@@ -107,7 +109,7 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `https://convoyage.onrender.com/api/users/AccepteMission/${demandeId}`,
+      `${API_URL}/api/users/AccepteMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -160,7 +162,7 @@ export const RefuseMission = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `https://convoyage.onrender.com/api/users/RefuseMission/${demandeId}`,
+      `${API_URL}/api/users/RefuseMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -198,7 +200,7 @@ export const decreaseOffer = (demandeId, navigation) => dispatch => {
   });
 
   axios
-    .post(`https://convoyage.onrender.com/api/users/decreaseOffer/${demandeId}`)
+    .post(`${API_URL}/api/users/decreaseOffer/${demandeId}`)
     .then(async res => {
 
 
@@ -228,7 +230,7 @@ export const decreaseOffer = (demandeId, navigation) => dispatch => {
 };
 export const FindRequestDemande = navigation => dispatch => {
   axios
-    .get('https://convoyage.onrender.com/api/users/findDemandsByUserId')
+    .get('${API_URL}/api/users/findDemandsByUserId')
     .then(async res => {
 
       dispatch({
@@ -254,7 +256,7 @@ export const DeleteDEmande = idDemande => dispatch => {
     payload: true,
   });
   axios
-    .delete(`https://convoyage.onrender.com/api/users/delete/${idDemande}`)
+    .delete(`${API_URL}/api/users/delete/${idDemande}`)
     .then(async res => {
 
 
@@ -345,7 +347,7 @@ export const GetRequest = () => dispatch => {
 export const GetMission = () => dispatch => {
 
   axios
-    .get(`https://convoyage.onrender.com/api/users/findMissionsByUser?limit=5&skip=5`)
+    .get(`${API_URL}/api/users/findMissionsByUser?limit=5&skip=5`)
     .then(async res => {
 
       dispatch({
@@ -364,7 +366,7 @@ export const GetMission = () => dispatch => {
 const getProducts = async (data) => {
   try {
     const response = await axios.get(
-      `https://convoyage.onrender.com/api/users/findMissionsByUser?limit=${data.limit}&skip=${data.skip}`
+      `${API_URL}/api/users/findMissionsByUser?limit=${data.limit}&skip=${data.skip}`
     );
 
 
@@ -400,4 +402,28 @@ export const GetMissions = (data) => {
     }
   };
 };
+
+
+export const AcceptedMission = () => dispatch => {
+console.log("hguigliugfliyflyufliyufml")
+  axios
+    .get(`${API_URL}/api/users/findMissionsAcceptedByUser`)
+    .then(async res => {
+      console.log(res.data)
+
+      dispatch({
+        type: ACCEPTED_MISSIONS,
+        payload: res.data,
+      });
+    })
+    .catch(err => {
+      console.log("********************", err)
+      dispatch({
+        type: SET_ERRORS,
+        payload: err,
+      });
+    });
+};
+
+
 

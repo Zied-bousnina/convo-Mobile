@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useNavigation} from '@react-navigation/native';
-import {GetMissions} from '../../../redux/actions/demandesActions';
+import {AcceptedMission, GetMissions} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
 import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
@@ -27,8 +27,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
 import { Button as BTN, Icon, MD3Colors } from 'react-native-paper';
-import { SET_EN_ROUTE } from '../../../redux/types';
-const RideRequests = () => {
+const AcceptedMissions = () => {
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
 
   const user = useSelector(({ currentUser }) => currentUser?.user);
@@ -97,70 +96,6 @@ if(
   }, [dispatch, user?.length, enable]);
 
 
-  // -------------------------------------------------------------
-  const [noti, setnoti] = useState([])
-  const [newMission, setnewMission] = useState(false)
-  useEffect(() => {
-//     socket.on('connect', () => {
-//     console.log('Connected to server');
-//     if (user) {
-//       // socket.current = io(host);
-//       // socket.emit("add-user", user.id);
-//     }
-
-// });
-const sendNotification = (mission) => {
-  PushNotification.localNotification({
-    channelId: "channell-id", // (required)
-    // channelName: "My channel", // (required)
-    title: "New Mission",
-    message: 'message',
-    playSound: true, // (optional) default: true
-    soundName: "default",
-    vibrate: true,
-    allowWhileIdle: true
-  });
-};
-socket.on('error', (error) => {
-    console.error('Socket error:', error);
-});
-
-
-    socket.on("message recieved", (newMessage) => {
-      // alert("gggg")
-      console.log("before",newMessage)
-      console.log("test",(newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
-      if((newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
-
-        setnoti(
-          [...noti, newMessage]
-        )
-        setnewMission(true)
-        PushNotification.localNotification({
-          channelId: "channell-id", // (required)
-          // channelName: "My channel", // (required)
-          title: "New Mission",
-          message: 'message',
-          playSound: true, // (optional) default: true
-          soundName: "default",
-          vibrate: true,
-          allowWhileIdle: true
-        });
-        sendNotification(newMessage?.mission)
-        // handleNotyfy(newMessage?);
-// if(newMessage?.partner?._id ==user?.id ){
-      console.log("New message received",newMessage);
-//   setnoti(
-//     [...noti, newMessage]
-//   )
-
-//   handleNotyfy(newMessage);
-}
-
-    });
-  }, [socket]);
-// console.log("notifivation", noti)
-  // -------------------------------------------------------------
   const changestatus = useCallback((value) => {
     // if (!user?.driverIsVerified) {
     //   ToastAndroid.showWithGravity(
@@ -207,12 +142,12 @@ socket.on('error', (error) => {
         if(isEnabled) {
           // setTimeout(() => {
 
-          //   dispatch(AddCurrentLocation({
-          //     address:{
-          //       latitude: position.coords.latitude,
-          //       longitude: position.coords.longitude
-          //     }
-          //   }, navigation))
+            // dispatch(AddCurrentLocation({
+            //   address:{
+            //     latitude: position.coords.latitude,
+            //     longitude: position.coords.longitude
+            //   }
+            // }, navigation))
           // }, 4000);
           socket.emit('locationUpdate', {userId:currentUser2?.user?.id,
           location:{
@@ -244,21 +179,17 @@ socket.on('error', (error) => {
 
   const PAGE_LIMIT = 5;
   // const dispatch = useDispatch();
-  const item_list = useSelector((state) => state.missions.missions.items);
+  const item_list = useSelector((state) => state?.AcceptedMissions?.mission?.missions);
   const isLoading = useSelector((state) => state.missions.isLoading);
   const page = useSelector((state) => state.missions.missions.page);
-  const count = useSelector((state) => state.missions.missions.count);
-
+  const count = useSelector((state) => state?.AcceptedMissions?.mission?.count);
+// console.log("item_list",item_list)
   useEffect(() => {
-    console.log("render2")
+    // console.log("render2")
     dispatch(
-      GetMissions({
-        page: 0,
-        limit: PAGE_LIMIT,
-        skip: 0 * PAGE_LIMIT,
-      }),
+        AcceptedMission(),
     );
-  }, [dispatch,count  ]);
+  }, [dispatch,count ,item_list?.length ]);
 
   const renderItem = useCallback(({ item }) => <ListRequest disable key={uniqueId()} data={item} />,[])
 
@@ -267,11 +198,7 @@ socket.on('error', (error) => {
 
     if (page * PAGE_LIMIT >=0  && !isLoading) {
       dispatch(
-        GetMissions({
-          page: page,
-          limit: PAGE_LIMIT,
-          skip: page * PAGE_LIMIT -PAGE_LIMIT,
-        }),
+        AcceptedMission(),
       );
     }
   };
@@ -280,27 +207,16 @@ socket.on('error', (error) => {
 
     if (page * PAGE_LIMIT < count && !isLoading) {
       dispatch(
-        GetMissions({
-          page: page,
-          limit: PAGE_LIMIT,
-          skip: page * PAGE_LIMIT,
-        }),
+        AcceptedMission(
+          ),
       );
     }
   };
 
   const enRouteAction = ()=> {
     // setenRoute(!enRoute)
-
     if(enRoute){
       setenRoute(false)
-      dispatch(
-        {
-          type: SET_EN_ROUTE,
-          payload:  false
-          ,
-        }
-      )
       socket.emit('enRoute', {userId:currentUser2?.user?.id,
         enRoute:false
       })
@@ -319,8 +235,19 @@ socket.on('error', (error) => {
     }
 
       }
-
-
+  const sendNotification = (mission) => {
+    PushNotification.localNotification({
+      channelId: "channel-id", // (required)
+      // channelName: "My channel", // (required)
+      title: "New Mission",
+      message: `A new mission is in progress\nDistance:  KM \nDate Depart:`,
+      playSound: true, // (optional) default: true
+      soundName: "default",
+      vibrate: true,
+      allowWhileIdle: true
+    });
+  };
+  sendNotification()
 
   const renderLoader = () => {
     return page * PAGE_LIMIT < count ? (
@@ -341,161 +268,11 @@ socket.on('error', (error) => {
   const getItemLayout = (data, index) => (
     {length: PAGE_LIMIT, offset: PAGE_LIMIT * index, index}
 )
-
-
   return (
     <View style={{ flex: 1 }}>
 
-      <View
-        style={{
-          // flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          // marginTop:10,
-
-        }}>
-
-        <SwitchToggle
-          size={60}
-          value={isEnabled && false}
-          onChange={value => {
-
-            changestatus(value);
-          }}
-          switchOn={true}
-          // onPress={() => Off(!on)}
-          circleColorOff="#d23a35"
-          circleColorOn="#6ab04c"
-          backgroundColorOn="#ffffff"
-          backgroundColorOff="#ffffff"
-          containerStyle={{
-            marginTop: 16,
-
-            width: 200,
-            height: 48,
-            borderRadius: 25,
-            padding: 5,
-            shadowOffset: {width: -1, height: -1},
-            shadowColor: '#ffffff',
-            shadowOpacity: 0.3,
-            shadowRadius: 20,
-            borderWidth: 1,
-            borderColor: !isEnabled ? '#d23a35' : '#6ab04c',
-          }}
-          backTextRight={'Online'}
-          textRightStyle={{
-            fontSize: 16,
-            color: 'black',
-
-            paddingLeft: 20,
-          }}
-          // backTextLeft={
-          //   'Offline'
-          // }
-          circleStyle={{
-            width: 100,
-            height: 40,
-            borderRadius: 20,
-          }}
-          // renderInsideCircle={() => (
-          //   <CustomComponent
-          //     someParam={someValue}
-          //   />
-          // )}
-          renderActiveText={false}
-          renderInActiveText={false}
-          switchOn={isEnabled}
-          onPress={() => {
-            changestatus(!isEnabled);
-          }}
-          circleColorOff={'#d23a35'}
-          circleColorOn={'#6ab04c'}
-          backgroundColorOn={'#ffffff'}
-          backgroundColorOff={'#ffffff'}
-          inactiveThumbColor={'#d23a35'}
-          // inactiveThumbColor={'#6ab04c'}
-          activeThumbColor={'#6ab04c'}
-          activeTrackColor={'#ffffff'}
-          inactiveTrackColor={'#ffffff'}
-          renderInactiveThumbIcon={() => (
-            <Text style={{fontSize: 14, color: 'black'}}>Offline</Text>
-          )}
-          renderActiveThumbIcon={() => (
-            <Text style={{fontSize: 14, color: 'black'}}>Online</Text>
-          )}
-          renderOffIndicator={() => (
-            <Text style={{fontSize: 12, color: 'black'}}></Text>
-          )}
-          renderOnIndicator={() => (
-            <Text style={{fontSize: 12, color: 'white'}}></Text>
-          )}
-        />
-      </View>
-      {
-        newMission &&
-
-      <View style={{
-  position: 'absolute',
-  top: 20, // Set top to 0 to align with the top of the screen
-  left: 0, // Align with the left of the screen
-  right: 0, // Align with the right of the screen
-  alignItems: 'center', // Center horizontally
-  justifyContent: 'center', // Center vertically
-  paddingTop: 90, // Add padding to create space from the top
-  // backgroundColor: '#007BFF', // Customize the background color as needed
-  padding: 10,
-  borderRadius: 5,
-  zIndex: 9999
-}}>
-      <BTN
-      icon={``} mode="contained" onPress={() =>{
-        loadItemsStart()
-        setnewMission(false)
 
 
-      }}>
-
- <> new mission
- <Icon
-    source="arrow-down"
-    color={MD3Colors.error50}
-    size={20}
-  />
-  </>
-
-
-    {/* Press me */}
-  </BTN>
-      </View>
-      }
-      <View  style={{
-          position: 'absolute',
-          bottom: 90,
-          right: 16,
-          // backgroundColor: '#007BFF', // Customize the background color as needed
-          padding: 10,
-          borderRadius: 5,
-          zIndex:9999
-        }}>
-      <BTN
-      icon={`${!enRoute? 'map':''}`} mode="contained" onPress={() =>{
-        enRouteAction()
-
-      }}>
-{
-  enRoute &&
- <> looking for en route request
- <Icon
-    source="close"
-    color={MD3Colors.error50}
-    size={20}
-  /></>
-}
-
-    {/* Press me */}
-  </BTN>
-      </View>
 
       {item_list?.length !=0 ? (
         <>
@@ -512,7 +289,7 @@ socket.on('error', (error) => {
             </Text>
           </View>
           {/* <ScrollView> */}
-            {item_list &&isEnabled ?
+            {item_list  ?
 
                <FlashList
               showsVerticalScrollIndicator={true}
@@ -660,14 +437,10 @@ socket.on('error', (error) => {
           borderRadius: 10,
         }}
         onPress={() =>
-         {
-          setenRoute(true)
+         { setenRoute(true)
           socket.emit('enRoute', {userId:currentUser2?.user?.id,
         enRoute:true
-      }
-
-
-      )
+      })
       ToastAndroid
       .showWithGravityAndOffset(
         'en route mode is on',
@@ -676,16 +449,7 @@ socket.on('error', (error) => {
         25,
         50,
         )
-          sheetRef.current.close()
-          dispatch(
-        {
-          type: SET_EN_ROUTE,
-          payload:  true
-          ,
-        }
-      )
-
-          }
+          sheetRef.current.close()}
         }
       />
     </View>
@@ -698,7 +462,7 @@ socket.on('error', (error) => {
   );
 };
 
-export default RideRequests;
+export default AcceptedMissions;
 const styles = StyleSheet.create({
   contentView: {
     flex: 1,

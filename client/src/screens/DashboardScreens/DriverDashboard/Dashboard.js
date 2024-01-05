@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Icon3 from 'react-native-vector-icons/Fontisto'
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import Icon4 from 'react-native-vector-icons/AntDesign'
+import Icon6 from 'react-native-vector-icons/FontAwesome5'
 import Icon5 from 'react-native-vector-icons/FontAwesome'
 import { get, save } from '../../../Storage'
 import { Colors } from '../../../theme'
@@ -19,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AddCurrentLocation, GetCurrentUser } from '../../../redux/actions/userActions'
 import Geolocation from 'react-native-geolocation-service';
 import { useNavigation } from '@react-navigation/native'
+import AcceptedMissions from './AcceptedMissions'
 const Tab = createBottomTabNavigator();
 const Dashboard = () => {
   const currentUser = useSelector(state=>state?.currentUser2?.users?.user)
@@ -160,7 +162,15 @@ if(
                     </View>
                 )
             }}  name="Dashboard" component={RideRequests}/>
-
+<Tab.Screen options={{
+                tabBarIcon:({focused})=>(
+                    <View style={{alignItems:'center'}} >
+                         <Icon6 name={focused ? 'route' : 'route'} size={20} color={focused ? "#26cbfc": "#999"} />
+                         {/* <Text style={{color: focused ? '#fff':'grey',fontFamily:'Roboto-Bold', fontSize:10}} >Scan</Text>    */}
+                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Accepted mission</Text>
+                    </View>
+                )
+            }}  name="scan" component={AcceptedMissions}/>
 <Tab.Screen options={{
                 tabBarIcon:({focused})=>(
                     <View style={{alignItems:'center'}} >
@@ -170,15 +180,7 @@ if(
                 )
             }}  name="recents" component={MyIncome}/>
 
-<Tab.Screen options={{
-                tabBarIcon:({focused})=>(
-                    <View style={{alignItems:'center'}} >
-                         <Icon4 name={focused ? 'staro' : 'staro'} size={20} color={focused ? "#26cbfc": "#999"} />
-                         {/* <Text style={{color: focused ? '#fff':'grey',fontFamily:'Roboto-Bold', fontSize:10}} >Scan</Text>    */}
-                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Rating</Text>
-                    </View>
-                )
-            }}  name="scan" component={Rating}/>
+
 
 
 

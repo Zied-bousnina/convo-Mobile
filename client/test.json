@@ -1,19 +1,78 @@
 {
-    "data": {
+    "__v": 0,
+    "_id": "65945d4c405de04f28c8b471",
+    "categorie": {
         "__v": 0,
-        "_id": "655b57df15fc130041296634",
+        "_id": "6590aac44226c4004e3c7686",
+        "createdAt": "2023-12-30T23:41:56.088Z",
+        "description": "cat 1",
+        "unitPrice": 150,
+        "updatedAt": "2023-12-30T23:41:56.088Z"
+    },
+    "createdAt": "2024-01-02T19:00:28.190Z",
+    "distance": "335.6551733870821",
+    "mission": {
+        "__v": 0,
+        "_id": "658d981eb9976167743cbf46",
         "address": {
-            "display_name": "عين الصفصاف, معتمدية بئر مشارقة, Zaghouan Governorate, Tunisia",
-            "latitude": "36.49348018653797",
-            "longitude": "10.117976781435708"
+            "display_name": "75, Acme Road, North Watford, Watford, Hertfordshire, England, WD24 5AH, United Kingdom",
+            "latitude": "51.67107308087401",
+            "longitude": "-0.4044906926852932"
         },
-        "createdAt": "2023-11-20T12:58:07.714Z",
+        "createdAt": "2023-12-28T15:45:34.334Z",
+        "dateDepart": "Fri Dec 29 2023 16:00:44 GMT+0100 (Central European Standard Time)",
         "destination": {
-            "display_name": "وادي الخضراء, معتمدية الفحص, Zaghouan Governorate, Tunisia",
-            "latitude": "36.329716183099805",
-            "longitude": "9.988085612305333"
+            "display_name": "Quai de l'Oise, Rieux, Clermont, Oise, Hauts-de-France, Metropolitan France, 60870, France",
+            "latitude": "49.29453121507309",
+            "longitude": "2.521843887536659"
         },
-        "distance": "21.60325238503127",
+        "distance": "335.6551733870821",
         "driverIsAuto": true,
-        "postalAddress": "عين الصفصاف, معتمدية بئر مشارقة, Zaghouan Governorate,
-Tunisia", "postalDestination": "وادي الخضراء, معتمدية الفحص, Zaghouan Governorate, Tunisia", "status": "in progress", "updatedAt": "2023-11-20T12: 58: 07.714Z", "user": "6552999be6e0f30042d67a91"}, "disable": true}
+        "missionType": "delivery",
+        "postalAddress": "75, Acme Road, North Watford, Watford, Hertfordshire, England, WD24 5AH, United Kingdom",
+        "postalDestination": "Quai de l'Oise, Rieux, Clermont, Oise, Hauts-de-France, Metropolitan France, 60870, France",
+        "status": "Accepted",
+        "updatedAt": "2024-01-01T00:11:04.084Z",
+        "user": "658b4532b697da6224bf6978",
+        "vehicleType": "car"
+    },
+    "montant": 50348.27600806231,
+    "partner": {
+        "Newsocket": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ],
+        "__v": 58,
+        "_id": "658b4532b697da6224bf6978",
+        "addressPartner": "MT",
+        "contactName": "partner",
+        "createdAt": "2023-12-26T21:27:14.140Z",
+        "driverIsVerified": false,
+        "email": "partner@test.tn",
+        "firstLogin": false,
+        "googleId": null,
+        "isBlocked": false,
+        "kbis": "https://res.cloudinary.com/dcuafrhwc/image/upload/v1703626032/pdf_uploads/kbis_1703626032914.png",
+        "name": "partner",
+        "onligne": false,
+        "password": "$2a$10$CnS1SudHV1Pa2VhL08A8c.WNpofBZ3lzkkTQr3QfuChUJHqrL5s5.",
+        "phoneNumber": "56 981 501",
+        "role": "PARTNER",
+        "siret": "585 855 555 55554",
+        "updatedAt": "2024-01-02T19:00:30.156Z",
+        "verified": true
+    },
+    "rectification": 0,
+    "status": "Accepted",
+    "updatedAt": "2024-01-05T16:52:03.473Z"
+}
