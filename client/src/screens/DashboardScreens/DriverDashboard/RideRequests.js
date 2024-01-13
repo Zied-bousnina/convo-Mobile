@@ -101,6 +101,70 @@ if(
   // -------------------------------------------------------------
   const [noti, setnoti] = useState([])
   const [newMission, setnewMission] = useState(false)
+  const sendNotification = (mission, navigation) => {
+    // Create a channel for the notification
+    PushNotification.createChannel(
+      {
+        channelId: "specialid",
+        channelName: "Special Message",
+        channelDescription: "Notification for special message",
+        importance: 4,
+        vibrate: true,
+      },
+      (created) => console.log(`createChannel returned '${created}'`)
+    );
+
+    // Extract information from the mission object
+    const {
+      distance,
+      address,
+      destination,
+      status,
+      dateDepart,
+      driverIsAuto,
+      vehicleType,
+      postalAddress,
+      postalDestination,
+    } = mission;
+
+    // Customize the notification message based on the mission information
+    const title = `Mission ${status}`;
+    const message = `
+      Distance: ${distance} km
+      Departure Date: ${new Date(dateDepart).toLocaleString()}
+      Driver: ${driverIsAuto ? 'Auto' : 'Manual'}
+      Vehicle Type: ${vehicleType}
+      From: ${postalAddress.display_name}
+      To: ${postalDestination.display_name}
+    `;
+
+    // Trigger the local notification with a callback for handling onPress
+    PushNotification.localNotification({
+      channelId: 'specialid',
+      title: title,
+      message: message,
+      onPress: () => {
+        // Navigate to the "MissionDetails" screen with the provided parameters
+        navigation.navigate("MissionDetails", {
+          demandeId: mission._id,
+          distance: distance,
+          address: address,
+          destination: destination,
+          status: status,
+          dateDepart: dateDepart,
+          driverIsAuto: driverIsAuto,
+          vehicleType: vehicleType,
+          postalAddress: postalAddress,
+          postalDestination: postalDestination,
+        });
+      },
+    });
+  };
+  // useEffect(() => {
+  //   sendNotification(newMission)
+
+  // }, [])
+
   useEffect(() => {
 //     socket.on('connect', () => {
 //     console.log('Connected to server');
@@ -110,65 +174,7 @@ if(
 //     }
 
 // });
-const sendNotification = (mission, navigation) => {
-  // Create a channel for the notification
-  PushNotification.createChannel(
-    {
-      channelId: "specialid",
-      channelName: "Special Message",
-      channelDescription: "Notification for special message",
-      importance: 4,
-      vibrate: true,
-    },
-    (created) => console.log(`createChannel returned '${created}'`)
-  );
 
-  // Extract information from the mission object
-  const {
-    distance,
-    address,
-    destination,
-    status,
-    dateDepart,
-    driverIsAuto,
-    vehicleType,
-    postalAddress,
-    postalDestination,
-  } = mission;
-
-  // Customize the notification message based on the mission information
-  const title = `Mission ${status}`;
-  const message = `
-    Distance: ${distance} km
-    Departure Date: ${new Date(dateDepart).toLocaleString()}
-    Driver: ${driverIsAuto ? 'Auto' : 'Manual'}
-    Vehicle Type: ${vehicleType}
-    From: ${postalAddress.display_name}
-    To: ${postalDestination.display_name}
-  `;
-
-  // Trigger the local notification with a callback for handling onPress
-  PushNotification.localNotification({
-    channelId: 'specialid',
-    title: title,
-    message: message,
-    onPress: () => {
-      // Navigate to the "MissionDetails" screen with the provided parameters
-      navigation.navigate("MissionDetails", {
-        demandeId: mission._id,
-        distance: distance,
-        address: address,
-        destination: destination,
-        status: status,
-        dateDepart: dateDepart,
-        driverIsAuto: driverIsAuto,
-        vehicleType: vehicleType,
-        postalAddress: postalAddress,
-        postalDestination: postalDestination,
-      });
-    },
-  });
-};
 
 socket.on('error', (error) => {
     console.error('Socket error:', error);
@@ -200,7 +206,9 @@ socket.on('error', (error) => {
 
     });
   }, [socket]);
-// console.log("notifivation", noti)
+
+
+
   // -------------------------------------------------------------
   const changestatus = useCallback((value) => {
     // if (!user?.driverIsVerified) {
