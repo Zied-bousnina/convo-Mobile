@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -50,7 +51,12 @@ const MissionDetails = ({route}) => {
     distance,
     postalDestination,
     postalAddress,
-    demandeId
+    demandeId,
+    postalDestinationCode,
+    missionType,
+    dateDepart,
+    remunerationAmount,
+    devisId
 
   } =  route.params
   console.log(route.params)
@@ -171,7 +177,25 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
     <SafeAreaView style={styles.Container}>
     <TouchableOpacity
     onPress={()=>{
-      navigation.goBack()
+      navigation.navigate("missionDetails",{
+            demandeId,
+            distance,
+            address,
+            destination,
+            comments,
+            offer,
+            // status,
+            postalAddress,
+            postalDestination,
+            // postalCode,
+            postalDestinationCode,
+            missionType,
+            dateDepart,
+            remunerationAmount,
+            devisId
+            // dateArrivee : data?.data?.mission?.dateArrivee,
+
+          })
     }}
      style={[ { position: 'absolute',
     top: 10, // Adjust as needed
@@ -327,85 +351,12 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                 />
               </View>
             </View> */}
-            <View style={styles.termsCon}>
-            </View>
-          </View>
-
-          <View style={styles.loginCon}>
-            {/* <LoginButton
-              style={[styles.LoginBtn,{ marginRight: 10 }]}
-              loginBtnLbl={styles.loginBtnLbl}
-              btnName={"-0.5"}
-            /> */}
-            <View
-            style={{
-              // width:"40%",
-              // justifyContent:"center",
-              // alignItems:"center",
-              // marginLeft: 20,
-              marginRight:10
-            }}
-            >
-
-            <BTN title="rejeté" type="solid" loading={isLoad && dec}
-              buttonStyle={[styles.LoginBtn], {
-                backgroundColor: '#f66',
-                borderRadius: 20,
-                width:"100%",
-                // paddingLeft:10
-
-              }}
-              onPress={handleDecrease}
-            />
-            </View>
-           {/* <AppInput
-                  name="TND"
-                  placeholder="TND"
-                  style={[styles.textInput, {fontWeight:"bold",marginRight: 10 }]}
-                  placeholderTextColor={'#aaa'}
-                  value={"TND"+offer}
-                  editable = {false}
-                  color={"white"}
-                /> */}
-            {/* <LoginButton
-              style={styles.LoginBtn}
-              loginBtnLbl={styles.loginBtnLbl}
-              btnName={"+0.5"}
-
-
-            /> */}
-            <BTN title="accepté" type="solid" loading={isLoad && inc}
-              buttonStyle={styles.LoginBtn}
-              onPress={handleIncrease}
-            />
 
           </View>
+
+
         </View>
-        <BottomSheet ref={sheetRef}
-        // height={Dimensions.get("screen").height}
-        closeOnDragDown={
-          true
-        }
-        // closeOnPressMask={true}
-        // snapPoints={['100%']}
 
-        // height={Dimensions.get("screen").height}
-
-        >
-       {/* <Destination/> */}
-       {/* <Pressable
-        onPress={()=>sheetRef.current.close()}
-        style={{
-          backgroundColor: '#6bc7ab',
-          padding: 16,
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: 'white', fontSize: 20 }}>Close</Text>
-      </Pressable> */}
-
-      {/* <FindDriver currentLocation={currentLocation} currentAddress={currentAddress}/> */}
-    </BottomSheet>
         </CostomFormik>
   </View>
 
@@ -458,7 +409,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     opacity: 0.7, // You can adjust the opacity as needed
     position: 'absolute',
-    top: '50%', // Position in the middle of the screen vertically
+    top: '70%', // Position in the middle of the screen vertically
     left: 0,
     right: 0,
     bottom: 0,

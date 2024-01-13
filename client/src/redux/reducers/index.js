@@ -27,6 +27,7 @@ import MissionsReducers from './Missions.reducers';
 import CurrentUserReducer from './CurrentUser.reducer';
 import enRouteReducer from './enRoute.reducer';
 import AcceptedMissionsReducer from './AcceptedMissions.reducer';
+import lastMissionReducer from './lastMission.reducer';
 
 
 export default  combineReducers({
@@ -57,6 +58,7 @@ export default  combineReducers({
     currentUser2: CurrentUserReducer,
     enRoute : enRouteReducer,
     AcceptedMissions : AcceptedMissionsReducer,
+    lastMission:lastMissionReducer
 
 
 

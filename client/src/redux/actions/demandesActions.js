@@ -12,6 +12,7 @@ import {
   SET_DEMANDES_MUNICIPAL,
   SET_ERRORS,
   SET_IS_LOADING,
+  SET_LAST_MISSION,
   SET_MISSIONS,
   SET_REQUEST,
 } from '../types';
@@ -106,10 +107,71 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
     type: SET_IS_LOADING,
     payload: true,
   });
+  dispatch({
+    type: SET_IS_LOADING,
+    payload: true,
+  })
 
   axios
     .post(
       `${API_URL}/api/users/AccepteMission/${demandeId}`,
+    )
+    .then(async res => {
+
+
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+      // console.log("accept",res.data)
+      navigation.navigate("AcceptationScreen",{
+        demandeId:res?.data?.demand?._id,
+        distance:res?.data?.demand?.distance,
+        address:res?.data?.demand?.address,
+        destination:res?.data?.demand?.destination,
+        comments:res?.data?.demand?.comments,
+        // offer:data?.data?.offer,
+        status:res?.data?.demand?.status,
+        postalAddress:res?.data?.demand?.postalAddress,
+        postalDestination:res?.data?.demand?.postalDestination,
+        // postalCode:data?.data?.postalCode,
+        // postalDestinationCode:data?.data?.postalDestinationCode,
+
+      })
+      // navigation.navigate("AcceptationScreen",userData )
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      })
+    })
+    .catch(err => {
+
+      dispatch({
+        type: SET_ERRORS,
+        payload: err?.response?.data,
+      });
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+    });
+};
+export const TermineeMission = (demandeId, navigation) => dispatch => {
+
+  dispatch({
+    type: SET_IS_LOADING,
+    payload: true,
+  });
+
+  axios
+    .post(
+      `${API_URL}/api/users/TermineeMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -250,6 +312,31 @@ export const FindRequestDemande = navigation => dispatch => {
       });
     });
 };
+export const FindLastMission = navigation => dispatch => {
+  // console.log("tee")
+  axios
+    .get(`${API_URL}/api/users/findLastMissionByUser`)
+    .then(async res => {
+      console.log(res.data)
+
+      dispatch({
+        type: SET_LAST_MISSION,
+        payload: res.data,
+      });
+    })
+
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err?.response?.data,
+      });
+      dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+    });
+};
+
 export const DeleteDEmande = idDemande => dispatch => {
   dispatch({
     type: SET_IS_LOADING,
@@ -407,7 +494,7 @@ export const GetMissions = (data) => {
 export const AcceptedMission = () => dispatch => {
 console.log("hguigliugfliyflyufliyufml")
   axios
-    .get(`${API_URL}/api/users/findMissionsAcceptedByUser`)
+    .get(`${API_URL}/api/users/findMissionsTermineeByUser`)
     .then(async res => {
       console.log(res.data)
 

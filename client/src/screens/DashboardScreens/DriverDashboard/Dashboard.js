@@ -21,6 +21,8 @@ import { AddCurrentLocation, GetCurrentUser } from '../../../redux/actions/userA
 import Geolocation from 'react-native-geolocation-service';
 import { useNavigation } from '@react-navigation/native'
 import AcceptedMissions from './AcceptedMissions'
+import Home from './Home'
+import MesMission from './MesMission'
 const Tab = createBottomTabNavigator();
 const Dashboard = () => {
   const currentUser = useSelector(state=>state?.currentUser2?.users?.user)
@@ -153,7 +155,7 @@ if(
             tabBarShowLabel:false,
 
         }} >
-            <Tab.Screen options={{
+            {/* <Tab.Screen options={{
                 tabBarIcon:({focused})=>(
                     <View style={{alignItems:'center'}} >
 
@@ -161,16 +163,34 @@ if(
                          <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Ride requests</Text>
                     </View>
                 )
-            }}  name="Dashboard" component={RideRequests}/>
-<Tab.Screen options={{
+            }}  name="Dashboard" component={RideRequests}/> */}
+            <Tab.Screen options={{
+                tabBarIcon:({focused})=>(
+                    <View style={{alignItems:'center'}} >
+
+                         <Icon4 name={'bars'} size={20} color={focused ?"#26cbfc": "#999"} />
+                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Home</Text>
+                    </View>
+                )
+            }}  name="Dashboard" component={Home}/>
+            <Tab.Screen options={{
                 tabBarIcon:({focused})=>(
                     <View style={{alignItems:'center'}} >
                          <Icon6 name={focused ? 'route' : 'route'} size={20} color={focused ? "#26cbfc": "#999"} />
                          {/* <Text style={{color: focused ? '#fff':'grey',fontFamily:'Roboto-Bold', fontSize:10}} >Scan</Text>    */}
+                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Mes Missions</Text>
+                    </View>
+                )
+            }}  name="Missions" component={MesMission}/>
+{/* <Tab.Screen options={{
+                tabBarIcon:({focused})=>(
+                    <View style={{alignItems:'center'}} >
+                         <Icon6 name={focused ? 'route' : 'route'} size={20} color={focused ? "#26cbfc": "#999"} />
+
                          <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Accepted mission</Text>
                     </View>
                 )
-            }}  name="scan" component={AcceptedMissions}/>
+            }}  name="scan" component={AcceptedMissions}/> */}
 <Tab.Screen options={{
                 tabBarIcon:({focused})=>(
                     <View style={{alignItems:'center'}} >

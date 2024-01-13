@@ -3,16 +3,15 @@ import { View, Text, ScrollView, Dimensions, Pressable, StyleSheet } from 'react
 import React, { memo, useEffect, useRef } from 'react'
 import { Button, Icon, Image } from 'react-native-elements'
 import { ListItem } from '@rneui/themed';
-import { useDispatch, useSelector } from 'react-redux';
-import { AccepteMission, DeleteDEmande, TermineeMission } from '../../../redux/actions/demandesActions';
+import { useDispatch } from 'react-redux';
+import { DeleteDEmande } from '../../../redux/actions/demandesActions';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import haversine from 'haversine'; // You may need to install this library using `npm install haversine`
 
 import { uniqueId } from "lodash";
 import { useNavigation } from '@react-navigation/native';
 import { Button as BTNPaper, MD3Colors } from 'react-native-paper';
-import { SET_REQUEST } from '../../../redux/types';
-const ListRequest = memo((data, key) => {
+const ListRequest2 = memo((data, key) => {
     const originalDateString = data?.data?.createdAt;
     const date = new Date(originalDateString);
     const month = date.toLocaleString('default', { month: 'short' });
@@ -21,7 +20,6 @@ const ListRequest = memo((data, key) => {
     const dispatch = useDispatch()
     const sheetRef = useRef(null);
     const navigation = useNavigation()
-    const isLOad = useSelector(state=>state?.isLoading?.isLoading)
     const actionDelete = () => {
       // dispatch(DeleteDEmande(data?.data?._id))
     }
@@ -68,25 +66,7 @@ console.log(data)
           // setselectedItem(item);
           // sheetRef.current.open();
 
-          navigation.navigate("missionDetails",{
-            demandeId:data?.data?.mission?._id,
-            distance:distance,
-            address:data?.data?.mission?.address,
-            destination:data?.data?.mission?.destination,
-            comments:data?.data?.mission?.comments,
-            offer:data?.data?.mission?.offer,
-            status:data?.data?.mission?.status,
-            postalAddress:data?.data?.mission?.postalAddress,
-            postalDestination:data?.data?.mission?.postalDestination,
-            postalCode:data?.data?.mission?.postalCode,
-            postalDestinationCode:data?.data?.mission?.postalDestinationCode,
-            missionType: data?.data?.mission?.missionType,
-            dateDepart : data?.data?.mission?.dateDepart,
-            remunerationAmount: data?.data?.remunerationAmount,
-            devisId: data?.data?._id
-            // dateArrivee : data?.data?.mission?.dateArrivee,
 
-          })
           // console.log("hello zied ")
         }
      }
@@ -203,49 +183,6 @@ console.log(data)
               <Text style={styles.showMoreText}>Click To Report User</Text>
             </View> */}
 
-
-            <View
-              style={styles.tags}
-            >
-            <BTNPaper
-            mode="outlined"
-            loading={isLOad}
-            onPress={() => {
-              console.log(data?.data?._id)
-              dispatch(AccepteMission(
-                data?.data?._id
-
-            ))
-            dispatch({
-        type: SET_REQUEST,
-        payload: [],
-      });
-      //       dispatch({
-      //   type: SET_LAST_MISSION,
-      //   payload: [],
-      // });
-    // dispatch(FindLastMission())
-            }}
-            >
-              Mission démarée
-            </BTNPaper>
-            <BTNPaper
-             loading={isLOad}
-            onPress={() => {
-              console.log(data?.data?._id)
-            dispatch(TermineeMission(
-              data?.data?._id
-
-            ))
-
-
-            }}
-            mode="contained">
-              Mission Terminée
-            </BTNPaper>
-
-            </View>
-
         </Pressable>
         {/* <Text>hets</Text> */}
 
@@ -254,7 +191,7 @@ console.log(data)
   })
 
 
-export default ListRequest
+export default ListRequest2
 const styles = StyleSheet.create({
   contentView: {
     flex: 1,

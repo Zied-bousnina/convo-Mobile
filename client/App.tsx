@@ -67,6 +67,9 @@ import MissionDetails from './src/screens/DashboardScreens/DriverDashboard/Missi
 import InternetDisconnected from './src/components/Animations/InternetDisconnected';
 import NetInfo from '@react-native-community/netinfo';
 import AcceptationScreen from './src/screens/DashboardScreens/DriverDashboard/AcceptationScreen';
+import MissionDetails2 from './src/screens/DashboardScreens/DriverDashboard/MissionDetails2';
+import MesMission from './src/screens/DashboardScreens/DriverDashboard/MesMission';
+// import MissionDetails2 from './src/screens/DashboardScreens/DriverDashboard/missionDetails2';
 function App(): JSX.Element {
   PushNotification.configure({
     onRegister: function (token) {
@@ -251,7 +254,10 @@ function App(): JSX.Element {
          component={FirstScreenStack}
        /> */}
         <Drawer.Screen
-      name="Driver"
+      name={`Hello ${
+        user?.user?.name ? user?.user?.name : 'Driver'
+
+      }!`}
 
       options={{
         drawerLabel: () => null, // Hide the label
@@ -259,6 +265,26 @@ function App(): JSX.Element {
         // header:"  Header",
       }}
       component={Dashboard}
+    />
+     <Drawer.Screen
+      name={"missionDetails"}
+      options={{drawerLabel: 'mission details', title: 'mission details',
+
+      drawerIcon: ({ focused, size }) => (
+       <Icon2
+           name="car-side"
+           size={size}
+           color={focused ? '#26cbfc' : 'black'}
+       />
+   ),
+     }}
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+      }}
+      component={MissionDetails2}
     />
         <Drawer.Screen
       name="AcceptationScreen"
@@ -270,6 +296,20 @@ function App(): JSX.Element {
       }}
       component={AcceptationScreen}
     />
+     {/* <Drawer.Screen
+         name="Missions"
+         options={{drawerLabel: 'Mes missions', title: 'Mes misssions',
+
+         drawerIcon: ({ focused, size }) => (
+          <Icon2
+              name="car-side"
+              size={size}
+              color={focused ? '#26cbfc' : 'black'}
+          />
+      ),
+        }}
+         component={MesMission}
+       /> */}
        <Drawer.Screen
          name="CityPage"
          options={{drawerLabel: 'City', title: 'City',
