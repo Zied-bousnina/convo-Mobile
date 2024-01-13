@@ -69,78 +69,54 @@ import NetInfo from '@react-native-community/netinfo';
 import AcceptationScreen from './src/screens/DashboardScreens/DriverDashboard/AcceptationScreen';
 function App(): JSX.Element {
   PushNotification.configure({
-    // (optional) Called when Token is generated (iOS and Android)
     onRegister: function (token) {
-      // console.log("TOKEN:", token);
     },
-
-    // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
-      // console.log("NOTIFICATION:", notification);
-
-      // process the notification
-
-      // (required) Called when a remote is received or opened, or local notification is opened
-      // notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
-
-    // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
     onAction: function (notification) {
-      // console.log("ACTION:", notification.action);
-      // console.log("NOTIFICATION:", notification);
-
-      // process the action
     },
-
     // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
     onRegistrationError: function(err) {
       console.error(err.message, err);
     },
-
-    // IOS ONLY (optional): default: all - Permissions to register.
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
-    },
-
-    // Should the initial notification be popped automatically
-    // default: true
     popInitialNotification: true,
-
-    /**
-     * (optional) default: true
-     * - Specified if permissions (ios) and token (android and ios) will requested or not,
-     * - if not, you must call PushNotificationsHandler.requestPermissions() later
-     * - if you are not using remote notification or do not have Firebase installed, use this:
-     *     requestPermissions: Platform.OS === 'ios'
-     */
     requestPermissions: true,
     requestPermissions: Platform.OS === 'ios'
   });
+  const isDarkMode = useColorScheme() == 'dark';
   const missions = useSelector(({ missions }) => missions?.missions);
   const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
   const user = useSelector(state => state?.auth);
 
-  const sendNotification = (mission) => {
-    PushNotification.localNotification({
-      channelId: "channel-id", // (required)
-      // channelName: "My channel", // (required)
-      title: "New Mission",
-      message: `A new mission is in progress\nDistance: ${parseInt(missions[missions?.length-1]?.distance)}KM \nDate Depart: ${missions[missions?.length-1]?.dateDepart ? missions[missions?.length-1]?.dateDepart.toString() : ''}\nDriver Auto: ${missions[missions?.length-1]?.driverIsAuto ? 'Yes' : 'No'}`,
-      playSound: true, // (optional) default: true
-      soundName: "default",
-      vibrate: true,
-      allowWhileIdle: true
-    });
-  };
+  // const sendNotification = (mission) => {
+  //   PushNotification.createChannel(
+  //     {
+  //       channelId: "specialid", // (required)
+  //       channelName: "Special messasge", // (required)
+  //       channelDescription: "Notification for special message", // (optional) default: undefined.
+  //       importance: 4, // (optional) default: 4. Int value of the Android notification importance
+  //       vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+  //     },
+  //     (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+  //   );
+  //   PushNotification.localNotification({
+  //     channelId:'specialid', //his must be same with channelid in createchannel
+  //     title:'hello',
+  //     message:'test message'
+  //   })
+  // };
+  // useEffect(() => {
+  //   sendNotification()
+  //   console.log("n")
+  // }, [[]])
+
   useEffect(() => {
-    sendNotification()
+    // sendNotification()
     if(
       missions?.length != cuuerentLength && user.isConnected
     ){
       setcuuerentLength(missions?.length)
-      sendNotification()
+      // sendNotification()
     }
     },[missions, cuuerentLength])
   useEffect(() => {

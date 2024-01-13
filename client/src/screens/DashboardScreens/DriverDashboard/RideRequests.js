@@ -28,6 +28,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
 import { Button as BTN, Icon, MD3Colors } from 'react-native-paper';
 import { SET_EN_ROUTE } from '../../../redux/types';
+
 const RideRequests = () => {
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
 
@@ -109,18 +110,66 @@ if(
 //     }
 
 // });
-const sendNotification = (mission) => {
+const sendNotification = (mission, navigation) => {
+  // Create a channel for the notification
+  PushNotification.createChannel(
+    {
+      channelId: "specialid",
+      channelName: "Special Message",
+      channelDescription: "Notification for special message",
+      importance: 4,
+      vibrate: true,
+    },
+    (created) => console.log(`createChannel returned '${created}'`)
+  );
+
+  // Extract information from the mission object
+  const {
+    distance,
+    address,
+    destination,
+    status,
+    dateDepart,
+    driverIsAuto,
+    vehicleType,
+    postalAddress,
+    postalDestination,
+  } = mission;
+
+  // Customize the notification message based on the mission information
+  const title = `Mission ${status}`;
+  const message = `
+    Distance: ${distance} km
+    Departure Date: ${new Date(dateDepart).toLocaleString()}
+    Driver: ${driverIsAuto ? 'Auto' : 'Manual'}
+    Vehicle Type: ${vehicleType}
+    From: ${postalAddress.display_name}
+    To: ${postalDestination.display_name}
+  `;
+
+  // Trigger the local notification with a callback for handling onPress
   PushNotification.localNotification({
-    channelId: "channell-id", // (required)
-    // channelName: "My channel", // (required)
-    title: "New Mission",
-    message: 'message',
-    playSound: true, // (optional) default: true
-    soundName: "default",
-    vibrate: true,
-    allowWhileIdle: true
+    channelId: 'specialid',
+    title: title,
+    message: message,
+    onPress: () => {
+      // Navigate to the "MissionDetails" screen with the provided parameters
+      navigation.navigate("MissionDetails", {
+        demandeId: mission._id,
+        distance: distance,
+        address: address,
+        destination: destination,
+        status: status,
+        dateDepart: dateDepart,
+        driverIsAuto: driverIsAuto,
+        vehicleType: vehicleType,
+        postalAddress: postalAddress,
+        postalDestination: postalDestination,
+      });
+    },
   });
 };
+
 socket.on('error', (error) => {
     console.error('Socket error:', error);
 });
@@ -136,16 +185,8 @@ socket.on('error', (error) => {
           [...noti, newMessage]
         )
         setnewMission(true)
-        PushNotification.localNotification({
-          channelId: "channell-id", // (required)
-          // channelName: "My channel", // (required)
-          title: "New Mission",
-          message: 'message',
-          playSound: true, // (optional) default: true
-          soundName: "default",
-          vibrate: true,
-          allowWhileIdle: true
-        });
+        console.log("++++++++++++++++++",newMessage?.mission)
+
         sendNotification(newMessage?.mission)
         // handleNotyfy(newMessage?);
 // if(newMessage?.partner?._id ==user?.id ){

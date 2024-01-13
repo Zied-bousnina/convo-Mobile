@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {Component, useCallback, useEffect, useRef, useState} from 'react';
 import {
   Text,
