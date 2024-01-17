@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { View, Text, Dimensions, Animated, useColorScheme, StyleSheet, Pressable } from 'react-native'
 import React, { useState, useRef, useCallback, useEffect} from 'react';
 import * as yup from 'yup';
@@ -41,6 +42,10 @@ const validationSchema = yup.object({
     .required('Password is required'),
 });
 const AnimatedLine = Animated.createAnimatedComponent(View);
+GoogleSignin.configure({
+  webClientId: '748250144158-0ii20tuoqf45r6lo3jsddkge4fl53une.apps.googleusercontent.com',
+  offlineAccess: false,
+});
 const LoginScreen = () => {
 
   const [show, setshow] = useState(false);
@@ -189,6 +194,8 @@ const LoginScreen = () => {
           } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
             // play services not available or outdated
           } else {
+            console.log(error)
+
             // some other error happened
           }
         }

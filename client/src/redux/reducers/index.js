@@ -28,6 +28,7 @@ import CurrentUserReducer from './CurrentUser.reducer';
 import enRouteReducer from './enRoute.reducer';
 import AcceptedMissionsReducer from './AcceptedMissions.reducer';
 import lastMissionReducer from './lastMission.reducer';
+import facturesReducers from './factures.reducers';
 
 
 export default  combineReducers({
@@ -58,7 +59,8 @@ export default  combineReducers({
     currentUser2: CurrentUserReducer,
     enRoute : enRouteReducer,
     AcceptedMissions : AcceptedMissionsReducer,
-    lastMission:lastMissionReducer
+    lastMission:lastMissionReducer,
+    factures: facturesReducers
 
 
 

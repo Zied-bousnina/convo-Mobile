@@ -6,11 +6,11 @@ import { Alert } from 'react-native';
 import { SetAuthToken } from '../../utils/SetAuthToken';
 import jwt_decode from "jwt-decode"
 import { GetProfile } from './profile.actions';
-import {API_URL} from '@env';
+// import {BASE_URL} from '@env';
 import Login from '../../components/Auth/Login';
 import { GetRequest } from './demandesActions';
 import { GetCurrentAccess } from './accessAction';
-
+const BASE_URL= 'https://convoyage.onrender.com'
 
 export const registerUser =  (userData, navigation ) => (dispatch) => {
 
@@ -27,7 +27,7 @@ export const registerUser =  (userData, navigation ) => (dispatch) => {
         type:SET_IS_SECCESS,
         payload:false
     })
-    axios.post(`${API_URL}/api/register`, userData)
+    axios.post(`${BASE_URL}/api/register`, userData)
         .then(async(res) => {
             dispatch({
                 type:SET_IS_LOADING,
@@ -107,7 +107,7 @@ export const verifyEmail = (userData, navigation)=>(dispatch)=> {
         payload:false
       })
 
-    axios.post(`${API_URL}/api/users/verifyemail`, userData)
+    axios.post(`${BASE_URL}/api/users/verifyemail`, userData)
     .then(async(res) => {
 
         dispatch({
@@ -270,7 +270,7 @@ export const resendOtp = (email)=>dispatch=> {
         type:SET_NOT_SUCCESS,
         payload:false
       })
-    axios.post(`${API_URL}/api/users/resendotp`, email)
+    axios.post(`${BASE_URL}/api/users/resendotp`, email)
     .then(async(res) => {
         dispatch({
             type:SET_IS_LOADING,
@@ -455,7 +455,7 @@ export const loginUser = (userData) => dispatch => {
     })
     dispatch(LogOut())
     axios
-        .post(`${API_URL}/api/users/login`, {email:userData.email, password:userData.password})
+        .post(`${BASE_URL}/api/users/login`, {email:userData.email, password:userData.password})
         .then(res => {
             // Save to localStorage
             const { token } = res.data
@@ -631,7 +631,7 @@ export const forgotPassword = (email)=>dispatch=> {
         type:SET_IS_LOADING,
         payload:true
     })
-    axios.post(`${API_URL}/api/users/forgot-password`, {email})
+    axios.post(`${BASE_URL}/api/users/forgot-password`, {email})
     .then(async(res) => {
 
             dispatch({

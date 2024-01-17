@@ -23,11 +23,16 @@ import { useNavigation } from '@react-navigation/native'
 import AcceptedMissions from './AcceptedMissions'
 import Home from './Home'
 import MesMission from './MesMission'
+import { Modal } from 'react-native-paper'
 const Tab = createBottomTabNavigator();
 const Dashboard = () => {
   const currentUser = useSelector(state=>state?.currentUser2?.users?.user)
   const currentUser2 = useSelector(state=>state?.auth)
+  const user = useSelector(state => state?.auth);
 
+  console.log("--------------------------------")
+  console.log(user)
+  console.log("--------------------------------")
   const [themeValue, setThemeValue] = useState('');
   const themes = useColorScheme();
   const dispatch = useDispatch()
@@ -124,6 +129,7 @@ if(
     });
 
     // Cleanup on component unmount
+
     return () => {
       socket.disconnect();
     };
@@ -140,6 +146,7 @@ if(
 
   return (
     <>
+
 
      <Tab.Navigator screenOptions={{
             headerShown:false,

@@ -27,7 +27,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
 import { Button as BTN, Icon, MD3Colors, SegmentedButtons } from 'react-native-paper';
-import { ACCEPTED_MISSIONS, SET_EN_ROUTE, SET_LAST_MISSION, SET_REQUEST } from '../../../redux/types';
+import { ACCEPTED_MISSIONS, SET_EN_ROUTE, SET_LAST_MISSION, SET_REQUEST, SET_RESET_STATE } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -184,22 +184,24 @@ socket.on('error', (error) => {
 });
 
 
-    socket.on("message recieved", (newMessage) => {
-      // alert("gggg")
-      console.log("before",newMessage)
-      console.log("test",(newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
-      if((newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
-        setnoti(
-          [...noti, newMessage]
-        )
-        setnewMission(true)
-        console.log("++++++++++++++++++",newMessage?.mission)
+socket.on("message received", (newMessage) => {
+  console.log(newMessage)
+  // alert("gggg")
+  console.log("before",newMessage)
+  console.log("test",(newMessage?.status == "Confirmée"|| newMessage?.status == "En retard"  ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
+  if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
-        sendNotification(newMessage?.mission)
-        // handleNotyfy(newMessage?);
+    setnoti(
+      [...noti, newMessage]
+    )
+    setnewMission(true)
+    console.log("++++++++++++++++++",newMessage?.mission)
+
+    sendNotification(newMessage?.mission)
+    // handleNotyfy(newMessage?);
 // if(newMessage?.partner?._id ==user?.id ){
-      console.log("New message received",newMessage);
+  console.log("New message received",newMessage);
 //   setnoti(
 //     [...noti, newMessage]
 //   )
@@ -207,7 +209,7 @@ socket.on('error', (error) => {
 //   handleNotyfy(newMessage);
 }
 
-    });
+});
   }, [socket]);
 
 
@@ -297,6 +299,7 @@ socket.on('error', (error) => {
 
       fetchData();
   }, [getCurrentLocation, requestLocationPermission]);
+
 
   const [value, setValue] = React.useState('enCours');
   const missionTerminee = useSelector((state) => state?.AcceptedMissions?.mission?.missions);
@@ -503,16 +506,38 @@ socket.on('error', (error) => {
   zIndex: 9999
 }}>
       <BTN
-      icon={``} mode="contained" onPress={() =>{
+      icon={``} mode="contained" onPress={async() =>{
+
+            dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+    dispatch(FindLastMission())
+    dispatch({
+        type: ACCEPTED_MISSIONS,
+        payload: [],
+
+    })
+    dispatch({
+        type: SET_REQUEST,
+        payload: [],
+      });
+    loadItemsStart()
+    dispatch(AcceptedMission())
+    dispatch({
+  type: SET_RESET_STATE
+});
+
         loadItemsStart()
         setnewMission(false)
+            await loadItemsStart()
 
 
       }}>
 
- <> new mission
+ <> nouvelle mission
  <Icon
-    source="arrow-down"
+    source="arrow-up"
     color={MD3Colors.error50}
     size={20}
   />
@@ -576,7 +601,29 @@ socket.on('error', (error) => {
           500
         }
         onRefresh={
-          async () => await loadItemsStart()
+
+          async () => {
+            dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+    dispatch(FindLastMission())
+    dispatch({
+        type: ACCEPTED_MISSIONS,
+        payload: [],
+
+    })
+    dispatch({
+        type: SET_REQUEST,
+        payload: [],
+      });
+    loadItemsStart()
+    dispatch(AcceptedMission())
+    dispatch({
+  type: SET_RESET_STATE
+});
+
+            await loadItemsStart()}
         }
         refreshing={
           isLoading
@@ -620,7 +667,27 @@ socket.on('error', (error) => {
           500
         }
         onRefresh={
-          async () => await loadItemsStart()
+          async () =>{
+            dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+      dispatch({
+  type: SET_RESET_STATE
+});
+    dispatch(FindLastMission())
+    dispatch({
+        type: ACCEPTED_MISSIONS,
+        payload: [],
+
+    })
+    dispatch({
+        type: SET_REQUEST,
+        payload: [],
+      });
+    loadItemsStart()
+    dispatch(AcceptedMission())
+             await loadItemsStart()}
         }
         refreshing={
           isLoading

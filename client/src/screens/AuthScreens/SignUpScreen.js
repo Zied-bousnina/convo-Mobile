@@ -153,7 +153,7 @@ const SignUpScreen = () => {
     console.log(values)
     // dispatch(formikActions.signUp(email, password, confirm, name));
     // console.log(formikActions.signUp(email, password, confirm, name))
-    dispatch(registerUser({...values}, navigation))
+    dispatch(registerUser({...values, firstLogin:false}, navigation))
     setTimeout(() => {
 
 

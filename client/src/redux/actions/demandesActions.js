@@ -11,6 +11,7 @@ import {
   SET_DEMANDES,
   SET_DEMANDES_MUNICIPAL,
   SET_ERRORS,
+  SET_FACTURES,
   SET_IS_LOADING,
   SET_LAST_MISSION,
   SET_MISSIONS,
@@ -21,7 +22,7 @@ import {setLoading} from './authActions';
 import { createSelector } from 'reselect';
 // import { GetMissions } from './demandesActions';
 import {API_URL} from '@env';
-
+const BASE_URL= 'https://convoyage.onrender.com'
 export const AddDemande = (userData, navigation) => dispatch => {
 
   dispatch({
@@ -30,7 +31,7 @@ export const AddDemande = (userData, navigation) => dispatch => {
   });
 
   axios
-    .post(`${API_URL}/api/users/createDemande`, userData)
+    .post(`${BASE_URL}/api/users/createDemande`, userData)
     .then(async res => {
 
 
@@ -72,7 +73,7 @@ export const increaseOffer = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `${API_URL}/api/users/incrementOffer/${demandeId}`,
+      `${BASE_URL}/api/users/incrementOffer/${demandeId}`,
     )
     .then(async res => {
 
@@ -114,7 +115,7 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `${API_URL}/api/users/AccepteMission/${demandeId}`,
+      `${BASE_URL}/api/users/AccepteMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -127,20 +128,21 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
         dispatch(setLoading(false));
       }, 3000);
       // console.log("accept",res.data)
-      navigation.navigate("AcceptationScreen",{
-        demandeId:res?.data?.demand?._id,
-        distance:res?.data?.demand?.distance,
-        address:res?.data?.demand?.address,
-        destination:res?.data?.demand?.destination,
-        comments:res?.data?.demand?.comments,
-        // offer:data?.data?.offer,
-        status:res?.data?.demand?.status,
-        postalAddress:res?.data?.demand?.postalAddress,
-        postalDestination:res?.data?.demand?.postalDestination,
-        // postalCode:data?.data?.postalCode,
-        // postalDestinationCode:data?.data?.postalDestinationCode,
+      navigation.navigate('Missions')
+      // navigation.navigate("city",{
+      //   demandeId:res?.data?.demand?._id,
+      //   distance:res?.data?.demand?.distance,
+      //   address:res?.data?.demand?.address,
+      //   destination:res?.data?.demand?.destination,
+      //   comments:res?.data?.demand?.comments,
+      //   // offer:data?.data?.offer,
+      //   status:res?.data?.demand?.status,
+      //   postalAddress:res?.data?.demand?.postalAddress,
+      //   postalDestination:res?.data?.demand?.postalDestination,
+      //   // postalCode:data?.data?.postalCode,
+      //   // postalDestinationCode:data?.data?.postalDestinationCode,
 
-      })
+      // })
       // navigation.navigate("AcceptationScreen",userData )
       dispatch({
         type: SET_IS_LOADING,
@@ -171,7 +173,7 @@ export const TermineeMission = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `${API_URL}/api/users/TermineeMission/${demandeId}`,
+      `${BASE_URL}/api/users/TermineeMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -184,20 +186,22 @@ export const TermineeMission = (demandeId, navigation) => dispatch => {
         dispatch(setLoading(false));
       }, 3000);
       // console.log("accept",res.data)
-      navigation.navigate("AcceptationScreen",{
-        demandeId:res?.data?.demand?._id,
-        distance:res?.data?.demand?.distance,
-        address:res?.data?.demand?.address,
-        destination:res?.data?.demand?.destination,
-        comments:res?.data?.demand?.comments,
-        // offer:data?.data?.offer,
-        status:res?.data?.demand?.status,
-        postalAddress:res?.data?.demand?.postalAddress,
-        postalDestination:res?.data?.demand?.postalDestination,
-        // postalCode:data?.data?.postalCode,
-        // postalDestinationCode:data?.data?.postalDestinationCode,
+      // navigation.navigate('city')
+      navigation.navigate('Missions')
+      // navigation.navigate("AcceptationScreen",{
+      //   demandeId:res?.data?.demand?._id,
+      //   distance:res?.data?.demand?.distance,
+      //   address:res?.data?.demand?.address,
+      //   destination:res?.data?.demand?.destination,
+      //   comments:res?.data?.demand?.comments,
+      //   // offer:data?.data?.offer,
+      //   status:res?.data?.demand?.status,
+      //   postalAddress:res?.data?.demand?.postalAddress,
+      //   postalDestination:res?.data?.demand?.postalDestination,
+      //   // postalCode:data?.data?.postalCode,
+      //   // postalDestinationCode:data?.data?.postalDestinationCode,
 
-      })
+      // })
       // navigation.navigate("AcceptationScreen",userData )
     })
     .catch(err => {
@@ -224,7 +228,7 @@ export const RefuseMission = (demandeId, navigation) => dispatch => {
 
   axios
     .post(
-      `${API_URL}/api/users/RefuseMission/${demandeId}`,
+      `${BASE_URL}/api/users/RefuseMission/${demandeId}`,
     )
     .then(async res => {
 
@@ -262,7 +266,7 @@ export const decreaseOffer = (demandeId, navigation) => dispatch => {
   });
 
   axios
-    .post(`${API_URL}/api/users/decreaseOffer/${demandeId}`)
+    .post(`${BASE_URL}/api/users/decreaseOffer/${demandeId}`)
     .then(async res => {
 
 
@@ -292,7 +296,7 @@ export const decreaseOffer = (demandeId, navigation) => dispatch => {
 };
 export const FindRequestDemande = navigation => dispatch => {
   axios
-    .get('${API_URL}/api/users/findDemandsByUserId')
+    .get('${BASE_URL}/api/users/findDemandsByUserId')
     .then(async res => {
 
       dispatch({
@@ -315,7 +319,7 @@ export const FindRequestDemande = navigation => dispatch => {
 export const FindLastMission = navigation => dispatch => {
   // console.log("tee")
   axios
-    .get(`${API_URL}/api/users/findLastMissionByUser`)
+    .get(`${BASE_URL}/api/users/findLastMissionByUser`)
     .then(async res => {
       console.log(res.data)
 
@@ -337,13 +341,37 @@ export const FindLastMission = navigation => dispatch => {
     });
 };
 
+export const Findfactures = navigation => dispatch => {
+  // console.log("tee")
+  axios
+    .get(`${BASE_URL}/api/users/facture/findFactureBydriver`)
+    .then(async res => {
+      console.log(res.data)
+
+      dispatch({
+        type: SET_FACTURES,
+        payload: res.data,
+      });
+    })
+
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err?.response?.data,
+      });
+      dispatch({
+        type: SET_FACTURES,
+        payload: [],
+      });
+    });
+};
 export const DeleteDEmande = idDemande => dispatch => {
   dispatch({
     type: SET_IS_LOADING,
     payload: true,
   });
   axios
-    .delete(`${API_URL}/api/users/delete/${idDemande}`)
+    .delete(`${BASE_URL}/api/users/delete/${idDemande}`)
     .then(async res => {
 
 
@@ -434,7 +462,7 @@ export const GetRequest = () => dispatch => {
 export const GetMission = () => dispatch => {
 
   axios
-    .get(`${API_URL}/api/users/findMissionsByUser?limit=5&skip=5`)
+    .get(`${BASE_URL}/api/users/findMissionsByUser?limit=5&skip=5`)
     .then(async res => {
 
       dispatch({
@@ -453,7 +481,7 @@ export const GetMission = () => dispatch => {
 const getProducts = async (data) => {
   try {
     const response = await axios.get(
-      `${API_URL}/api/users/findMissionsByUser?limit=${data.limit}&skip=${data.skip}`
+      `${BASE_URL}/api/users/findMissionsByUser?limit=${data.limit}&skip=${data.skip}`
     );
 
 
@@ -494,7 +522,7 @@ export const GetMissions = (data) => {
 export const AcceptedMission = () => dispatch => {
 console.log("hguigliugfliyflyufliyufml")
   axios
-    .get(`${API_URL}/api/users/findMissionsTermineeByUser`)
+    .get(`${BASE_URL}/api/users/findMissionsTermineeByUser`)
     .then(async res => {
       console.log(res.data)
 

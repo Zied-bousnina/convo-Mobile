@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import { useFormikContext } from 'formik'

@@ -2,20 +2,20 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAndroid, Platform, ImageBackground, RefreshControl} from 'react-native';
+import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAndroid, Platform, ImageBackground, RefreshControl, Animated} from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
-import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
+import {AddCurrentLocation, ChangeStatus, getUsersById, updatePassword} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
-import {useNavigation} from '@react-navigation/native';
-import {AccepteMission, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {AccepteMission, AcceptedMission, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
 import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
 import {StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
-import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, ScrollView, TextInput} from 'react-native-gesture-handler';
 import { useCallback } from 'react';
 import PushNotification from "react-native-push-notification";
 import { formatDistanceToNow } from 'date-fns';
@@ -26,11 +26,35 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // import { SkeletonPlaceholder } from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
-import { Button as BTN, Icon, MD3Colors } from 'react-native-paper';
-import { SET_EN_ROUTE, SET_LAST_MISSION } from '../../../redux/types';
+import { Button as BTN, Icon, MD3Colors, Modal, Portal } from 'react-native-paper';
+import { ACCEPTED_MISSIONS, SET_EN_ROUTE, SET_FIRST_LOGIN, SET_LAST_MISSION, SET_REQUEST, SET_RESET_STATE } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import LockIcon from '../../../components/svg/LockIcon';
+import ShowIcon from '../../../components/svg/ShowIcon';
+import AppInput from '../../../components/Inputs/AppInput';
+import CostomFormik from '../../../components/costomFormik/CostomFormik';
+import * as yup from 'yup';
+import { Colors } from '../../../theme';
+import Fonts from '../../../assets/fonts';
+import LoginButton from '../../../components/Buttons/LoginButton';
+import AppLoader from '../../../components/Animations/AppLoader';
+const screenHeight = Dimensions.get('window').height;
+const initialValues = {
+
+  password: '',
+  confirm: '',
+
+};
+const validationSchema = yup.object({
+
+
+  password: yup.string().trim().min(6, 'password is too short!').required('Password is required'),
+  confirm: yup.string()
+  .oneOf([yup.ref('password'), null], 'Passwords must match')
+});
+
 const Home = () => {
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
 
@@ -44,7 +68,9 @@ const Home = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const currentUser2 = useSelector(state=>state?.auth)
-
+  const AnimatedLine = Animated.createAnimatedComponent(View);
+  const [show, setshow] = useState(false);
+  const lineAnimation = useRef(new Animated.Value(0)).current;
   const [userConnected_id, setuserConnected_id] = useState()
   useEffect(() => {
     // Handle connection
@@ -183,11 +209,12 @@ socket.on('error', (error) => {
 });
 
 
-    socket.on("message recieved", (newMessage) => {
+    socket.on("message received", (newMessage) => {
+      console.log(newMessage)
       // alert("gggg")
       console.log("before",newMessage)
-      console.log("test",(newMessage?.status == "Accepted" ) && (newMessage?.mission?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.mission?.driverIsAuto  ))
-      if((newMessage?.status == "Accepted" ) && (newMessage?.mission?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.mission?.driverIsAuto  )){
+      console.log("test",(newMessage?.status == "Confirmée"|| newMessage?.status == "En retard"  ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
+      if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
         setnoti(
           [...noti, newMessage]
@@ -324,7 +351,14 @@ const getDistanceFromLatLonInKm=()=>{
       fetchData();
   }, [getCurrentLocation, requestLocationPermission]);
 
-
+  const showPasswordHandler = navigation => {
+    setshow(!show);
+    Animated.timing(lineAnimation, {
+      toValue: show ? 0 : 20,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  };
   const PAGE_LIMIT = 5;
   // const dispatch = useDispatch();
   const item_list = useSelector((state) => state.missions.missions.items);
@@ -333,12 +367,27 @@ const getDistanceFromLatLonInKm=()=>{
   const isLOad = useSelector(state=>state?.isLoading?.isLoading)
   const page = useSelector((state) => state.missions.missions.page);
   const count = useSelector((state) => state.missions.missions.count);
-
+  const userAuth = useSelector(state => state?.auth);
+  const isLoad = useSelector(state=>state?.isLoading?.isLoading)
   useEffect(() => {
     // console.log("render2")
     dispatch(FindLastMission())
 
   }, [dispatch,lastMission.length  ]);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+      console.log("reb")
+      dispatch(FindLastMission())
+    }, [])
+  );
+
+
 //   console.log(lastMission)
 
   const renderItem = useCallback(({ item }) => <ListRequest disable key={uniqueId()} data={item} />,[])
@@ -436,8 +485,21 @@ const onRefresh = React.useCallback(() => {
       });
     dispatch(FindLastMission())
   }, []);
+  const handleLogin = (values, formikActions) => {
+    console.log(values)
+dispatch(updatePassword({
+    newPassword:values?.confirm,
+    confirm:values?.password
+  })
+)
+formikActions.setSubmitting(false)
 
+  };
   return (
+    <>
+
+
+
 
 
       <ImageBackground
@@ -451,6 +513,130 @@ const onRefresh = React.useCallback(() => {
     }}
     resizeMode="cover"
   >
+  <>
+
+  <Portal>
+        <Modal visible={userAuth?.isFirstTime}
+
+         contentContainerStyle={
+          {
+            backgroundColor:"white",
+            padding:20,
+            margin:20,
+            borderRadius:10
+          }
+
+        }>
+        {isLoad? <AppLoader/> : null }
+         <Text style={{ fontSize: 18, marginBottom: 10 }}>
+          Bonjour Monsieur {userAuth?.user?.name}!
+        </Text>
+        <Text style={{ marginBottom: 10 }}>
+          Vous devez changer votre mot de passe pour des raisons de sécurité.
+        </Text>
+        <CostomFormik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleLogin}
+        >
+        <View style={styles.container}>
+
+          <View style={styles.formCon}>
+
+
+          <View style={[styles.textBoxCon, {marginTop: 30}]}>
+               <View style={styles.at}>
+                 <LockIcon width={20} height={20} />
+               </View>
+               <View style={[styles.passCon]}>
+                 <View style={styles.textCon}>
+                   <AppInput
+                     name="password"
+                     placeholder="Password"
+                     secureTextEntry={!show}
+                     style={styles.textInput}
+                     placeholderTextColor={'#aaa'}
+                   />
+                 </View>
+                 <View style={styles.show}>
+                   <Pressable
+                    onPress={showPasswordHandler}
+                   >
+                     <ShowIcon width={20} height={20} />
+                     <AnimatedLine
+                       style={{
+                         height: 2,
+                         width: lineAnimation,
+                         backgroundColor: 'black',
+                         position: 'absolute',
+                         bottom: 10,
+                         left: 0,
+                         transform: [{rotate: '150deg'}],
+                       }}
+                     />
+                   </Pressable>
+                 </View>
+               </View>
+             </View>
+             <View style={[styles.textBoxCon, {marginTop: 30}]}>
+               <View style={styles.at}>
+                 <LockIcon width={20} height={20} />
+               </View>
+               <View style={[styles.passCon]}>
+                 <View style={styles.textCon}>
+                   <AppInput
+                     name="confirm"
+                     placeholder="Confirm Password"
+                     secureTextEntry={!show}
+                     style={styles.textInput}
+                     placeholderTextColor={'#aaa'}
+                   />
+                 </View>
+                 <View style={styles.show}>
+                   <Pressable
+                   onPress={showPasswordHandler}
+                >
+                     <ShowIcon width={20} height={20} />
+                     <AnimatedLine
+                       style={{
+                         height: 2,
+                         width: lineAnimation,
+                         backgroundColor: 'black',
+                         position: 'absolute',
+                         bottom: 10,
+                         left: 0,
+                         transform: [{rotate: '150deg'}],
+                       }}
+                     />
+                   </Pressable>
+                 </View>
+               </View>
+             </View>
+
+          </View>
+          <View style={[styles.loginCon, {
+            marginTop: 20,
+
+          }]}>
+            <LoginButton
+              style={styles.LoginBtn}
+              loginBtnLbl={styles.loginBtnLbl}
+              btnName={"Ok, Got it"}
+              />
+
+          </View>
+
+
+
+
+        </View>
+      </CostomFormik>
+
+
+
+        </Modal>
+      </Portal>
+
   <ScrollView
   refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -466,7 +652,66 @@ const onRefresh = React.useCallback(() => {
     lastMission  && (lastMission?.mission?.status =='Affectée'|| lastMission?.mission?.status =='En retard' || lastMission?.mission?.status =='Démarrée' || lastMission?.mission?.status =='Confirmée')  &&
 
 <>
+{
+  newMission  &&
 
+      <View style={{
+  position: 'absolute',
+  top: 20, // Set top to 0 to align with the top of the screen
+  left: 0, // Align with the left of the screen
+  right: 0, // Align with the right of the screen
+  alignItems: 'center', // Center horizontally
+  justifyContent: 'center', // Center vertically
+  paddingTop: 5, // Add padding to create space from the top
+  // backgroundColor: '#007BFF', // Customize the background color as needed
+  padding: 10,
+  borderRadius: 5,
+  zIndex: 9999
+}}>
+      <BTN
+      icon={``} mode="contained" onPress={async() =>{
+        onRefresh()
+
+            dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+    dispatch(FindLastMission())
+    dispatch({
+        type: ACCEPTED_MISSIONS,
+        payload: [],
+
+    })
+    dispatch({
+        type: SET_REQUEST,
+        payload: [],
+      });
+    loadItemsStart()
+    dispatch(AcceptedMission())
+    dispatch({
+  type: SET_RESET_STATE
+});
+
+        loadItemsStart()
+        setnewMission(false)
+            await loadItemsStart()
+
+
+      }}>
+
+ <> nouvelle mission
+ <Icon
+    source="arrow-up"
+    color={MD3Colors.error50}
+    size={20}
+  />
+  </>
+
+
+    {/* Press me */}
+  </BTN>
+      </View>
+      }
 
     <Text
         style={{
@@ -709,7 +954,9 @@ const onRefresh = React.useCallback(() => {
         // buttonColor={
         //     "#fff"
         // }
-        icon="currency-eur" mode="outlined" onPress={() => console.log('Pressed')}>
+        icon="currency-eur" mode="outlined" onPress={() => {
+          navigation.navigate("recents")
+        }}>
         Mes Rénumérations
   </BTNPaper>
   </View>
@@ -821,12 +1068,258 @@ const onRefresh = React.useCallback(() => {
 </KeyboardAwareScrollView>
     </GestureHandlerRootView>
     </ScrollView>
+    </>
     </ImageBackground>
+    </>
   );
 };
 
 export default Home;
 const styles = StyleSheet.create({
+  mainCon: {
+    // backgroundColor: theme.colors.black,
+    backgroundColor: Colors["light"]?.backgroundColor,
+// backgroundColor: process.env.ICON_COLOR,
+    flex: 1,
+    height:screenHeight*1.5
+
+  },
+  loginIcon: {
+    alignSelf: 'center',
+    top:-70,
+    left:-30
+  },
+  formCon: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+  container: {
+    paddingHorizontal: 20,
+    marginTop: -40,
+  },
+  loginLblCon: {
+    position: 'relative',
+    bottom: 40,
+  },
+  loginLbl: {
+    color: Colors["light"]?.black,
+    fontSize: 32,
+    fontFamily: Fonts.type.NotoSansExtraBold,
+  },
+  at: {
+    alignSelf: 'center',
+    width: '10%',
+  },
+  show: {
+    alignSelf: 'center',
+    width: '10%',
+    position: 'relative',
+    right: 20,
+    zIndex: 10,
+  },
+  textBoxCon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textCon: {
+    width: '90%',
+  },
+  passCon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textInput: {
+    borderBottomColor: Colors["light"]?.gray,
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    color: Colors["light"]?.black,
+    fontSize: 16,
+    fontFamily: Fonts.type.NotoSansMedium,
+    height: 40,
+  },
+  forgotAction: {
+    paddingVertical: 20,
+  },
+  dontHaveAccountLbl: {
+    marginTop: 10, // Adjust this value for proper spacing
+    color:"#26cbfc" , // You can choose the color you want
+    textDecorationLine: 'underline', // Underline the text to make it look like a link
+  },
+  registerCon: {flexDirection: 'row',
+  padding:15,
+   justifyContent: 'center', paddingTop: 10},
+  registerLbl: {color: Colors["light"]?.primary, fontFamily: Fonts.type.NotoSansSemiBold},
+  registerNew: {
+    color: Colors["light"]?.gray,
+    fontFamily: Fonts.type.NotoSansSemiBold,
+  },
+  forgotLbl: {
+    color:"#26cbfc" ,
+    textAlign: 'right',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+  },
+  LoginBtn: {
+    backgroundColor: "#2df793",
+    borderRadius: 20,
+    shadowColor: Colors["light"]?.black,
+    borderColor: 'transparent',
+  },
+  loginBtnLbl: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: Fonts.type.NotoSansBlack,
+    color: Colors["light"]?.white,
+    paddingVertical: 10,
+  },
+  devider: {
+    borderBottomColor: Colors["light"]?.gray,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginTop: 20,
+  },
+  or: {
+    color: Colors["light"]?.gray,
+    textAlign: 'center',
+    backgroundColor: Colors["light"]?.backgroundColor,
+    width: 60,
+    alignSelf: 'center',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+    position: 'relative',
+    bottom: 13,
+  },
+  deviderCon: {
+    paddingVertical: 10,
+  },
+  googleIconCon: {
+    flexDirection: 'row',
+    backgroundColor: Colors["light"]?.gray2,
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 20,
+    paddingHorizontal: 30,
+  },
+  googleLbl: {
+    color: Colors["light"]?.black,
+    textAlign: 'center',
+    paddingHorizontal: 30,
+    fontFamily: Fonts.type.NotoSansBlack,
+  },
+  googleIcon: {
+    alignSelf: 'center',
+  },
+  googleLblCon: {
+    alignSelf: 'center',
+
+  },
+  error: {
+    color: 'red',
+    fontFamily: Fonts.type.NotoSansSemiBold,
+    fontSize: 12,
+  },
+
+
+  blockMenu: {
+    // flexDirection: 'column',
+// justifyContent: 'center',
+// alignItems: 'center',
+// marginTop: 50,
+// paddingVertical:40,
+height:screenHeight,
+padding: 20,
+backgroundColor: Colors["light"]?.backgroundColor,
+
+borderRadius: 10,
+shadowColor: Colors["light"]?.black,
+shadowOffset: { width: 6, height: 6 },
+shadowOpacity: 0.1,
+shadowRadius: 11,
+elevation: 2,
+},
+blockMenuTitle: {
+
+fontSize: 22,
+fontFamily: 'Aller-Bold, Aller-Regular, Helvetica, Arial, sans-serif',
+color: '#022D26',
+marginBottom: 10,
+},
+blockMenuItems: {
+display: 'flex',
+flexDirection: 'row',
+flexWrap: 'wrap',
+
+marginHorizontal: -8,
+
+},
+blockMenuItem: {
+paddingVertical: 12,
+paddingHorizontal: 8,
+flexGrow: 1,
+},
+blockMenuLink: {
+  backgroundColor: Colors["light"]?.white,
+  // backgroundColor: ,
+borderRadius: 10,
+borderWidth: 1.5,
+borderColor: "#357762",
+paddingVertical: 0.25,
+paddingHorizontal: 1.5,
+fontSize: 20,
+fontFamily: 'Aller-Bold, Aller-Regular, Helvetica, Arial, sans-serif',
+color: "#022d26",
+textAlign: 'center',
+// transitionDuration: 250,
+// transitionTimingFunction: 'ease',
+},
+
+card: {
+padding: 20,
+marginVertical: 50,
+backgroundColor: Colors["light"]?.white,
+borderRadius: 10,
+shadowColor: Colors["light"]?.black,
+shadowOffset: {
+width: 6,
+height: 6,
+},
+shadowOpacity: 0.1,
+shadowRadius: 11,
+marginBottom: 20,
+},
+cardHeader: {
+fontSize: 18,
+fontFamily: 'Aller-Regular',
+color: Colors["light"]?.black,
+marginBottom: 10,
+
+},
+cardHeaderBold: {
+fontFamily: 'Aller-Bold',
+},
+cardTitle: {
+fontSize: 22,
+fontFamily: 'Aller-Bold',
+color: Colors["light"]?.primary,
+marginBottom: 10,
+},
+cardLocation: {
+fontSize: 16,
+fontFamily: 'Aller-Regular',
+color: Colors["light"]?.gray,
+marginBottom: 10,
+},
+cardButton: {
+backgroundColor: Colors["light"]?.primary,
+borderRadius: 10,
+paddingVertical: 10,
+paddingHorizontal: 20,
+},
+cardButtonText: {
+color: Colors["light"]?.white,
+fontSize: 16,
+fontFamily: 'Aller-Bold',
+textAlign: 'center',
+},
   contentView: {
     flex: 1,
     height: 500,

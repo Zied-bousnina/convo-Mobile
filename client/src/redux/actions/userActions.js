@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 import axios from "axios"
-import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_USER2, SET_ERRORS, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
+import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_USER2, SET_ERRORS, SET_FIRST_LOGIN, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
 import { setLoading } from "./authActions"
 import { socket } from "../../../socket"
-import {API_URL} from '@env';
+import {API_UxRL} from '@env';
+const BASE_URL= 'https://convoyage.onrender.com'
 export const GetCurrentAccessList =  () => (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/users/access/getCurrentAccessList`)
       .then(async(res) => {
@@ -23,6 +24,69 @@ export const GetCurrentAccessList =  () => (dispatch) => {
       .catch( (err) =>{
 
     }
+
+      )
+}
+export const updatePassword = (userData) => dispatch => {
+
+  dispatch({
+      type: SET_ERRORS,
+      payload: []
+  })
+  dispatch({
+      type:SET_IS_LOADING,
+      payload:true
+  })
+
+  axios
+      .post(`${BASE_URL}/api/users/updatePassword`, userData)
+      .then(res => {
+          dispatch({
+              type: SET_FIRST_LOGIN,
+              payload: false
+          })
+          dispatch({
+              type: SET_ERRORS,
+              payload: []
+          })
+          dispatch({
+              type:SET_IS_LOADING,
+              payload:false
+          })
+          dispatch({
+              type: SET_IS_SECCESS,
+              payload: true
+          })
+  //  navigate('/list-of-demandes');
+          setTimeout(() => {
+              dispatch({
+                  type: SET_IS_SECCESS,
+                  payload: false
+              })
+          }, 3000);
+      })
+      .catch(err =>
+         {
+          // console.log(err)
+          dispatch({
+              type: SET_ERRORS,
+              payload: err?.response?.data
+          })
+          dispatch({
+              type: SET_IS_SECCESS,
+              payload: false
+          })
+                setTimeout(() => {
+                  dispatch(
+                    setLoading(false)
+                  )
+
+                }, 3000);
+                dispatch({
+                  type:SET_IS_LOADING,
+                  payload:false
+              })
+      }
 
       )
 }
@@ -216,7 +280,7 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
     payload:true
 })
 
-  axios.post(`${API_URL}/api/basicInfo`, userData, {
+  axios.post(`${BASE_URL}/api/basicInfo`, userData, {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data'
@@ -271,7 +335,7 @@ export const AddCurrentLocation =  (userData, navigation ) => (dispatch) => {
 
 
 
-  axios.post(`${API_URL}/api/users/AddAddress`, userData,)
+  axios.post(`${BASE_URL}/api/users/AddAddress`, userData,)
       .then(async(res) => {
 
 
@@ -284,7 +348,7 @@ export const AddCurrentLocation =  (userData, navigation ) => (dispatch) => {
       )
 }
 export const findBasicInfoByUserId =(dispatch) => ()=>{
-  axios.get(`${API_URL}/api/basicInfo/findBasicProfileById`)
+  axios.get(`${BASE_URL}/api/basicInfo/findBasicProfileById`)
       .then(async(res) => {
 
 
@@ -301,7 +365,7 @@ export const findBasicInfoByUserId =(dispatch) => ()=>{
 }
 export const GetCurrentUser = (navigation)=>dispatch=>{
 
-  axios.get(`${API_URL}/api/users/users/currentUser`)
+  axios.get(`${BASE_URL}/api/users/users/currentUser`)
   .then(res => {
       // console.log(res)
       dispatch({
@@ -346,7 +410,7 @@ dispatch({
   type:SET_IS_SECCESS,
   payload:false
 })
-  axios.post(`${API_URL}/api/users/SetUserStatus`,data)
+  axios.post(`${BASE_URL}/api/users/SetUserStatus`,data)
       .then(async(res) => {
 
         dispatch({
@@ -385,7 +449,7 @@ dispatch({
 }
 
 export const getUsersById =() => (dispatch)=>{
-  axios.get(`${API_URL}/api/users/getUsersById`)
+  axios.get(`${BASE_URL}/api/users/getUsersById`)
       .then(async(res) => {
 
 

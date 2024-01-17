@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 // reducer.js
 
-import { GET_PRODUCTS_FULFILLED, GET_PRODUCTS_PENDING, GET_PRODUCTS_REJECTED } from "../types";
+import { GET_PRODUCTS_FULFILLED, GET_PRODUCTS_PENDING, GET_PRODUCTS_REJECTED,SET_RESET_STATE } from "../types";
 
 // import * as actionTypes from './actionTypes';
 
@@ -54,6 +54,19 @@ export default function (state = initialState, action)  {
         isLoading: false,
         isError: true,
         message: action.payload,
+      };
+    case SET_RESET_STATE :
+      return {
+        missions: {
+          page: 0,
+          count: 999,
+          limit: 10,
+          items: [],
+        },
+        isError: false,
+        isSuccess: false,
+        isLoading: false,
+        message: '',
       };
     default:
       return state;

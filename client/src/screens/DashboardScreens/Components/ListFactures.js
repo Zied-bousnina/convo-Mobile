@@ -1,0 +1,259 @@
+/* eslint-disable prettier/prettier */
+import { View, Text, ScrollView, Dimensions, Pressable, StyleSheet } from 'react-native'
+import React, { memo, useEffect, useRef } from 'react'
+import { Button, Icon, Image } from 'react-native-elements'
+import { ListItem } from '@rneui/themed';
+import { useDispatch } from 'react-redux';
+import { DeleteDEmande } from '../../../redux/actions/demandesActions';
+import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import haversine from 'haversine'; // You may need to install this library using `npm install haversine`
+
+import { uniqueId } from "lodash";
+import { useNavigation } from '@react-navigation/native';
+import { Button as BTNPaper, MD3Colors } from 'react-native-paper';
+const ListFactures = memo((data, key) => {
+    const originalDateString = data?.data?.createdAt;
+    const date = new Date(originalDateString);
+    const month = date.toLocaleString('default', { month: 'short' });
+    const day = date.getDate();
+    const formattedDate = `${month} ${day}`;
+    const dispatch = useDispatch()
+    const sheetRef = useRef(null);
+    const navigation = useNavigation()
+    const actionDelete = () => {
+      // dispatch(DeleteDEmande(data?.data?._id))
+    }
+console.log(data)
+    const truncateText = (text, maxLength) => {
+      console.log(text)
+      // return "h";
+      return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text;
+    };
+    const getDistanceFromLatLonInKm=()=>{
+      const userLocation = [ data?.data?.mission?.address?.latitude /* user's latitude */, data?.data?.mission?.address?.longitude  /* user's longitude */];
+    const destinationLocation = [
+       data?.data?.mission?.destination?.latitude,
+       data?.data?.mission?.destination?.longitude,
+    ]
+      const lat1 = data?.data?.mission?.address?.latitude;
+    const lon1 = data?.data?.mission?.address?.longitude;
+    const lat2 = data?.data?.mission?.destination?.latitude;
+    const lon2 =  data?.data?.mission?.destination?.longitude;
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lon2-lon1);
+      var a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var d = R * c; // Distance in km
+     return d
+    }
+    const deg2rad=(deg)=> {
+      return deg * (Math.PI/180)
+    }
+    const distance = parseFloat(getDistanceFromLatLonInKm().toFixed(2))
+
+    return (
+        <>
+
+
+<Pressable style={styles.taskContainer}
+     onPress={
+        () => {
+          // setselectedItem(item);
+          // sheetRef.current.open();
+
+
+          // console.log("hello zied ")
+        }
+     }
+     >
+     <View
+             style={{
+        flexDirection: 'row',
+        justifyContent: 'flex-end',  // Align items to the right
+        alignItems: 'flex-end',
+        // marginBottom: 16,
+        // paddingRight: 16,  // Add some padding to the right if needed
+    }}
+     >
+        {/* <BTNPaper
+            style={{
+                marginRight:-10
+            }}
+            loading={false} mode="contained" onPress={() => console.log('Pressed')}>
+    Confirmée
+  </BTNPaper> */}
+     </View>
+          <View style={styles.tags2}>
+            {/* Your tags view code */}
+
+            <View
+                style={{
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    marginLeft: 5,
+                }}>
+
+
+            {/* <Text style={styles.text}>Partenaire: {data?.data?.partner?.contactName}
+           </Text> */}
+           {/* {item?.user?.email} */}
+          <Text  style={styles.text}>Départ:
+          {truncateText(data?.data?.mission?.postalAddress, 40)}
+
+           {/* {item?.user?.email} */}
+           </Text>
+          <Text  style={styles.text}>
+          Arrivée: {truncateText(data?.data?.mission?.postalDestination, 40)}
+          </Text>
+            </View>
+
+          </View>
+
+          {/* } */}
+          {/* <Text style={styles.text}>{item?.profile?.bio?  `About User: ${item?.profile?.bio}`: "" }</Text> */}
+          <View style={styles.tags}>
+
+
+          <View style={styles.stats}>
+            <View>
+              <Text style={styles.date}>
+              <Icon
+    source="clock-outline"
+    color={MD3Colors.secondary40}
+    size={20}
+  /> {new Date(data?.data?.createdAt).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  })}
+              {/* {formattedDate} */}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.stats}>
+            <View>
+              <Text style={styles.date}>
+              <Icon
+    source="calendar-outline"
+    color={MD3Colors.secondary40}
+    size={20}
+  /> {new Date(data?.data?.createdAt).toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  })}
+              {/* {formattedDate} */}
+              </Text>
+            </View>
+          </View>
+          </View>
+          {/* <View style={styles.stats}> */}
+            <View
+
+             style={{
+        flexDirection: 'row',
+        justifyContent: 'flex-end',  // Align items to the right
+        alignItems: 'flex-end',
+        // marginBottom: 16,
+        // paddingRight: 16,  // Add some padding to the right if needed
+    }}
+
+            >
+              <Text style={styles.date}>
+              {Number(data?.data?.totalAmmount).toLocaleString('fr-FR', {style:'currency', currency: 'EUR'})}
+              {/* {formattedDate} */}
+              </Text>
+            </View>
+          {/* </View> */}
+
+
+            {/* <View style={styles.showMoreContainer}>
+              <Text style={styles.showMoreText}>Click To Report User</Text>
+            </View> */}
+
+        </Pressable>
+        {/* <Text>hets</Text> */}
+
+        </>
+    );
+  })
+
+
+export default ListFactures
+const styles = StyleSheet.create({
+  contentView: {
+    flex: 1,
+    height: 500,
+    backgroundColor: 'white',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginVertical: 20,
+    backgroundColor: 'white',
+  },
+  subHeader: {
+    backgroundColor: '#2089dc',
+    color: 'white',
+    textAlign: 'center',
+    paddingVertical: 5,
+    marginBottom: 10,
+  },
+  taskContainer: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    margin: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
+  tags: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  tags2: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  tags3: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+    padding:10,
+    marginRight:10
+  },
+  text: {
+    marginBottom: 6,
+    color:"#7c8483"
+  },
+  stats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  date: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    color:"#7c8483"
+  },
+});

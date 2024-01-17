@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useNavigation} from '@react-navigation/native';
-import {GetMissions} from '../../../redux/actions/demandesActions';
+import {AccepteMission, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
 import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
@@ -29,7 +29,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
 import { Avatar, Button as BTN, Card, Divider, Icon, IconButton, MD3Colors } from 'react-native-paper';
-import { SET_EN_ROUTE } from '../../../redux/types';
+import { SET_EN_ROUTE, SET_LAST_MISSION } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -51,7 +51,8 @@ const MissionDetails2 = ({route}) => {
         missionType,
         dateDepart ,
         remunerationAmount,
-        devisId
+        devisId,
+        status
 
       } =  route.params
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
@@ -66,7 +67,7 @@ const MissionDetails2 = ({route}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const currentUser2 = useSelector(state=>state?.auth)
-
+  const isLOad = useSelector(state=>state?.isLoading?.isLoading)
   const [userConnected_id, setuserConnected_id] = useState()
   useEffect(() => {
     // Handle connection
@@ -125,7 +126,9 @@ if(
   // -------------------------------------------------------------
   const [noti, setnoti] = useState([])
   const [newMission, setnewMission] = useState(false)
+
   const sendNotification = (mission, navigation) => {
+
     // Create a channel for the notification
     PushNotification.createChannel(
       {
@@ -423,6 +426,7 @@ socket.on('error', (error) => {
 )
 
 
+
   return (
 
 
@@ -641,7 +645,7 @@ socket.on('error', (error) => {
             destination,
             comments,
             offer,
-            // status,
+            status,
             postalAddress,
             postalDestination,
             postalCode,
@@ -718,7 +722,7 @@ socket.on('error', (error) => {
 
 
         </View>
-        <BTNPaper
+        {/* <BTNPaper
         onPress={()=>{}}
         style={{
             backgroundColor:"#8B5CF6",
@@ -727,7 +731,66 @@ socket.on('error', (error) => {
         }}
         mode="contained">
     <Text style={{color:"white"}}>Confirmer Mission</Text>
-    </BTNPaper>
+    </BTNPaper> */}
+    {
+        status=='Démarrée' ?
+        <BTNPaper
+             style={{
+            backgroundColor:"#8B5CF6",
+            marginHorizontal:10,
+            marginBottom:10
+        }}
+        mode="contained"
+            loading={isLOad}  onPress={() =>{
+            dispatch(TermineeMission(
+                devisId,
+                navigation
+
+            ))
+            setTimeout(() => {
+              navigation.navigate('Missions')
+
+}, 2000);
+
+
+            dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+    dispatch(FindLastMission())
+            }
+            }>
+    <Text style={{color:"white"}}>Terminée Mission</Text>
+  </BTNPaper>:
+  <BTNPaper
+              style={{
+            backgroundColor:"#8B5CF6",
+            marginHorizontal:10,
+            marginBottom:10
+        }}
+        mode="contained"
+            loading={isLOad}  onPress={() =>{
+            dispatch(AccepteMission(
+                devisId,
+                navigation
+
+            ))
+            setTimeout(() => {
+              navigation.navigate('Missions')
+
+}, 2000);
+            dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+    dispatch(FindLastMission())
+            }
+            }>
+   <Text style={{color:"white"}}>Confirmer Mission</Text>
+  </BTNPaper>
+
+     }
+
 
 
 

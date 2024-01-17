@@ -1,3 +1,7 @@
+/* eslint-disable handle-callback-err */
+/* eslint-disable keyword-spacing */
+/* eslint-disable semi */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 
 import 'react-native-gesture-handler';
@@ -56,6 +60,7 @@ import CertificateVehicle from './src/screens/DashboardScreens/Registartion/Vehi
 import {  GetMissions } from './src/redux/actions/demandesActions';
 import RideDetails from './src/screens/DashboardScreens/Components/RideDetails';
 import { findBasicInfoByUserId } from './src/redux/actions/userActions';
+import {API_URL} from '@env';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -69,49 +74,15 @@ import NetInfo from '@react-native-community/netinfo';
 import AcceptationScreen from './src/screens/DashboardScreens/DriverDashboard/AcceptationScreen';
 import MissionDetails2 from './src/screens/DashboardScreens/DriverDashboard/MissionDetails2';
 import MesMission from './src/screens/DashboardScreens/DriverDashboard/MesMission';
+import axios from 'axios';
 // import MissionDetails2 from './src/screens/DashboardScreens/DriverDashboard/missionDetails2';
 function App(): JSX.Element {
-  PushNotification.configure({
-    onRegister: function (token) {
-    },
-    onNotification: function (notification) {
-    },
-    onAction: function (notification) {
-    },
-    // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
-    onRegistrationError: function(err) {
-      console.error(err.message, err);
-    },
-    popInitialNotification: true,
-    requestPermissions: true,
-    requestPermissions: Platform.OS === 'ios'
-  });
+  PushNotification.configure({onRegister: function (token) { },onNotification: function (notification) {},onAction: function (notification) { },onRegistrationError: function(err) {console.error(err.message, err);}, popInitialNotification: true,requestPermissions: true,requestPermissions: Platform.OS === 'ios'});
   const isDarkMode = useColorScheme() == 'dark';
   const missions = useSelector(({ missions }) => missions?.missions);
   const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
   const user = useSelector(state => state?.auth);
 
-  // const sendNotification = (mission) => {
-  //   PushNotification.createChannel(
-  //     {
-  //       channelId: "specialid", // (required)
-  //       channelName: "Special messasge", // (required)
-  //       channelDescription: "Notification for special message", // (optional) default: undefined.
-  //       importance: 4, // (optional) default: 4. Int value of the Android notification importance
-  //       vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-  //     },
-  //     (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-  //   );
-  //   PushNotification.localNotification({
-  //     channelId:'specialid', //his must be same with channelid in createchannel
-  //     title:'hello',
-  //     message:'test message'
-  //   })
-  // };
-  // useEffect(() => {
-  //   sendNotification()
-  //   console.log("n")
-  // }, [[]])
 
   useEffect(() => {
     // sendNotification()
@@ -162,32 +133,38 @@ function App(): JSX.Element {
   }, [setAppTheme]);
 
   // -------------theme----------------------------
-  useEffect(() => {
-    AsyncStorage.getItem('jwtToken')
-      .then(value => {
-        if (value) {
-          const decode = jwt_decode(value);
-          store.dispatch(setCurrentUser(decode));
 
-          SetAuthToken(value);
-        }
+
+
+  const fetchUser = async ()=>  {
+    const user = await AsyncStorage.getItem('jwtToken');
+    console.log(user)
+    if (user) {
+      const decode = jwt_decode(user);
+      axios.get(`${API_URL}/api/users/checkTokenValidity`)
+      .then(res => {
+        console.log(res)
+        console.log("//", decode)
+      store.dispatch(setCurrentUser(decode));
+      SetAuthToken(user);
       })
       .catch(err => {
-      });
-
-    const activeExpires = new Date(user?.user?.iat);
-    const currentDate = new Date();
-    // console.log(`activeExpires-----------------------------------------------------------------------------------`,
-    //  activeExpires < currentDate);
-    if (currentDate > activeExpires) {
-      AsyncStorage.removeItem('jwtToken');
+        store.dispatch(LogOut())
+        console.log(err)
+      })
+     // Corrected typo here
+    }else {
       store.dispatch(LogOut())
-      // store.dispatch(setCurrentUser({}));
+
     }
-  }, []);
+  }
+
+useEffect(() => {
+  console.log("fetched")
+  fetchUser()
 
 
-
+}, [])
 
 
 
@@ -212,10 +189,7 @@ function App(): JSX.Element {
     }
   }, [showMessage]);
 
-  // console.log('isConnected', isConnected);
-  // console.log(showMessage);
-  // console.log(isConnected);
-// console.log(user)
+
   if (!isConnected) {
     return <InternetDisconnected />;
   }
