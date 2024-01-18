@@ -9,7 +9,8 @@ import {
   Alert,
   Dimensions,
   StyleSheet,
-  useColorScheme
+  useColorScheme,
+  ImageBackground
 } from 'react-native';
 import Fonts from '../../assets/fonts';
 // import SvgIcon from '../common/assets/images/SvgIcon';
@@ -135,6 +136,18 @@ const VerifyEmailScreen = () => {
 
 
   return (
+    <ImageBackground
+
+    source={
+        require('../../assets/images1/pattern-randomized.png')
+        // require('../../assets')
+    }
+    style={{
+      flex: 1,
+      // backgroundColor: '#B52424', // Fallback color in case the image fails to load
+    }}
+    resizeMode="cover"
+  >
     <>
  {isLoad ? <AppLoader /> : null}
  {MailSent ? <AppLoader /> : null}
@@ -207,6 +220,7 @@ const VerifyEmailScreen = () => {
           </View>
         </View>
       </KeyboardAwareScrollView></>
+      </ImageBackground>
   )
 }
 
@@ -214,7 +228,7 @@ export default VerifyEmailScreen
 
 const styling = theme=>StyleSheet.create({
   mainCon: {
-    backgroundColor: Colors[theme]?.backgroundColor,
+    // backgroundColor: Colors[theme]?.backgroundColor,
     flex: 1,
     height:screenHeight
   },

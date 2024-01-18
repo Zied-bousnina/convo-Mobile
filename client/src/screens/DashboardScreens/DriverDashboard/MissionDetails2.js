@@ -28,12 +28,13 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // import { SkeletonPlaceholder } from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
-import { Avatar, Button as BTN, Card, Divider, Icon, IconButton, MD3Colors } from 'react-native-paper';
+import { Avatar, Button as BTN, Card, Dialog, Divider, Icon, IconButton, MD3Colors, Modal, Portal } from 'react-native-paper';
 import { SET_EN_ROUTE, SET_LAST_MISSION } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BackSvg from '../../../components/svg/BackSvg';
+import { launchCamera } from 'react-native-image-picker';
 const MissionDetails2 = ({route}) => {
 
     const {
@@ -69,6 +70,8 @@ const MissionDetails2 = ({route}) => {
   const currentUser2 = useSelector(state=>state?.auth)
   const isLOad = useSelector(state=>state?.isLoading?.isLoading)
   const [userConnected_id, setuserConnected_id] = useState()
+  const [visibleError, setvisibleError] = useState(false)
+  const [Error, setError] = useState()
   useEffect(() => {
     // Handle connection
     socket.on('connect', () => {
@@ -115,7 +118,7 @@ if(
 
 
   useEffect(() => {
-    // console.log("render")
+
     dispatch(getUsersById());
 
     enable();
@@ -194,7 +197,7 @@ if(
 
   useEffect(() => {
 //     socket.on('connect', () => {
-//     console.log('Connected to server');
+//
 //     if (user) {
 //       // socket.current = io(host);
 //       // socket.emit("add-user", user.id);
@@ -204,26 +207,24 @@ if(
 
 
 socket.on('error', (error) => {
-    console.error('Socket error:', error);
+
 });
 
 
     socket.on("message recieved", (newMessage) => {
       // alert("gggg")
-      console.log("before",newMessage)
-      console.log("test",(newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
-      if((newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
+     if((newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
         setnoti(
           [...noti, newMessage]
         )
         setnewMission(true)
-        console.log("++++++++++++++++++",newMessage?.mission)
+
 
         sendNotification(newMessage?.mission)
         // handleNotyfy(newMessage?);
 // if(newMessage?.partner?._id ==user?.id ){
-      console.log("New message received",newMessage);
+
 //   setnoti(
 //     [...noti, newMessage]
 //   )
@@ -301,7 +302,7 @@ socket.on('error', (error) => {
         //   socket.emit('offline_client', currentUser2?.user?.id)
 
         // }
-        // console.log("position", position?.coords)
+
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -310,7 +311,7 @@ socket.on('error', (error) => {
 
   });
   useEffect(() => {
-    // console.log("redredhg")
+
     const fetchData = async () => {
         if (Platform.OS === 'android') {
           await requestLocationPermission();
@@ -331,7 +332,7 @@ socket.on('error', (error) => {
   const count = useSelector((state) => state.missions.missions.count);
 
   useEffect(() => {
-    console.log("render2")
+
     dispatch(
       GetMissions({
         page: 0,
@@ -421,12 +422,176 @@ socket.on('error', (error) => {
     ) : null;
   };
   const keyExtractor = useCallback((item, i)=> `${i}-${item._id}`,[]);
+  const [visible, setvisible] = useState(false)
+  const setToastMsg = msg=> {
+    ToastAndroid.showWithGravity(
+      msg,
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+
+    )
+  }
   const getItemLayout = (data, index) => (
     {length: PAGE_LIMIT, offset: PAGE_LIMIT * index, index}
 )
+const [image, setImage] = useState([]);
+const TakePhoto = () => {
+  const options = {
+    title: 'Select Photo',
+    storageOptions: {
+      skipBackup: true,
+      mediaType: 'photo',
+      includeBase64: false,
+      path: 'images',
+      maxHeight: 2000,
+    maxWidth: 2000
+      // allowsEditing: true
+    },
+
+  };
+  launchCamera(options, (response) => {
 
 
 
+    if (response.didCancel) {
+
+      setToastMsg('User cancelled image picker');
+    } else if (response.error) {
+
+      setToastMsg('ImagePicker Error: ' + response.error);
+    } else {
+      const uri = response.assets[0].uri;
+      const type = response.assets[0].type;
+      const name = response.assets[0].fileName;
+      const source = {
+        uri,
+        type,
+        name,
+      }
+      setImage((prevImages) => [...prevImages, source])
+
+    }
+  });
+}
+const handleDeleteImage = (index) => {
+  const newImageArray = [...image];
+  newImageArray.splice(index, 1);
+  setImage(newImageArray);
+};
+
+const savePhotosTerminéé =()=> {
+
+
+  const formData = new FormData();
+
+  image.forEach((img, index) => {
+    formData.append(`avatar${index}`, {
+      uri: img?.uri ? img?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
+      type: 'image/jpg',
+      name: new Date() + `_profile_${index}`
+    });
+  });
+
+  dispatch(TermineeMission(devisId,formData, navigation))
+//  dispatch(TermineeMission(
+//     //             devisId
+
+//     //         ))
+  .then((data) => {
+
+    dispatch({
+          type: SET_LAST_MISSION,
+          payload: [],
+        });
+        setvisible(false)
+      dispatch(FindLastMission())
+
+
+      navigation.navigate('Missions')
+
+
+    dispatch({
+type: SET_LAST_MISSION,
+payload: [],
+});
+dispatch(FindLastMission())
+
+
+
+  })
+  .catch((error) => {
+
+  });
+}
+
+const savePhotos =()=> {
+
+  const formData = new FormData();
+
+  image.forEach((img, index) => {
+    formData.append(`avatar${index}`, {
+      uri: img?.uri ? img?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
+      type: 'image/jpg',
+      name: new Date() + `_profile_${index}`
+    });
+  });
+
+  dispatch(AccepteMission(devisId,formData, navigation))
+
+  .then((data) => {
+    socket.emit("MissionAccepted")
+    setvisible(false)
+    dispatch({
+          type: SET_LAST_MISSION,
+          payload: [],
+        });
+        navigation.navigate('Missions')
+
+
+    dispatch({
+type: SET_LAST_MISSION,
+payload: [],
+});
+      dispatch(FindLastMission())
+
+
+  })
+  .catch((error) => {
+    // alert("Erreur de chargement")
+    // Vous avez déjà une mission en cours !
+    setError(error?.response?.data?.message)
+    console.log(error?.response?.data?.message)
+    setvisible(false)
+    setvisibleError(true)
+
+  });
+}
+const renderItem2 = ({ item, index }) => (
+  <View style={{ position: "relative" }}>
+    <Image
+      source={{ uri: item.uri }}
+      style={{
+        width: 150,
+        height: 150,
+        resizeMode: 'contain',
+      }}
+    />
+    {/* Delete icon */}
+    <BTNPaper
+      icon={"delete-sweep"}
+      onPress={() => handleDeleteImage(index)}
+      style={{
+        position: "absolute",
+        top: 5,
+        right: 5,
+        padding: 5,
+        borderRadius: 10,
+      }}
+    >
+      {/* <Text style={{ color: "white" }}>Delete</Text> */}
+    </BTNPaper>
+  </View>
+);
   return (
 
 
@@ -469,7 +634,7 @@ socket.on('error', (error) => {
           // setselectedItem(item);
           // sheetRef.current.open();
         //   navigation.navigate("missionDetails",{missionId : "h"})
-          console.log("hello zied ")
+
         }
      }
      >
@@ -742,22 +907,23 @@ socket.on('error', (error) => {
         }}
         mode="contained"
             loading={isLOad}  onPress={() =>{
-            dispatch(TermineeMission(
-                devisId,
-                navigation
+              setvisible(true)
+//             dispatch(TermineeMission(
+//                 devisId,
+//                 navigation
 
-            ))
-            setTimeout(() => {
-              navigation.navigate('Missions')
+//             ))
+//             setTimeout(() => {
+//               navigation.navigate('Missions')
 
-}, 2000);
+// }, 2000);
 
 
-            dispatch({
-        type: SET_LAST_MISSION,
-        payload: [],
-      });
-    dispatch(FindLastMission())
+//             dispatch({
+//         type: SET_LAST_MISSION,
+//         payload: [],
+//       });
+//     dispatch(FindLastMission())
             }
             }>
     <Text style={{color:"white"}}>Terminée Mission</Text>
@@ -770,26 +936,132 @@ socket.on('error', (error) => {
         }}
         mode="contained"
             loading={isLOad}  onPress={() =>{
-            dispatch(AccepteMission(
-                devisId,
-                navigation
-
-            ))
-            setTimeout(() => {
-              navigation.navigate('Missions')
-
-}, 2000);
-            dispatch({
-        type: SET_LAST_MISSION,
-        payload: [],
-      });
-    dispatch(FindLastMission())
-            }
+           setvisible(true) }
             }>
-   <Text style={{color:"white"}}>Confirmer Mission</Text>
+   <Text style={{color:"white"}}>Démarrée Mission</Text>
   </BTNPaper>
 
      }
+     <Portal>
+        <Modal  visible={visible}
+        onDismiss={()=>  {
+          setvisible(false)
+        }}
+        contentContainerStyle={
+          {
+            backgroundColor:"white",
+            padding:20,
+            margin:20,
+            borderRadius:10
+          }
+
+
+        }
+
+        >
+         <IconButton
+    icon="close"
+    iconColor={MD3Colors.error50}
+    size={20}
+    onPress={() => setvisible(false)}
+  />
+
+
+        {/* <KeyboardAwareScrollView> */}
+
+
+  <Text>
+
+  { image?.length }/ 5
+  </Text>
+
+
+
+    <FlatList
+      data={image}
+      renderItem={renderItem2}
+      keyExtractor={(item, index) => index.toString()}
+    />
+    {
+      image?.length <5 &&
+
+  <BTNPaper icon="camera" mode="contained" loading={isLOad} onPress={() => TakePhoto()}>
+  prendre une photo
+  </BTNPaper>
+    }
+  {
+    image?.length >= 1 &&
+    (
+      status=='Démarrée' ?
+  <BTNPaper icon="content-save-all" mode="outlined" loading={isLOad} onPress={() => {
+
+    savePhotosTerminéé()
+
+  }}>
+
+    {/* savePhotos()}}> */}
+  enregistrer
+  </BTNPaper>:
+  <BTNPaper loading={isLOad} icon="content-save-all" mode="outlined" onPress={() => {
+
+
+    savePhotos();
+  }}>
+
+    {/* savePhotos()}}> */}
+  enregistrer
+  </BTNPaper>
+    )
+  }
+  {/* </KeyboardAwareScrollView> */}
+
+        </Modal>
+      </Portal>
+      <Portal>
+          <Dialog visible={visibleError} onDismiss={
+
+            ()=> {
+              setvisibleError(false)
+            }
+          }
+          style={
+            {
+              backgroundColor:'#878585',
+              padding:20,
+              margin:20,
+              borderRadius:10
+              }
+
+          }
+
+
+          >
+            <Dialog.Title
+            style={{
+              color:"#000000"
+            }}
+            >Alert</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">{Error}</Text>
+            </Dialog.Content>
+            <Dialog.Actions
+            style={{
+              // justifyContent:'center',
+              color:"#000000"
+            }}
+            >
+              <BTNPaper onPress={
+                ()=> {
+                  setvisibleError(false)
+                }
+              }
+              style={{
+                color:"#8B5CF6"
+              }}
+              >Done</BTNPaper>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
 
 
 

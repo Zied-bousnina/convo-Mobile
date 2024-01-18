@@ -58,6 +58,27 @@ console.log(data)
     }
     const distance = parseFloat(getDistanceFromLatLonInKm().toFixed(2))
 
+    const navigateDetails= ()=> {
+      navigation.navigate("missionDetails",{
+        demandeId:data?.data?.mission?._id,
+        distance:distance,
+        address:data?.data?.mission?.address,
+        destination:data?.data?.mission?.destination,
+        comments:data?.data?.mission?.comments,
+        offer:data?.data?.mission?.offer,
+        status:data?.data?.mission?.status,
+        postalAddress:data?.data?.mission?.postalAddress,
+        postalDestination:data?.data?.mission?.postalDestination,
+        postalCode:data?.data?.mission?.postalCode,
+        postalDestinationCode:data?.data?.mission?.postalDestinationCode,
+        missionType: data?.data?.mission?.missionType,
+        dateDepart : data?.data?.mission?.dateDepart,
+        remunerationAmount: data?.data?.remunerationAmount,
+        devisId: data?.data?._id
+        // dateArrivee : data?.data?.mission?.dateArrivee,
+
+      })
+    }
     return (
         <>
 
@@ -205,21 +226,40 @@ console.log(data)
 
 
             <View
-              style={styles.tags}
+              // style={styles.tags}
             >
+            {
+              data?.data?.status=='Démarrée' ?
+              <BTNPaper
+             loading={isLOad}
+            onPress={() => {
+              navigateDetails()
+            //   console.log(data?.data?._id)
+            // dispatch(TermineeMission(
+            //   data?.data?._id
+
+            // ))
+
+
+            }}
+            mode="contained">
+              Mission Terminée
+            </BTNPaper>
+            :
             <BTNPaper
             mode="outlined"
             loading={isLOad}
             onPress={() => {
-              console.log(data?.data?._id)
-              dispatch(AccepteMission(
-                data?.data?._id
+              navigateDetails()
+      //         console.log(data?.data?._id)
+      //         dispatch(AccepteMission(
+      //           data?.data?._id
 
-            ))
-            dispatch({
-        type: SET_REQUEST,
-        payload: [],
-      });
+      //       ))
+      //       dispatch({
+      //   type: SET_REQUEST,
+      //   payload: [],
+      // });
       //       dispatch({
       //   type: SET_LAST_MISSION,
       //   payload: [],
@@ -229,20 +269,9 @@ console.log(data)
             >
               Mission démarée
             </BTNPaper>
-            <BTNPaper
-             loading={isLOad}
-            onPress={() => {
-              console.log(data?.data?._id)
-            dispatch(TermineeMission(
-              data?.data?._id
-
-            ))
+            }
 
 
-            }}
-            mode="contained">
-              Mission Terminée
-            </BTNPaper>
 
             </View>
 

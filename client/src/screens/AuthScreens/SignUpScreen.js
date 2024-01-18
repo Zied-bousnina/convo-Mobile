@@ -56,6 +56,8 @@ import LockIcon from '../../components/svg/LockIcon';
 import ShowIcon from '../../components/svg/ShowIcon';
 import LoginButton from '../../components/Buttons/LoginButton';
 import { registerUser } from '../../redux/actions/authActions';
+import { Button } from 'react-native-paper';
+import { ImageBackground } from 'react-native';
 const SignUpScreen = () => {
 
     const [show, setshow] = useState(false);
@@ -172,6 +174,20 @@ const SignUpScreen = () => {
   }
 
   return (
+    <ImageBackground
+
+    source={
+        require('../../assets/images1/pattern-randomized.png')
+        // require('../../assets')
+    }
+    style={{
+      flex: 1,
+      // backgroundColor: '#B52424', // Fallback color in case the image fails to load
+    }}
+    resizeMode="cover"
+  >
+
+
 <>
     {isLoad? <AppLoader/> : null }
      {isLoading? <AppLoader /> : null}
@@ -185,6 +201,20 @@ const SignUpScreen = () => {
 
 
      <KeyboardAwareScrollView behavior="position" style={SignUpStyle.mainCon}>
+     <View style={{padding: 20}}>
+
+
+          <Button
+          mode='contained'
+          onPress={()=>navigation.goBack()}
+          icon="keyboard-return"
+          style={{ borderRadius: 20, width: 50, height: 50, justifyContent: 'center', alignItems: 'center'}}
+
+          >
+            {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
+
+          </Button>
+        </View>
          <View style={SignUpStyle.loginIcon}>
            {/* <SvgIcon icon={'signup'} width={300} height={300} /> */}
            <Logo
@@ -344,6 +374,7 @@ const SignUpScreen = () => {
        </KeyboardAwareScrollView>
        {/* </GestureHandlerRootView> */}
        </>
+       </ImageBackground>
   )
 }
 
@@ -351,7 +382,7 @@ export default SignUpScreen
 
 const styling = theme=>StyleSheet.create({
     mainCon: {
-      backgroundColor:  Colors[theme]?.backgroundColor,
+      // backgroundColor:  Colors[theme]?.backgroundColor,
       flex: 1,
       height:screenHeight
 

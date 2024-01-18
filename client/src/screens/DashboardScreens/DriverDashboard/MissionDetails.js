@@ -59,12 +59,15 @@ const MissionDetails = ({route}) => {
     devisId
 
   } =  route.params
-  console.log(route.params)
+
+
   const [offer, setoffer] = useState(route.params?.offer)
-  // console.log()
+
+
 
  const handleIncrease = ()=>{
-    // console.log("increase")
+
+
     setdecrease(false)
     setincrease(true)
     setoffer(parseFloat(offer) + 0.5)
@@ -72,7 +75,8 @@ const MissionDetails = ({route}) => {
  }
 
  const handleDecrease = ()=> {
-    // console.log("decrease")
+
+
     setincrease(false)
     setdecrease(true)
     setoffer(parseFloat(offer) - 0.5)
@@ -81,11 +85,6 @@ const MissionDetails = ({route}) => {
 
 
 
-
-// console.log(destinationa)
-
-
-  // console.log(fullBins)
   const html_script = `
  <!DOCTYPE html>
  <html>

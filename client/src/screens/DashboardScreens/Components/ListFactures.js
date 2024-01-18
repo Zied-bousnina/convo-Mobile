@@ -10,8 +10,14 @@ import haversine from 'haversine'; // You may need to install this library using
 
 import { uniqueId } from "lodash";
 import { useNavigation } from '@react-navigation/native';
-import { Button as BTNPaper, MD3Colors } from 'react-native-paper';
+import { Avatar, Button as BTNPaper, Card, DataTable, Divider, IconButton, MD3Colors, Modal, Portal } from 'react-native-paper';
 const ListFactures = memo((data, key) => {
+  const [page, setPage] = React.useState(0);
+  const [numberOfItemsPerPageList] = React.useState([2, 3, 4]);
+  const [itemsPerPage, onItemsPerPageChange] = React.useState(
+    numberOfItemsPerPageList[0]
+  );
+
     const originalDateString = data?.data?.createdAt;
     const date = new Date(originalDateString);
     const month = date.toLocaleString('default', { month: 'short' });
@@ -55,129 +61,164 @@ console.log(data)
       return deg * (Math.PI/180)
     }
     const distance = parseFloat(getDistanceFromLatLonInKm().toFixed(2))
+    const [visible, setVisible] = React.useState(false);
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+    const containerStyle = {backgroundColor: 'white', padding: 20,
+    margin:20,
+  };
+  const from = page * itemsPerPage;
+  const to = Math.min((page + 1) * itemsPerPage, data?.data?.factures.length);
+
+  React.useEffect(() => {
+    setPage(0);
+  }, [itemsPerPage]);
 
     return (
         <>
 
 
-<Pressable style={styles.taskContainer}
-     onPress={
-        () => {
-          // setselectedItem(item);
-          // sheetRef.current.open();
-
-
-          // console.log("hello zied ")
-        }
-     }
-     >
-     <View
-             style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-end',  // Align items to the right
-        alignItems: 'flex-end',
-        // marginBottom: 16,
-        // paddingRight: 16,  // Add some padding to the right if needed
-    }}
-     >
-        {/* <BTNPaper
-            style={{
-                marginRight:-10
-            }}
-            loading={false} mode="contained" onPress={() => console.log('Pressed')}>
-    Confirmée
-  </BTNPaper> */}
-     </View>
-          <View style={styles.tags2}>
-            {/* Your tags view code */}
-
-            <View
-                style={{
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    marginLeft: 5,
-                }}>
-
-
-            {/* <Text style={styles.text}>Partenaire: {data?.data?.partner?.contactName}
-           </Text> */}
-           {/* {item?.user?.email} */}
-          <Text  style={styles.text}>Départ:
-          {truncateText(data?.data?.mission?.postalAddress, 40)}
-
-           {/* {item?.user?.email} */}
-           </Text>
-          <Text  style={styles.text}>
-          Arrivée: {truncateText(data?.data?.mission?.postalDestination, 40)}
-          </Text>
-            </View>
-
-          </View>
-
-          {/* } */}
-          {/* <Text style={styles.text}>{item?.profile?.bio?  `About User: ${item?.profile?.bio}`: "" }</Text> */}
-          <View style={styles.tags}>
-
-
-          <View style={styles.stats}>
-            <View>
-              <Text style={styles.date}>
-              <Icon
-    source="clock-outline"
-    color={MD3Colors.secondary40}
-    size={20}
-  /> {new Date(data?.data?.createdAt).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  })}
-              {/* {formattedDate} */}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.stats}>
-            <View>
-              <Text style={styles.date}>
-              <Icon
-    source="calendar-outline"
-    color={MD3Colors.secondary40}
-    size={20}
-  /> {new Date(data?.data?.createdAt).toLocaleDateString('en-US', {
+<Card.Title
+    title={`Facture N°${(data?.data?._id).toString().slice(-5)}`}
+    subtitle={`de ${
+      new Date(data?.data?.from).toLocaleDateString('en-US', {
     month: '2-digit',
     day: '2-digit',
     year: 'numeric',
-  })}
-              {/* {formattedDate} */}
-              </Text>
-            </View>
-          </View>
-          </View>
-          {/* <View style={styles.stats}> */}
-            <View
+  })
+    }| à ${
+      new Date(data?.data?.to).toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  })
+    }`  }
+    left={(props) => <Avatar.Icon {...props}
+    style={{backgroundColor:"#F2F0FD",
 
-             style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-end',  // Align items to the right
-        alignItems: 'flex-end',
-        // marginBottom: 16,
-        // paddingRight: 16,  // Add some padding to the right if needed
+
+
     }}
+     icon="information-outline"
+        color="#8B5CF6"
 
+
+     />}
+    // right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => {}} />}
+    // right={()=><Text>{Number(39).toLocaleString('fr-FR', {style:'currency', currency: 'EUR'})}</Text>}
+    titleStyle={{ color: "black",
+    fontFamily:"Roboto-Bold",
+    fontSize:16
+     }}
+    subtitleStyle={{ color: "black",
+    fontFamily:"Roboto-Bold",
+    fontSize:12
+     }}
+     right={(prps)=> {
+        return(
+          <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
+          <Text style={{ color: "black",
+    fontFamily:"Roboto-Bold",
+    fontSize:12
+     }}> {Number(data?.data?.totalAmmount).toLocaleString('fr-FR', {style:'currency', currency: 'EUR'})}</Text>
+          <IconButton
+          style={{backgroundColor:"#8B5CF6",borderRadius:5}}
+          labelStyle={{color:"white"}}
+          icon="eye"
+          mode="contained"
+          onPress={() => {
+            // navigation.navigate('FactureDetails', { data: data?.data })
+            showModal()
+            }}
+        >
+
+        </IconButton>
+          </View>
+        )
+
+
+     }
+     }
+
+
+  />
+  <Portal>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+          <Text
+          style={{ color: "black",
+          fontFamily:"Roboto-Bold",
+          fontSize:16,
+          textAlign:"center"
+           }}
+          >Liste des missions. </Text>
+            <DataTable
+      style={{backgroundColor:"#F2F0FD"}}
+      columns={[
+        {
+          id: 'start',
+          label: 'Start',
+          minWidth: 100,
+          sortable: true,
+          // format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'to',
+          label: 'To',
+          minWidth: 100,
+          sortable: true,
+          // format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'distance',
+          label: 'Distance',
+          minWidth: 100,
+          sortable: true,
+          format: (value) => value.toFixed(2),
+        },
+      ]}
             >
-              <Text style={styles.date}>
-              {Number(data?.data?.totalAmmount).toLocaleString('fr-FR', {style:'currency', currency: 'EUR'})}
-              {/* {formattedDate} */}
-              </Text>
-            </View>
-          {/* </View> */}
+      <DataTable.Header>
+        <DataTable.Title
+        // style={{
+        //   color:"black"
+        // }}
+        >start</DataTable.Title>
+        <DataTable.Title
 
+        numeric>to</DataTable.Title>
+        <DataTable.Title numeric>distance</DataTable.Title>
+      </DataTable.Header>
 
-            {/* <View style={styles.showMoreContainer}>
-              <Text style={styles.showMoreText}>Click To Report User</Text>
-            </View> */}
+      {data?.data?.factures.slice(from, to).map((item) => (
+        <DataTable.Row key={item._id}>
+          <DataTable.Cell>{item.mission?.postalAddress}</DataTable.Cell>
+          <DataTable.Cell numeric>{item.mission?.postalDestination}</DataTable.Cell>
+          <DataTable.Cell numeric>{item.mission?.distance}</DataTable.Cell>
+        </DataTable.Row>
+      ))}
 
-        </Pressable>
+      <DataTable.Pagination
+        page={page}
+        numberOfPages={Math.ceil(data?.data?.factures.length / itemsPerPage)}
+        onPageChange={(page) => setPage(page)}
+        label={`${from + 1}-${to} of ${data?.data?.factures.length}`}
+        numberOfItemsPerPageList={numberOfItemsPerPageList}
+        numberOfItemsPerPage={itemsPerPage}
+        onItemsPerPageChange={onItemsPerPageChange}
+        showFastPaginationControls
+        selectPageDropdownLabel={'Rows per page'}
+      />
+    </DataTable>
+    <Text
+          style={{ color: "black",
+          fontFamily:"Roboto-Bold",
+          fontSize:16,
+          textAlign:"center"
+           }}
+          > Cliquez à l'extérieur de cette zone pour fermer.</Text>
+        </Modal>
+      </Portal>
+  <Divider/>
         {/* <Text>hets</Text> */}
 
         </>

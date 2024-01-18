@@ -88,7 +88,7 @@ if(
 
 
   useEffect(() => {
-    // console.log("render")
+
     dispatch(getUsersById());
 
     enable();
@@ -160,7 +160,7 @@ if(
           socket.emit('offline_client', currentUser2?.user?.id)
 
         }
-        // console.log("position", position?.coords)
+
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -183,9 +183,9 @@ if(
   const isLoading = useSelector((state) => state.missions.isLoading);
   const page = useSelector((state) => state.missions.missions.page);
   const count = useSelector((state) => state?.AcceptedMissions?.mission?.count);
-// console.log("item_list",item_list)
+
   useEffect(() => {
-    // console.log("render2")
+
     dispatch(
         AcceptedMission(),
     );

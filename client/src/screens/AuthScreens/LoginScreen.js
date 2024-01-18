@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { View, Text, Dimensions, Animated, useColorScheme, StyleSheet, Pressable } from 'react-native'
+import { View, Text, Dimensions, Animated, useColorScheme, StyleSheet, Pressable, ImageBackground } from 'react-native'
 import React, { useState, useRef, useCallback, useEffect} from 'react';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -202,7 +202,21 @@ const LoginScreen = () => {
 
   };
   return (
+
+    <ImageBackground
+
+    source={
+        require('../../assets/images1/pattern-randomized.png')
+        // require('../../assets')
+    }
+    style={{
+      flex: 1,
+      // backgroundColor: '#B52424', // Fallback color in case the image fails to load
+    }}
+    resizeMode="cover"
+  >
     <>
+
     {/* {loading ? <EmailSent/> :null } */}
     {isLoad? <AppLoader/> : null }
 
@@ -312,7 +326,7 @@ const LoginScreen = () => {
               <Text style={LoginStyle.dontHaveAccountLbl}>Don't have an account yet?</Text>
               </Pressable>
           </View>
-          <View style={LoginStyle.deviderCon}>
+          {/* <View style={LoginStyle.deviderCon}>
             <View style={LoginStyle.devider} />
             <Text style={LoginStyle.or}>OR</Text>
           </View>
@@ -327,7 +341,7 @@ const LoginScreen = () => {
                 <Text style={LoginStyle.googleLbl}>Login with Google</Text>
               </Pressable>
             </View>
-          </View>
+          </View> */}
           <View style={LoginStyle.registerCon}>
             {/* <Text style={LoginStyle.registerNew}>New User? </Text> */}
             {/* <Pressable
@@ -388,6 +402,7 @@ const LoginScreen = () => {
 </GestureHandlerRootView >
 
     </>
+    </ImageBackground>
   )
 }
 
@@ -397,7 +412,7 @@ const styling = theme=>
 StyleSheet.create({
   mainCon: {
     // backgroundColor: theme.colors.black,
-    backgroundColor: Colors[theme]?.backgroundColor,
+    // backgroundColor: Colors[theme]?.backgroundColor,
 // backgroundColor: process.env.ICON_COLOR,
     flex: 1,
     height:screenHeight*1.5

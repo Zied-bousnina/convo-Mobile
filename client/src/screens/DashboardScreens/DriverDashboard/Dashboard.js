@@ -30,9 +30,7 @@ const Dashboard = () => {
   const currentUser2 = useSelector(state=>state?.auth)
   const user = useSelector(state => state?.auth);
 
-  console.log("--------------------------------")
-  console.log(user)
-  console.log("--------------------------------")
+
   const [themeValue, setThemeValue] = useState('');
   const themes = useColorScheme();
   const dispatch = useDispatch()
@@ -202,7 +200,7 @@ if(
                 tabBarIcon:({focused})=>(
                     <View style={{alignItems:'center'}} >
                          <Icon5 name={focused ? 'money' : 'money'} size={20} color={focused ? "#26cbfc": "#999"} />
-                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >My Income</Text>
+                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} > Mes Rénumérations</Text>
                     </View>
                 )
             }}  name="recents" component={MyIncome}/>

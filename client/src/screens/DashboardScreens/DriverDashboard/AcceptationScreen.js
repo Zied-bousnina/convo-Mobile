@@ -54,12 +54,12 @@ const AcceptationScreen = ({route}) => {
     demandeId
 
   } =  route.params
-  console.log(route.params)
+
   const [offer, setoffer] = useState(route.params?.offer)
-  // console.log()
+
 
  const handleIncrease = ()=>{
-    // console.log("increase")
+
     setdecrease(false)
     setincrease(true)
     setoffer(parseFloat(offer) + 0.5)
@@ -67,7 +67,7 @@ const AcceptationScreen = ({route}) => {
  }
 
  const handleDecrease = ()=> {
-    // console.log("decrease")
+
     setincrease(false)
     setdecrease(true)
     setoffer(parseFloat(offer) - 0.5)
@@ -95,10 +95,10 @@ const AcceptationScreen = ({route}) => {
   // Format the timer value into HH:MM:SS
   const formattedTime = new Date(timer * 1000).toISOString().substr(11, 8);
 
-// console.log(destinationa)
 
 
-  // console.log(fullBins)
+
+
   const html_script = `
  <!DOCTYPE html>
  <html>

@@ -11,6 +11,8 @@ import {
   useColorScheme,
   Alert,
   TouchableWithoutFeedback,
+  Touchable,
+  ImageBackground,
 } from 'react-native';
 import Fonts from '../../assets/fonts';
 // import SvgIcon from '../../assets/images/SvgIcon';
@@ -30,6 +32,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { forgotPassword } from '../../redux/actions/authActions';
 import DropdownAlert from 'react-native-dropdownalert';
 import AppLoader from '../../components/Animations/AppLoader';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Button } from 'react-native-paper';
 const validationSchema = yup.object({
     email: yup
       .string()
@@ -46,7 +50,7 @@ const ForgotPasswordScreen = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const state = useSelector(state=>state)
-    console.log("---------------------------------------------------------------------",state.mail.emailSent)
+    // console.log("---------------------------------------------------------------------",state.mail.emailSent)
     const dropdown = useRef(null);
     const showAlert = () => {
         dropdown.current.alertWithType('success', 'Title', 'Message');
@@ -120,7 +124,7 @@ const ForgotPasswordScreen = () => {
      save('Theme', theme);
      save('IsDefault', isDefault);
      setThemeValue(theme);
-     console.log('storage', theme)
+    //  console.log('storage', theme)
    }, []);
 
    useEffect(() => {
@@ -135,6 +139,20 @@ const ForgotPasswordScreen = () => {
    // ------------------End theme-----------------------
 
   return (
+    <ImageBackground
+
+    source={
+        require('../../assets/images1/pattern-randomized.png')
+        // require('../../assets')
+    }
+    style={{
+      flex: 1,
+      // backgroundColor: '#B52424', // Fallback color in case the image fails to load
+    }}
+    resizeMode="cover"
+  >
+
+
     <>
          {isLoad? <AppLoader/> : null }
 
@@ -142,18 +160,18 @@ const ForgotPasswordScreen = () => {
     {/* {isLoad? <AppLoader/> : null } */}
 
         <View style={{padding: 20}}>
-          <TouchableWithoutFeedback onPress={
-            () => {
-              navigation.goBack(null)
-              navigation.navigate('Login')
-            }
-          }>
+
+
+          <Button
+          mode='contained'
+          onPress={()=>navigation.goBack()}
+          icon="keyboard-return"
+          style={{ borderRadius: 20, width: 50, height: 50, justifyContent: 'center', alignItems: 'center'}}
+
+          >
             {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
-            <BackSvg
-              width={31}
-              height={31}
-            />
-          </TouchableWithoutFeedback>
+
+          </Button>
         </View>
         <View style={{position: 'relative', bottom: 30}}>
           <View style={styles.loginIcon}>
@@ -241,6 +259,7 @@ const ForgotPasswordScreen = () => {
         </View>
       </KeyboardAwareScrollView>
       </>
+      </ImageBackground>
   )
 }
 
@@ -249,7 +268,7 @@ export default ForgotPasswordScreen
 const styling = theme=>
 StyleSheet.create({
   mainCon: {
-    backgroundColor: Colors[theme]?.backgroundColor,
+    // backgroundColor: Colors[theme]?.backgroundColor,
     flex: 1,
   },
   loginIcon: {

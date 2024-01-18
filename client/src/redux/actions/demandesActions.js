@@ -22,7 +22,9 @@ import {setLoading} from './authActions';
 import { createSelector } from 'reselect';
 // import { GetMissions } from './demandesActions';
 import {API_URL} from '@env';
-const BASE_URL= 'https://convoyage.onrender.com'
+// const BASE_URL= 'https://convoyage.onrender.com'
+const BASE_URL= 'http://192.168.1.16:3600'
+
 export const AddDemande = (userData, navigation) => dispatch => {
 
   dispatch({
@@ -102,7 +104,7 @@ export const increaseOffer = (demandeId, navigation) => dispatch => {
       }, 3000);
     });
 };
-export const AccepteMission = (demandeId, navigation) => dispatch => {
+export const AccepteMission = (demandeId,images, navigation) => dispatch => {
 
   dispatch({
     type: SET_IS_LOADING,
@@ -113,11 +115,19 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
     payload: true,
   })
 
-  axios
+  return axios
     .post(
       `${BASE_URL}/api/users/AccepteMission/${demandeId}`,
+      images,{
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data'
+          // 'Authorization': 'Bearer ' + token
+        }
+
+      }
     )
-    .then(async res => {
+    .then( res => {
 
 
       dispatch({
@@ -127,7 +137,7 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
       setTimeout(() => {
         dispatch(setLoading(false));
       }, 3000);
-      // console.log("accept",res.data)
+
       navigation.navigate('Missions')
       // navigation.navigate("city",{
       //   demandeId:res?.data?.demand?._id,
@@ -148,6 +158,7 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
         type: SET_IS_LOADING,
         payload: false,
       })
+      return res.data; // Return data if needed
     })
     .catch(err => {
 
@@ -162,20 +173,29 @@ export const AccepteMission = (demandeId, navigation) => dispatch => {
       setTimeout(() => {
         dispatch(setLoading(false));
       }, 3000);
+      throw err; // Rethrow the error if needed
     });
 };
-export const TermineeMission = (demandeId, navigation) => dispatch => {
+export const TermineeMission = (demandeId,images, navigation) => dispatch => {
 
   dispatch({
     type: SET_IS_LOADING,
     payload: true,
   });
 
-  axios
+ return axios
     .post(
       `${BASE_URL}/api/users/TermineeMission/${demandeId}`,
+      images,{
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data'
+          // 'Authorization': 'Bearer ' + token
+        }
+
+      }
     )
-    .then(async res => {
+    .then( res => {
 
 
       dispatch({
@@ -185,7 +205,8 @@ export const TermineeMission = (demandeId, navigation) => dispatch => {
       setTimeout(() => {
         dispatch(setLoading(false));
       }, 3000);
-      // console.log("accept",res.data)
+
+
       // navigation.navigate('city')
       navigation.navigate('Missions')
       // navigation.navigate("AcceptationScreen",{
@@ -203,6 +224,7 @@ export const TermineeMission = (demandeId, navigation) => dispatch => {
 
       // })
       // navigation.navigate("AcceptationScreen",userData )
+      return res.data; // Return data if needed
     })
     .catch(err => {
 
@@ -217,6 +239,7 @@ export const TermineeMission = (demandeId, navigation) => dispatch => {
       setTimeout(() => {
         dispatch(setLoading(false));
       }, 3000);
+      throw err; // Rethrow the error if needed
     });
 };
 export const RefuseMission = (demandeId, navigation) => dispatch => {
@@ -296,7 +319,7 @@ export const decreaseOffer = (demandeId, navigation) => dispatch => {
 };
 export const FindRequestDemande = navigation => dispatch => {
   axios
-    .get('${BASE_URL}/api/users/findDemandsByUserId')
+    .get(`${BASE_URL}/api/users/findDemandsByUserId`)
     .then(async res => {
 
       dispatch({
@@ -317,11 +340,11 @@ export const FindRequestDemande = navigation => dispatch => {
     });
 };
 export const FindLastMission = navigation => dispatch => {
-  // console.log("tee")
+
   axios
     .get(`${BASE_URL}/api/users/findLastMissionByUser`)
     .then(async res => {
-      console.log(res.data)
+
 
       dispatch({
         type: SET_LAST_MISSION,
@@ -342,11 +365,11 @@ export const FindLastMission = navigation => dispatch => {
 };
 
 export const Findfactures = navigation => dispatch => {
-  // console.log("tee")
+
   axios
-    .get(`${BASE_URL}/api/users/facture/findFactureBydriver`)
+    .get(`${BASE_URL}/api/users/facture/fetchAllFacturesByDriver`)
     .then(async res => {
-      console.log(res.data)
+
 
       dispatch({
         type: SET_FACTURES,
@@ -520,11 +543,11 @@ export const GetMissions = (data) => {
 
 
 export const AcceptedMission = () => dispatch => {
-console.log("hguigliugfliyflyufliyufml")
+
   axios
     .get(`${BASE_URL}/api/users/findMissionsTermineeByUser`)
     .then(async res => {
-      console.log(res.data)
+
 
       dispatch({
         type: ACCEPTED_MISSIONS,
@@ -532,7 +555,7 @@ console.log("hguigliugfliyflyufliyufml")
       });
     })
     .catch(err => {
-      console.log("********************", err)
+
       dispatch({
         type: SET_ERRORS,
         payload: err,

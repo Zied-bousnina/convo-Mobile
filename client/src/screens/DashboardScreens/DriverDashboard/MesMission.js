@@ -8,7 +8,7 @@ import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {AcceptedMission, FindLastMission, GetMissions} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
@@ -37,7 +37,7 @@ const MesMission = () => {
 
   const user = useSelector(({ currentUser }) => currentUser?.user);
   const [enRoute, setenRoute] = useState(isEnRoute)
-
+  const item_list = useSelector((state) => state.missions.missions.items);
   const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
   const [selectedItem, setselectedItem] = useState({});
 
@@ -45,8 +45,33 @@ const MesMission = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const currentUser2 = useSelector(state=>state?.auth)
-
+  const [newMission, setnewMission] = useState(false)
   const [userConnected_id, setuserConnected_id] = useState()
+  useFocusEffect(
+    React.useCallback(() => {
+      setnewMission(true)
+      loadItemsStart()
+      dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+      dispatch(FindLastMission())
+      dispatch({
+        type: ACCEPTED_MISSIONS,
+        payload: [],
+
+      })
+
+dispatch({
+  type: SET_REQUEST,
+  payload: [],
+});
+loadItemsStart()
+dispatch(AcceptedMission())
+
+      // dispatch(FindLastMission())
+    }, [])
+  );
   useEffect(() => {
     // Handle connection
     socket.on('connect', () => {
@@ -93,7 +118,7 @@ if(
 
 
   useEffect(() => {
-    // console.log("render")
+
     dispatch(getUsersById());
 
     enable();
@@ -103,7 +128,7 @@ if(
 
   // -------------------------------------------------------------
   const [noti, setnoti] = useState([])
-  const [newMission, setnewMission] = useState(false)
+
   const sendNotification = (mission, navigation) => {
     // Create a channel for the notification
     PushNotification.createChannel(
@@ -170,7 +195,7 @@ if(
 
   useEffect(() => {
 //     socket.on('connect', () => {
-//     console.log('Connected to server');
+//
 //     if (user) {
 //       // socket.current = io(host);
 //       // socket.emit("add-user", user.id);
@@ -182,26 +207,52 @@ if(
 socket.on('error', (error) => {
     console.error('Socket error:', error);
 });
+socket.on("MissionAccepted",async ()=> {
+  setnewMission(true)
 
+
+  dispatch({
+type: SET_LAST_MISSION,
+payload: [],
+});
+dispatch(FindLastMission())
+dispatch({
+type: ACCEPTED_MISSIONS,
+payload: [],
+
+})
+dispatch({
+type: SET_REQUEST,
+payload: [],
+});
+loadItemsStart()
+dispatch(AcceptedMission())
+dispatch({
+type: SET_RESET_STATE
+});
+
+loadItemsStart()
+setnewMission(false)
+  await loadItemsStart()
+
+})
 
 
 socket.on("message received", (newMessage) => {
-  console.log(newMessage)
+
   // alert("gggg")
-  console.log("before",newMessage)
-  console.log("test",(newMessage?.status == "Confirmée"|| newMessage?.status == "En retard"  ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
   if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
     setnoti(
       [...noti, newMessage]
     )
     setnewMission(true)
-    console.log("++++++++++++++++++",newMessage?.mission)
+
 
     sendNotification(newMessage?.mission)
     // handleNotyfy(newMessage?);
 // if(newMessage?.partner?._id ==user?.id ){
-  console.log("New message received",newMessage);
+
 //   setnoti(
 //     [...noti, newMessage]
 //   )
@@ -279,7 +330,7 @@ socket.on("message received", (newMessage) => {
         //   socket.emit('offline_client', currentUser2?.user?.id)
 
         // }
-        // console.log("position", position?.coords)
+        //
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -288,7 +339,7 @@ socket.on("message received", (newMessage) => {
 
   });
   useEffect(() => {
-    // console.log("redredhg")
+    //
     const fetchData = async () => {
         if (Platform.OS === 'android') {
           await requestLocationPermission();
@@ -304,22 +355,22 @@ socket.on("message received", (newMessage) => {
   const [value, setValue] = React.useState('enCours');
   const missionTerminee = useSelector((state) => state?.AcceptedMissions?.mission?.missions);
   useEffect(() => {
-    // console.log("render2")
+    //
     dispatch(
         AcceptedMission(),
     );
   }, [dispatch,missionTerminee?.length ]);
-  // console.log(missionTerminee)
+  //
 
   const PAGE_LIMIT = 5;
   // const dispatch = useDispatch();
-  const item_list = useSelector((state) => state.missions.missions.items);
+
   const isLoading = useSelector((state) => state.missions.isLoading);
   const page = useSelector((state) => state.missions.missions.page);
   const count = useSelector((state) => state.missions.missions.count);
 
   useEffect(() => {
-    console.log("render2")
+
     dispatch(
       GetMissions({
         page: 0,

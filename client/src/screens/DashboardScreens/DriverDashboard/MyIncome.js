@@ -2,11 +2,11 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAndroid, Platform, ImageBackground} from 'react-native';
+import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAndroid, Platform, ImageBackground, TextInput} from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
-import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
+import {AddCurrentLocation, ChangeStatus, GenerateFacture, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useNavigation} from '@react-navigation/native';
 import {AcceptedMission, FindLastMission, Findfactures, GetMissions} from '../../../redux/actions/demandesActions';
@@ -26,22 +26,33 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // import { SkeletonPlaceholder } from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
-import { Button as BTN, Icon, MD3Colors, SegmentedButtons } from 'react-native-paper';
+import { Button as BTN, FAB, Icon, MD3Colors, Modal, Portal, SegmentedButtons } from 'react-native-paper';
 import { ACCEPTED_MISSIONS, SET_EN_ROUTE, SET_FACTURES, SET_LAST_MISSION, SET_REQUEST, SET_RESET_STATE } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ListRequest2 from '../Components/ListRequest2';
 import ListFactures from '../Components/ListFactures';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
 const MyIncome = () => {
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
-
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {backgroundColor: 'white', padding: 20,
+  margin:20,
+};
   const user = useSelector(({ currentUser }) => currentUser?.user);
   const [enRoute, setenRoute] = useState(isEnRoute)
 
   const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
   const [selectedItem, setselectedItem] = useState({});
-
+  const [dateDE, setDateDE] = useState(new Date())
+  const [dateA, setDateA] = useState(new Date())
+  const [openDE, setOpenDE] = useState(false)
+  const [openA, setOpenA] = useState(false)
+  const isLOad = useSelector(state=>state?.isLoading?.isLoading)
   const sheetRef = useRef(null);
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -94,7 +105,8 @@ if(
 
 
   useEffect(() => {
-    // console.log("render")
+
+
     dispatch(getUsersById());
 
     enable();
@@ -171,7 +183,8 @@ if(
 
   useEffect(() => {
 //     socket.on('connect', () => {
-//     console.log('Connected to server');
+//
+
 //     if (user) {
 //       // socket.current = io(host);
 //       // socket.emit("add-user", user.id);
@@ -187,22 +200,20 @@ socket.on('error', (error) => {
 
 
 socket.on("message received", (newMessage) => {
-  console.log(newMessage)
+
   // alert("gggg")
-  console.log("before",newMessage)
-  console.log("test",(newMessage?.status == "Confirmée"|| newMessage?.status == "En retard"  ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
-  if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
+ if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
     setnoti(
       [...noti, newMessage]
     )
     setnewMission(true)
-    console.log("++++++++++++++++++",newMessage?.mission)
+
 
     sendNotification(newMessage?.mission)
     // handleNotyfy(newMessage?);
 // if(newMessage?.partner?._id ==user?.id ){
-  console.log("New message received",newMessage);
+
 //   setnoti(
 //     [...noti, newMessage]
 //   )
@@ -280,7 +291,7 @@ socket.on("message received", (newMessage) => {
         //   socket.emit('offline_client', currentUser2?.user?.id)
 
         // }
-        // console.log("position", position?.coords)
+
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -289,7 +300,7 @@ socket.on("message received", (newMessage) => {
 
   });
   useEffect(() => {
-    // console.log("redredhg")
+
     const fetchData = async () => {
         if (Platform.OS === 'android') {
           await requestLocationPermission();
@@ -306,14 +317,12 @@ socket.on("message received", (newMessage) => {
   const missionTerminee = useSelector((state) => state?.AcceptedMissions?.mission?.missions);
   const factures = useSelector((state) => state?.factures?.factures);
   useEffect(() => {
-    // console.log("render2")
+
     dispatch(
       Findfactures(),
     );
   }, [dispatch,factures?.length ]);
 
-  // console.log("facturesssssssssssssssssssssssssssssssssssss", factures)
-  // console.log(missionTerminee)
 
   const PAGE_LIMIT = 5;
   // const dispatch = useDispatch();
@@ -408,7 +417,58 @@ socket.on("message received", (newMessage) => {
   const getItemLayout = (data, index) => (
     {length: PAGE_LIMIT, offset: PAGE_LIMIT * index, index}
 )
+// const fabStyle = { [animateFrom]: 16 };
+const getDateDE = () => {
+  let tempDate = dateDE.toString().split(' ');
+  return dateDE !== ''
+    ? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
+    : '';
+};
+const getDateA = () => {
+  let tempDate = dateA.toString().split(' ');
+  return dateA !== ''
+    ? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
+    : '';
+};
 
+const generereFacture = ()=> {
+  dispatch({
+    type: SET_FACTURES,
+    payload: [],
+  });
+  dispatch(
+    GenerateFacture({
+      from: moment(dateDE).format("YYYY-MM-DD"),
+      to: moment(dateA).format("YYYY-MM-DD")
+    }),
+  )    .then((data)=> {
+
+    if(data?.data?.success){
+      ToastAndroid
+      .showWithGravityAndOffset(
+        'Facture generée avec success',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+        )
+    }
+    hideModal()
+
+  })
+  .catch((err)=> {
+    ToastAndroid
+    .showWithGravityAndOffset(
+      'Erreur lors de la generation de la facture',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+      )
+  })
+  hideModal()
+  // hideModal()
+}
 
   return (
 
@@ -601,8 +661,93 @@ socket.on("message received", (newMessage) => {
 >
 
 </Text>
+<Portal>
+  <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+    <View>
+      <Text>Genere nouvelle facture</Text>
+
+      {/* Date Inputs */}
+      <View>
+        <Text>Date de</Text>
+
+        <TextInput
+          placeholder="Start Date"
+          onFocus={() => setOpenDE(true)}
+          dataDetectorTypes={
+            "calendarEvent"
+          }
+
+          style={styles.textInput}
 
 
+           value={
+            getDateDE()
+          }
+          type="date"
+          // Add necessary props and styles for your input
+        />
+        <DatePicker
+        modal
+        open={openDE}
+        date={dateDE}
+        onConfirm={(date) => {
+          setOpenDE(false)
+          setDateDE(date)
+        }}
+        onCancel={() => {
+          setOpenDE(false)
+        }}
+      />
+      <DatePicker
+        modal
+        open={openA}
+        date={dateA}
+        onConfirm={(date) => {
+          setOpenA(false)
+          setDateA(date)
+        }}
+        onCancel={() => {
+          setOpenA(false)
+        }}
+      />
+      </View>
+
+      <View>
+        <Text>à</Text>
+        <TextInput
+          placeholder="End Date"
+          style={styles.textInput}
+          onFocus={() => setOpenA(true)}
+          value={
+            getDateA()
+          }
+          // Add necessary props and styles for your input
+        />
+      </View>
+
+      {/* "Generer" Button */}
+      <BTNPaper
+      isLoading={isLOad}
+      mode='contained'
+       onPress={()=>{
+        generereFacture()
+       }}  >
+      Generer
+      </BTNPaper>
+
+      {/* Example Modal Text */}
+      <Text>Click outside this area to dismiss.</Text>
+    </View>
+  </Modal>
+</Portal>
+
+
+
+<FAB
+    icon="plus"
+    style={styles.fab}
+    onPress={() => showModal()}
+  />
 
     </ImageBackground>
   );
@@ -678,5 +823,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     color:"#7c8483"
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 50,
+
+  },
+  textInput: {
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    marginBottom: 5,
+    padding: 10,
+    color:"black"
   },
 });

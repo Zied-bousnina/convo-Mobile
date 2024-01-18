@@ -10,7 +10,9 @@ import { GetProfile } from './profile.actions';
 import Login from '../../components/Auth/Login';
 import { GetRequest } from './demandesActions';
 import { GetCurrentAccess } from './accessAction';
-const BASE_URL= 'https://convoyage.onrender.com'
+// const BASE_URL= 'https://convoyage.onrender.com'
+const BASE_URL= 'http://192.168.1.16:3600'
+
 
 export const registerUser =  (userData, navigation ) => (dispatch) => {
 

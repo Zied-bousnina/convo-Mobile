@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAndroid, Platform, ImageBackground, RefreshControl, Animated} from 'react-native';
+import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAndroid, Platform, ImageBackground, RefreshControl, Animated, TouchableOpacity, ScrollViewBase} from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
@@ -26,7 +26,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // import { SkeletonPlaceholder } from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
-import { Button as BTN, Icon, MD3Colors, Modal, Portal } from 'react-native-paper';
+import { Button as BTN, Dialog, Icon, IconButton, MD3Colors, Modal, Portal } from 'react-native-paper';
 import { ACCEPTED_MISSIONS, SET_EN_ROUTE, SET_FIRST_LOGIN, SET_LAST_MISSION, SET_REQUEST, SET_RESET_STATE } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
@@ -40,7 +40,9 @@ import { Colors } from '../../../theme';
 import Fonts from '../../../assets/fonts';
 import LoginButton from '../../../components/Buttons/LoginButton';
 import AppLoader from '../../../components/Animations/AppLoader';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 const screenHeight = Dimensions.get('window').height;
+
 const initialValues = {
 
   password: '',
@@ -57,10 +59,10 @@ const validationSchema = yup.object({
 
 const Home = () => {
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
-
+  const [visibleError, setvisibleError] = useState(false)
   const user = useSelector(({ currentUser }) => currentUser?.user);
   const [enRoute, setenRoute] = useState(isEnRoute)
-
+  const [Error, setError] = useState()
   const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
   const [selectedItem, setselectedItem] = useState({});
 
@@ -118,7 +120,7 @@ if(
 
 
   useEffect(() => {
-    // console.log("render")
+
     dispatch(getUsersById());
 
     enable();
@@ -129,6 +131,7 @@ if(
   // -------------------------------------------------------------
   const [noti, setnoti] = useState([])
   const [newMission, setnewMission] = useState(false)
+  const [visible, setvisible] = useState(false)
   const sendNotification = (mission, navigation) => {
     // Create a channel for the notification
     PushNotification.createChannel(
@@ -139,7 +142,7 @@ if(
         importance: 4,
         vibrate: true,
       },
-      (created) => console.log(`createChannel returned '${created}'`)
+      (created) => {}
     );
 
     // Extract information from the mission object
@@ -195,7 +198,7 @@ if(
 
   useEffect(() => {
 //     socket.on('connect', () => {
-//     console.log('Connected to server');
+//
 //     if (user) {
 //       // socket.current = io(host);
 //       // socket.emit("add-user", user.id);
@@ -207,25 +210,53 @@ if(
 socket.on('error', (error) => {
     console.error('Socket error:', error);
 });
+socket.on("MissionAccepted",async ()=> {
+  setnewMission(true)
+  onRefresh()
+
+  dispatch({
+type: SET_LAST_MISSION,
+payload: [],
+});
+dispatch(FindLastMission())
+dispatch({
+type: ACCEPTED_MISSIONS,
+payload: [],
+
+})
+dispatch({
+type: SET_REQUEST,
+payload: [],
+});
+loadItemsStart()
+dispatch(AcceptedMission())
+dispatch({
+type: SET_RESET_STATE
+});
+
+loadItemsStart()
+setnewMission(false)
+  await loadItemsStart()
+
+})
 
 
     socket.on("message received", (newMessage) => {
-      console.log(newMessage)
+
+
       // alert("gggg")
-      console.log("before",newMessage)
-      console.log("test",(newMessage?.status == "Confirmée"|| newMessage?.status == "En retard"  ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
-      if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
+       if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
         setnoti(
           [...noti, newMessage]
         )
         setnewMission(true)
-        console.log("++++++++++++++++++",newMessage?.mission)
+
 
         sendNotification(newMessage?.mission)
         // handleNotyfy(newMessage?);
 // if(newMessage?.partner?._id ==user?.id ){
-      console.log("New message received",newMessage);
+
 //   setnoti(
 //     [...noti, newMessage]
 //   )
@@ -330,7 +361,7 @@ const getDistanceFromLatLonInKm=()=>{
         //   socket.emit('offline_client', currentUser2?.user?.id)
 
         // }
-        // console.log("position", position?.coords)
+
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -339,7 +370,7 @@ const getDistanceFromLatLonInKm=()=>{
 
   });
   useEffect(() => {
-    // console.log("redredhg")
+    //
     const fetchData = async () => {
         if (Platform.OS === 'android') {
           await requestLocationPermission();
@@ -370,7 +401,7 @@ const getDistanceFromLatLonInKm=()=>{
   const userAuth = useSelector(state => state?.auth);
   const isLoad = useSelector(state=>state?.isLoading?.isLoading)
   useEffect(() => {
-    // console.log("render2")
+    //
     dispatch(FindLastMission())
 
   }, [dispatch,lastMission.length  ]);
@@ -382,13 +413,13 @@ const getDistanceFromLatLonInKm=()=>{
         type: SET_LAST_MISSION,
         payload: [],
       });
-      console.log("reb")
+
       dispatch(FindLastMission())
     }, [])
   );
 
 
-//   console.log(lastMission)
+//
 
   const renderItem = useCallback(({ item }) => <ListRequest disable key={uniqueId()} data={item} />,[])
 
@@ -486,7 +517,7 @@ const onRefresh = React.useCallback(() => {
     dispatch(FindLastMission())
   }, []);
   const handleLogin = (values, formikActions) => {
-    console.log(values)
+
 dispatch(updatePassword({
     newPassword:values?.confirm,
     confirm:values?.password
@@ -495,6 +526,196 @@ dispatch(updatePassword({
 formikActions.setSubmitting(false)
 
   };
+  const [image, setImage] = useState([]);
+
+  const setToastMsg = msg=> {
+    ToastAndroid.showWithGravity(
+      msg,
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+
+    )
+  }
+  const selectPhotoTapped = () => {
+    const options = {
+      title: 'Select Photo',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+        // allowsEditing: true
+      },
+
+    };
+    launchImageLibrary(options, (response) => {
+
+
+      //
+      if (response.didCancel) {
+        //
+        setToastMsg('User cancelled image picker');
+      } else if (response.error) {
+        //
+        setToastMsg('ImagePicker Error: ' + response.error);
+      } else {
+        const uri = response.assets[0].uri;
+        const type = response.assets[0].type;
+        const name = response.assets[0].fileName;
+        const source = {
+          uri,
+          type,
+          name,
+        }
+        setImage(
+          [...image, source]
+        )
+        //
+      }
+    });
+  }
+  const TakePhoto = () => {
+    const options = {
+      title: 'Select Photo',
+      storageOptions: {
+        skipBackup: true,
+        mediaType: 'photo',
+        includeBase64: false,
+        path: 'images',
+        maxHeight: 2000,
+      maxWidth: 2000
+        // allowsEditing: true
+      },
+
+    };
+    launchCamera(options, (response) => {
+
+
+      //
+      if (response.didCancel) {
+        //
+
+        setToastMsg('User cancelled image picker');
+      } else if (response.error) {
+        //
+
+        setToastMsg('ImagePicker Error: ' + response.error);
+      } else {
+        const uri = response.assets[0].uri;
+        const type = response.assets[0].type;
+        const name = response.assets[0].fileName;
+        const source = {
+          uri,
+          type,
+          name,
+        }
+        setImage((prevImages) => [...prevImages, source])
+
+      }
+    });
+  }
+  const handleDeleteImage = (index) => {
+    const newImageArray = [...image];
+    newImageArray.splice(index, 1);
+    setImage(newImageArray);
+  };
+
+  const savePhotosTerminéé =()=> {
+
+
+    const formData = new FormData();
+
+    image.forEach((img, index) => {
+      formData.append(`avatar${index}`, {
+        uri: img?.uri ? img?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
+        type: 'image/jpg',
+        name: new Date() + `_profile_${index}`
+      });
+    });
+
+    dispatch(TermineeMission(lastMission?.mission?._id,formData, navigation))
+//  dispatch(TermineeMission(
+//     //             lastMission?.mission?._id
+
+//     //         ))
+    .then((data) => {
+
+      dispatch({
+            type: SET_LAST_MISSION,
+            payload: [],
+          });
+        dispatch(FindLastMission())
+        setvisible(false)
+
+
+    })
+    .catch((error) => {
+
+
+    });
+  }
+  const savePhotos =()=> {
+
+
+    const formData = new FormData();
+
+    image.forEach((img, index) => {
+      formData.append(`avatar${index}`, {
+        uri: img?.uri ? img?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
+        type: 'image/jpg',
+        name: new Date() + `_profile_${index}`
+      });
+    });
+
+    dispatch(AccepteMission(lastMission?.mission?._id,formData, navigation))
+
+    .then((data) => {
+      socket.emit("MissionAccepted")
+
+      dispatch({
+            type: SET_LAST_MISSION,
+            payload: [],
+          });
+        dispatch(FindLastMission())
+        setvisible(false)
+
+
+    })
+    .catch((error) => {
+      //
+      setError(error?.response?.data?.message)
+      console.log(error?.response?.data?.message)
+      setvisible(false)
+      setvisibleError(true)
+      setvisible(false)
+      // setvisibleError(true)
+
+    });
+  }
+  const renderItem2 = ({ item, index }) => (
+    <View style={{ position: "relative" }}>
+      <Image
+        source={{ uri: item.uri }}
+        style={{
+          width: 150,
+          height: 150,
+          resizeMode: 'contain',
+        }}
+      />
+      {/* Delete icon */}
+      <BTNPaper
+        icon={"delete-sweep"}
+        onPress={() => handleDeleteImage(index)}
+        style={{
+          position: "absolute",
+          top: 5,
+          right: 5,
+          padding: 5,
+          borderRadius: 10,
+        }}
+      >
+        {/* <Text style={{ color: "white" }}>Delete</Text> */}
+      </BTNPaper>
+    </View>
+  );
   return (
     <>
 
@@ -636,6 +857,51 @@ formikActions.setSubmitting(false)
 
         </Modal>
       </Portal>
+      <Portal>
+          <Dialog visible={visibleError} onDismiss={
+
+            ()=> {
+              setvisibleError(false)
+            }
+          }
+          style={
+            {
+              backgroundColor:'#878585',
+              padding:20,
+              margin:20,
+              borderRadius:10
+              }
+
+          }
+
+
+          >
+            <Dialog.Title
+            style={{
+              color:"#000000"
+            }}
+            >Alert</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">{Error}</Text>
+            </Dialog.Content>
+            <Dialog.Actions
+            style={{
+              // justifyContent:'center',
+              color:"#000000"
+            }}
+            >
+              <BTNPaper onPress={
+                ()=> {
+                  setvisibleError(false)
+                }
+              }
+              style={{
+                color:"#8B5CF6"
+              }}
+              >Done</BTNPaper>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
 
   <ScrollView
   refreshControl={
@@ -648,11 +914,7 @@ formikActions.setSubmitting(false)
 
       <GestureHandlerRootView>
       <KeyboardAwareScrollView>
-{
-    lastMission  && (lastMission?.mission?.status =='Affectée'|| lastMission?.mission?.status =='En retard' || lastMission?.mission?.status =='Démarrée' || lastMission?.mission?.status =='Confirmée')  &&
-
-<>
-{
+      {
   newMission  &&
 
       <View style={{
@@ -712,6 +974,11 @@ formikActions.setSubmitting(false)
   </BTN>
       </View>
       }
+{
+    lastMission  && (lastMission?.mission?.status =='Affectée'|| lastMission?.mission?.status =='En retard' || lastMission?.mission?.status =='Démarrée' || lastMission?.mission?.status =='Confirmée')  &&
+
+<>
+
 
     <Text
         style={{
@@ -753,6 +1020,28 @@ formikActions.setSubmitting(false)
      }
      >
      <View
+     style={styles.tags}
+     >
+     <BTNPaper
+     mode='text'
+    //  disabled
+textColor={
+  (lastMission?.mission?.status === "En retard") ? "#E74C3C" : // Alizarin Red
+  (lastMission?.mission?.status === "Confirmée") ? "#2ECC71" : // Emerald Green
+  (lastMission?.mission?.status === "Affectée") ? "#FFA500" : // Orange
+  (lastMission?.mission?.status === "Démarrée") ? "#3498DB" : // Dodger Blue
+  (lastMission?.mission?.status === "Terminée") ? "#27AE60" : // Nephritis Green
+  '#009688' // Teal
+}
+
+
+
+      >
+      Statut :{lastMission?.mission?.status}
+     </BTNPaper>
+
+
+     <View
              style={{
         flexDirection: 'row',
         justifyContent: 'flex-end',  // Align items to the right
@@ -768,15 +1057,16 @@ formikActions.setSubmitting(false)
                 marginRight:-10
             }}
             loading={isLOad} mode="contained" onPress={() =>{
-            dispatch(TermineeMission(
-                lastMission?.mission?._id
+              setvisible(true)
+    //         dispatch(TermineeMission(
+    //             lastMission?.mission?._id
 
-            ))
-            dispatch({
-        type: SET_LAST_MISSION,
-        payload: [],
-      });
-    dispatch(FindLastMission())
+    //         ))
+    //         dispatch({
+    //     type: SET_LAST_MISSION,
+    //     payload: [],
+    //   });
+    // dispatch(FindLastMission())
             }
             }>
     Terminée
@@ -785,23 +1075,30 @@ formikActions.setSubmitting(false)
             style={{
                 marginRight:-10
             }}
-            loading={isLOad} mode="contained" onPress={() =>{
-            dispatch(AccepteMission(
-                lastMission?.mission?._id
+            loading={isLOad} mode="contained"
+    //          onPress={() =>{
+    //         dispatch(AccepteMission(
+    //             lastMission?.mission?._id
 
-            ))
-            dispatch({
-        type: SET_LAST_MISSION,
-        payload: [],
-      });
-    dispatch(FindLastMission())
-            }
-            }>
-    Confirmée
+    //         ))
+    //         dispatch({
+    //     type: SET_LAST_MISSION,
+    //     payload: [],
+    //   });
+    // dispatch(FindLastMission())
+    //         }
+    //         }
+onPress={()=>{
+  //
+  setvisible(true)
+}}
+            >
+    Démarée
   </BTNPaper>
 
      }
 
+     </View>
      </View>
           <View style={styles.tags2}>
             {/* Your tags view code */}
@@ -969,7 +1266,7 @@ formikActions.setSubmitting(false)
         // buttonColor={
         //     "#fff"
         // }
-        icon="home-account" mode="outlined" onPress={() => console.log('Pressed')}>
+        icon="home-account" mode="outlined" onPress={() => {}}>
         Mon Profil
   </BTNPaper>
   </View>
@@ -982,7 +1279,7 @@ formikActions.setSubmitting(false)
         // buttonColor={
         //     "#fff"
         // }
-        icon="file-document" mode="outlined" onPress={() => console.log('Pressed')}>
+        icon="file-document" mode="outlined" onPress={() => {}}>
         Mes Documents
   </BTNPaper>
   </View>
@@ -1065,6 +1362,81 @@ formikActions.setSubmitting(false)
 >
 
 </Text>
+ <Portal>
+        <Modal  visible={visible}
+        onDismiss={()=>  {
+          setvisible(false)
+        }}
+        contentContainerStyle={
+          {
+            backgroundColor:"white",
+            padding:20,
+            margin:20,
+            borderRadius:10
+          }
+
+
+        }
+
+        >
+         <IconButton
+    icon="close"
+    iconColor={MD3Colors.error50}
+    size={20}
+    onPress={() => setvisible(false)}
+  />
+
+
+        {/* <KeyboardAwareScrollView> */}
+
+
+  <Text>
+
+  { image?.length }/ 5
+  </Text>
+
+
+
+    <FlatList
+      data={image}
+      renderItem={renderItem2}
+      keyExtractor={(item, index) => index.toString()}
+    />
+    {
+      image?.length <5 &&
+
+  <BTNPaper icon="camera" mode="contained" loading={isLOad} onPress={() => TakePhoto()}>
+  prendre une photo
+  </BTNPaper>
+    }
+  {
+    image?.length >= 1 &&
+    (
+      lastMission?.mission?.status=='Démarrée' ?
+  <BTNPaper icon="content-save-all" mode="outlined" loading={isLOad} onPress={() => {
+
+    savePhotosTerminéé()
+
+  }}>
+
+    {/* savePhotos()}}> */}
+  enregistrer t
+  </BTNPaper>:
+  <BTNPaper icon="content-save-all" mode="outlined" loading={isLOad} onPress={() => {
+
+
+    savePhotos();
+  }}>
+
+    {/* savePhotos()}}> */}
+  enregistrer
+  </BTNPaper>
+    )
+  }
+  {/* </KeyboardAwareScrollView> */}
+
+        </Modal>
+      </Portal>
 </KeyboardAwareScrollView>
     </GestureHandlerRootView>
     </ScrollView>

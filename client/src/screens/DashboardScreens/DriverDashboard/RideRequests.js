@@ -90,7 +90,7 @@ if(
 
 
   useEffect(() => {
-    // console.log("render")
+
     dispatch(getUsersById());
 
     enable();
@@ -167,7 +167,7 @@ if(
 
   useEffect(() => {
 //     socket.on('connect', () => {
-//     console.log('Connected to server');
+//
 //     if (user) {
 //       // socket.current = io(host);
 //       // socket.emit("add-user", user.id);
@@ -183,20 +183,18 @@ socket.on('error', (error) => {
 
     socket.on("message recieved", (newMessage) => {
       // alert("gggg")
-      console.log("before",newMessage)
-      console.log("test",(newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  ))
       if((newMessage?.status == "Accepted" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
         setnoti(
           [...noti, newMessage]
         )
         setnewMission(true)
-        console.log("++++++++++++++++++",newMessage?.mission)
+
 
         sendNotification(newMessage?.mission)
         // handleNotyfy(newMessage?);
 // if(newMessage?.partner?._id ==user?.id ){
-      console.log("New message received",newMessage);
+
 //   setnoti(
 //     [...noti, newMessage]
 //   )
@@ -274,7 +272,7 @@ socket.on('error', (error) => {
           socket.emit('offline_client', currentUser2?.user?.id)
 
         }
-        // console.log("position", position?.coords)
+
       },
       error => console.log(error),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -299,7 +297,7 @@ socket.on('error', (error) => {
   const count = useSelector((state) => state.missions.missions.count);
 
   useEffect(() => {
-    console.log("render2")
+
     dispatch(
       GetMissions({
         page: 0,

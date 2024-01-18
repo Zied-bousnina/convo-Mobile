@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState} from 'react';
 import {Text,View,StyleSheet,KeyboardAvoidingView, TouchableOpacity, Pressable, Dimensions, ToastAndroid, Image} from 'react-native';
 import Fonts from '../../assets/fonts';
@@ -170,7 +171,7 @@ const ProfileSettings = () => {
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
-    // console.log(formData)
+    console.log(image?.uri)
 
 
     dispatch(AddProfile(formData, navigation))

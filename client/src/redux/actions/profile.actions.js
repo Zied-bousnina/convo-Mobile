@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import axios from "axios";
 import { SET_ERRORS, SET_IS_LOADING, SET_PROFILES } from "../types";
 import { setLoading } from "./authActions";
@@ -8,9 +9,9 @@ import { CreateScore } from "./scoreAction";
 
 // import {API_URL} from '@env';
 
+const BASE_URL= 'http://192.168.1.16:3600'
 
-
-export const AddProfile =  (userData, navigation ) => (dispatch) => {
+export const AddProfile =   (userData, navigation ) => (dispatch) => {
 
   dispatch({
     type:SET_IS_LOADING,
@@ -23,7 +24,7 @@ export const AddProfile =  (userData, navigation ) => (dispatch) => {
   }).catch((err) => {
 
   });
-  axios.post(`https://xgenboxv2.onrender.com/api/profile/upload-profile`, userData, {
+  axios.post(`${BASE_URL}/api/profile/upload-profile`, userData, {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data'
@@ -57,6 +58,7 @@ export const AddProfile =  (userData, navigation ) => (dispatch) => {
       })
       .catch( (err) =>{
 
+
         dispatch({
           type: SET_ERRORS,
           payload: err?.response?.data
@@ -77,7 +79,7 @@ export const AddProfile =  (userData, navigation ) => (dispatch) => {
 }
 
 export const GetProfile =  () => (dispatch) => {
-  axios.get(`https://xgenboxv2.onrender.com/api/profile`)
+  axios.get(`${BASE_URL}/api/profile`)
       .then(async(res) => {
 
         dispatch({
@@ -107,7 +109,7 @@ export const EditProfile1 =  (userData, navigation ) => (dispatch) => {
   }).catch((err) => {
 
   });
-  axios.put(`https://xgenboxv2.onrender.com/api/profile/EditProfile`, userData, {
+  axios.put(`${BASE_URL}/api/profile/EditProfile`, userData, {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data'

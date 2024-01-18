@@ -4,7 +4,8 @@ import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_
 import { setLoading } from "./authActions"
 import { socket } from "../../../socket"
 import {API_UxRL} from '@env';
-const BASE_URL= 'https://convoyage.onrender.com'
+// const BASE_URL= 'https://convoyage.onrender.com'
+const BASE_URL= 'http://192.168.1.16:3600'
 export const GetCurrentAccessList =  () => (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/users/access/getCurrentAccessList`)
       .then(async(res) => {
@@ -67,7 +68,7 @@ export const updatePassword = (userData) => dispatch => {
       })
       .catch(err =>
          {
-          // console.log(err)
+
           dispatch({
               type: SET_ERRORS,
               payload: err?.response?.data
@@ -367,14 +368,15 @@ export const GetCurrentUser = (navigation)=>dispatch=>{
 
   axios.get(`${BASE_URL}/api/users/users/currentUser`)
   .then(res => {
-      // console.log(res)
+
+
       dispatch({
           type: SET_CURRENT_USER2,
           payload: res?.data
       })
-console.log(res?.data?.user?._id)
+
 socket.on('connect', () => {
-  console.log('Connected to server');
+
   // if(currentUser){
 
 
@@ -390,7 +392,7 @@ socket.on('connect', () => {
   })
   .catch(err =>
      {
-      // console.log("err in authAction.js line 366",err)
+
       dispatch({
           type: SET_ERRORS,
           payload: err?.response?.data
@@ -459,6 +461,40 @@ export const getUsersById =() => (dispatch)=>{
         })
       })
       .catch( (err) =>{
+
+    }
+
+      )
+}
+
+export const GenerateFacture = (data)=> (dispatch)=>{
+  console.log(data)
+
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+
+ return axios.post(`${BASE_URL}/api/users/facture/fetchFactureByDriver`,data)
+      .then(async(res) => {
+
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+
+      return res.data;
+      })
+      .catch( (err) =>{
+        dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+      })
+      dispatch({
+        type:SET_IS_LOADING,
+        payload:false
+    })
+    throw err;
 
     }
 
