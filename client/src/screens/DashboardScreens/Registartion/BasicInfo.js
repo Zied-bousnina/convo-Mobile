@@ -8,7 +8,7 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { LogOut, setLoading } from '../../../redux/actions/authActions';
 import { AddProfile } from '../../../redux/actions/profile.actions';
 import AppLoader from '../../../components/Animations/AppLoader';
@@ -29,14 +29,44 @@ import ProfileAnimation from '../../../components/Animations/ProfileAnimation';
 import ButtonCustom from '../../../components/Buttons/ButtonCustom';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
-import { AddBasicInfo } from '../../../redux/actions/userActions';
-const initialValues = {
-    firstName:'',
-    lastName:'',
-    dateNais:'',
-    email:'',
+import { AddBasicInfo, findBasicInfoByUserId } from '../../../redux/actions/userActions';
+import { Button, FAB, IconButton } from 'react-native-paper';
+
+
+
+
+const BasicInfo = () => {
+    const [governorates, setgovernorates] = useState([]);
+  const [selectedValue, setSelectedValue] = useState('Tunis');
+  const [selectedMunicipal, setMunicipal] = useState('Tunis');
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const isLoading = useSelector(state=>state?.errors?.isLoading)
+  const user = useSelector(state=>state?.auth?.user)
+  const [load, setload] = useState(false)
+  const isLoad = useSelector(state=>state?.isLoading?.isLoading)
+  const [open, setOpen] = useState(false)
+  const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(findBasicInfoByUserId(dispatch));
+    }, [])
+  );
+  useEffect(() => {
+    dispatch(findBasicInfoByUserId(dispatch));
+
+  }, [ basicInfo?._id])
+
+  const initialValues = {
+    firstName:basicInfo?.firstName ? basicInfo?.firstName :'',
+    lastName:basicInfo?.lastName ? basicInfo?.lastName :'',
+    dateNais:basicInfo?.dateNais ? basicInfo?.dateNais :'',
+    email:basicInfo?.email ? basicInfo?.email :'',
 
   };
+  const [date, setDate] = useState(  basicInfo?.dateNais ?  new Date(basicInfo?.dateNais) :new Date())
   const validationSchema = yup.object({
     firstName: yup
       .string()
@@ -51,22 +81,7 @@ const initialValues = {
 
 
   });
-
-
-
-const BasicInfo = () => {
-    const [governorates, setgovernorates] = useState([]);
-  const [selectedValue, setSelectedValue] = useState('Tunis');
-  const [selectedMunicipal, setMunicipal] = useState('Tunis');
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const isLoading = useSelector(state=>state?.errors?.isLoading)
-  const user = useSelector(state=>state?.auth?.user)
-  const [load, setload] = useState(false)
-  const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
-  const isLoad = useSelector(state=>state?.isLoading?.isLoading)
-  const [date, setDate] = useState(new Date())
-  const [open, setOpen] = useState(false)
+  const [image, setImage] = useState(basicInfo?.avatar ? {uri:basicInfo?.avatar} : '');
   // --------------------Gove-------------------------------------
   useEffect(() => {
     axios
@@ -191,6 +206,14 @@ const handleSkip = ()=> {
 }
 
   return (
+    <>
+     <FAB
+    icon="arrow-left"
+    style={styles.fab}
+    onPress={() => navigation.navigate("Registration")}
+  />
+
+
     <KeyboardAwareScrollView>
 
 
@@ -209,13 +232,7 @@ const handleSkip = ()=> {
           onSubmit={handleCreateProfile}
             >
     <View style={{padding: 10}}>
-          <Pressable onPress={()=>navigation.navigate("Registration")}>
-            {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
-            <BackSvg
-              width={31}
-              height={31}
-            />
-          </Pressable>
+
         </View>
 
         <View style={styles.loginIcon}>
@@ -233,12 +250,15 @@ const handleSkip = ()=> {
             </View>
             <View style={styles.loginCon}>
 
-<ButtonCustom
-  style={styles.LoginBtn}
-  loginBtnLbl={styles.loginBtnLbl}
-  btnName={image ?"Edit Photo" : "Add a photo*"}
+<Button
+  // style={styles.LoginBtn}
+  // loginBtnLbl={styles.loginBtnLbl}
+  // btnName={image ?"Edit Photo" : "Add a photo*"}
   onPress={selectPhotoTapped}
-  />
+  mode='outlined'
+  >
+   { image ?"Edit Photo" : "Add a photo*"}
+  </Button>
 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
 
 </View>
@@ -263,6 +283,7 @@ const handleSkip = ()=> {
                   placeholder="First Name"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
+                  value={basicInfo?.firstName}
                 />
               </View>
             </View>
@@ -275,6 +296,7 @@ const handleSkip = ()=> {
                   placeholder="Last Name"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
+                  value={basicInfo?.lastName}
                 />
               </View>
             </View>
@@ -360,12 +382,21 @@ const handleSkip = ()=> {
       </>
     </View>
         </KeyboardAwareScrollView>
+        </>
   )
 }
 
 export default BasicInfo
 
 const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    zIndex:900,
+    // margin: 16,
+    Left: 0,
+    // bottom: 0,
+    top:0
+  },
     item: {
      flexDirection: 'row',
      justifyContent: 'space-between', // Add this line
@@ -617,7 +648,7 @@ const styles = StyleSheet.create({
 },
 LoginBtn2: {
     marginTop: 15,
-    backgroundColor: "#2df793", // Change background color to white
+    // backgroundColor: "#2df793", // Change background color to white
     borderRadius: 60,
     shadowColor: "black",
 

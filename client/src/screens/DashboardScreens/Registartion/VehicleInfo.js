@@ -125,6 +125,14 @@ const VehicleInfo = () => {
 
 export default VehicleInfo
 const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    zIndex:900,
+    // margin: 16,
+    Left: 0,
+    // bottom: 0,
+    top:0
+  },
    item: {
     flexDirection: 'row',
     justifyContent: 'space-between', // Add this line

@@ -153,6 +153,7 @@ console.log(data)
           >Liste des missions. </Text>
             <DataTable
       style={{backgroundColor:"#F2F0FD"}}
+
       columns={[
         {
           id: 'start',
@@ -191,7 +192,9 @@ console.log(data)
 
       {data?.data?.factures.slice(from, to).map((item) => (
         <DataTable.Row key={item._id}>
-          <DataTable.Cell>{item.mission?.postalAddress}</DataTable.Cell>
+          <DataTable.Cell
+          
+          >{item.mission?.postalAddress}</DataTable.Cell>
           <DataTable.Cell numeric>{item.mission?.postalDestination}</DataTable.Cell>
           <DataTable.Cell numeric>{item.mission?.distance}</DataTable.Cell>
         </DataTable.Row>

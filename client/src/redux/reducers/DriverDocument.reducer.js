@@ -1,21 +1,20 @@
 
 import isEmpty from "../../utils/isEmpty"
-import {  SET_BASIC_INFO } from "../types"
+import {  SET_DOCUMENT } from "../types"
 
 const initialState = {
 
-    basicInfo: {},
-    basicInfoIsEmpty: false
+    document: {},
+
 }
 
 export default function(state = initialState, action) {
-    // console.log("switch",action.payload )
     switch(action.type) {
-        case SET_BASIC_INFO:
+        case SET_DOCUMENT:
             return {
                 ...state,
-                basicInfoIsEmpty: isEmpty(action.payload),
-                basicInfo: action.payload
+
+                document: action.payload
             }
 
         default:

@@ -8,7 +8,7 @@ import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, GenerateFacture, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {AcceptedMission, FindLastMission, Findfactures, GetMissions} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
@@ -322,6 +322,20 @@ socket.on("message received", (newMessage) => {
       Findfactures(),
     );
   }, [dispatch,factures?.length ]);
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch({
+        type: SET_FACTURES,
+        payload: [],
+      });
+
+      dispatch(
+        Findfactures(),
+      );
+
+    }, [])
+  );
+  // console.log(factures)
 
 
   const PAGE_LIMIT = 5;
@@ -505,7 +519,7 @@ const generereFacture = ()=> {
 
 
 
-      {item_list?.length !=0  ? (
+      {factures?.length !=0  ? (
         <>
           <View
             style={{

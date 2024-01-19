@@ -17,7 +17,7 @@ import CitySvg from '../../components/svg/CitySvg';
 import CountrySvg from '../../components/svg/CountrySVG';
 import PostalCodeSvg from '../../components/svg/PostalCodeSVG';
 import BioSvg from '../../components/svg/BioSvg';
-import { AddProfile } from '../../redux/actions/profile.actions';
+import { AddProfile, GetProfile } from '../../redux/actions/profile.actions';
 import BackSvg from '../../components/svg/BackSvg';
 import { LogOut } from '../../redux/actions/authActions';
 import ImagePicker, { launchImageLibrary } from 'react-native-image-picker';
@@ -41,66 +41,84 @@ const windowHeight = Dimensions.get('window').height;
 
 
 
-const initialValues = {
-  tel:'',
-  address:'',
-  city:'',
-  country:'',
-  postalCode:'',
-  bio:'',
-};
-const validationSchema = yup.object({
-  tel: yup
-    .string()
-    .trim()
-    .min(8, 'Phone number must be at least 8 number')
-    .max(10, 'Phone number must be at most 8 number')
-    .required('Phone number is required'),
-  address: yup
-    .string()
-    .trim()
-    .required('Address is required'),
-  // city: yup
-  //   .string()
-  //   .trim()
-  //   .required('City is required'),
-  // country: yup
-  //   .string()
-  //   .trim()
-  //   .required('Country is required'),
-  postalCode: yup
-    .string()
-    .trim()
-    .required('Postal code is required'),
-  // bio: yup
-  //   .string()
-  //   .trim()
-  //   .required('Bio is required'),
 
-});
 
 const ProfileSettings = () => {
+  const profile = useSelector(state=>state?.profile?.profile)
+  const currentUser2 = useSelector(state=>state?.auth)
+
+  const initialValues = {
+    tel:useSelector(state=>state?.profile?.profile?.tel),
+    address:useSelector(state=>state?.profile?.profile?.address),
+    city:useSelector(state=>state?.profile?.profile?.city),
+    country:useSelector(state=>state?.profile?.profile?.country),
+    postalCode:useSelector(state=>state?.profile?.profile?.postalCode),
+    bio:'',
+    // useSelector(state=>state?.profile?.profile)
+  };
+  const validationSchema = yup.object({
+    tel: yup
+      .string()
+      .trim()
+      .min(8, 'Phone number must be at least 8 number')
+      .max(10, 'Phone number must be at most 8 number')
+      .required('Phone number is required'),
+    // address: yup
+    //   .string()
+    //   .trim()
+    //   .required('Address is required'),
+    // city: yup
+    //   .string()
+    //   .trim()
+    //   .required('City is required'),
+    // country: yup
+    //   .string()
+    //   .trim()
+    //   .required('Country is required'),
+    // postalCode: yup
+
+    //   .string()
+    //   .trim()
+    //   .required('Postal code is required'),
+    // bio: yup
+    //   .string()
+    //   .trim()
+    //   .required('Bio is required'),
+
+  });
+
+  useEffect(() => {
+  dispatch(GetProfile())
+  }, [profile?._id])
+
+
     const [governorates, setgovernorates] = useState([]);
-  const [selectedValue, setSelectedValue] = useState('Tunis');
-  const [selectedMunicipal, setMunicipal] = useState('Tunis');
+  const [selectedValue, setSelectedValue] = useState(profile?.country ?profile?.country:  'Tunis');
+  const [selectedMunicipal, setMunicipal] = useState( profile?.city ? profile?.city:  'Tunis');
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const isLoading = useSelector(state=>state?.errors?.isLoading)
   const user = useSelector(state=>state?.auth?.user)
   const [load, setload] = useState(false)
-  const [image, setImage] = useState(user?.avatar ? {uri:user?.avatar} : '');
+  const [image, setImage] = useState(profile?.avatar ? {uri:profile?.avatar} : '');
   const isLoad = useSelector(state=>state?.isLoading?.isLoading)
-
+console.log(profile)
 
    // --------------------Gove-------------------------------------
    useEffect(() => {
-    axios
-      .get(`https://xgenboxv2.onrender.com/api/governorates`)
-      .then(res => {
-        setgovernorates(res.data[0]);
-      })
-      .catch(err => console.log(err));
-  }, []);
+    const fetchGovernorates = async () => {
+      try {
+        const response = await axios.get('https://xgenboxv2.onrender.com/api/governorates');
+        const firstGovernorate = response.data[0];
+        setgovernorates(firstGovernorate);
+      } catch (error) {
+        console.error('Error fetching governorates:', error);
+      }
+    };
+
+    fetchGovernorates();
+  }, [governorates?.governorates?.length]);
+  console.log(governorates)
 
   const municipales = governorates?.governorates?.filter(
     (item, index) => item.name === selectedValue,
@@ -161,10 +179,15 @@ const ProfileSettings = () => {
     // console.log(values)
     const formData = new FormData();
     formData.append('tel', values.tel);
-    formData.append('address', values.address);
+    formData.append('address', values.address ?
+      values.address : profile?.address
+    );
     formData.append('city', selectedValue);
     formData.append('country', selectedMunicipal);
-    formData.append('postalCode', values.postalCode);
+    formData.append('postalCode', values.postalCode ?
+      values.postalCode : profile?.postalCode
+
+    );
     formData.append('bio', values?.bio ? values.bio : '');
     formData.append('avatar', {
       uri: image?.uri ? image?.uri : `https://ui-avatars.com/api/?name=${user?.name}+${user?.name}&background=0D8ABC&color=fff`,
@@ -201,10 +224,6 @@ const ProfileSettings = () => {
 
 
   }
-  // console.log(image.uri)
-  // console.log("image is ", image? setToastMsg("yes") : null)
-
-
 
 
 
@@ -217,7 +236,7 @@ const ProfileSettings = () => {
     <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
     <View style={{padding: 20}}>
           <Pressable
-          onPress={()=>navigation.goBack()}>
+          onPress={()=>navigation.navigate("ProfileScreen")}>
             {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
             <BackSvg
               width={31}
@@ -267,6 +286,7 @@ const ProfileSettings = () => {
                   placeholder="Tel"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
+                  value={profile?.tel}
                 />
               </View>
             </View>
@@ -366,6 +386,7 @@ const ProfileSettings = () => {
                   placeholder="Address"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
+                  value={profile?.address}
                 />
               </View>
             </View>
@@ -382,6 +403,7 @@ const ProfileSettings = () => {
                   placeholder="Postal Code"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
+                  value={profile?.postalCode}
                 />
               </View>
             </View>

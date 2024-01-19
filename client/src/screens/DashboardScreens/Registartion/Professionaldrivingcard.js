@@ -15,32 +15,34 @@ import DatePicker from 'react-native-date-picker'
 import LoginButton from '../../../components/Buttons/LoginButton'
 import BackSvg from '../../../components/svg/BackSvg'
 import { useNavigation } from '@react-navigation/native'
+import { AddDriverDoc_DriverLicence } from '../../../redux/actions/userActions'
+import AppLoader from '../../../components/Animations/AppLoader'
+import { FAB } from 'react-native-paper'
 const initialValues = {
-  licenseNbr:'',
-  dateExp:'',
 
 
 };
 const validationSchema = yup.object({
-  licenseNbr: yup
-    .string()
-    .trim()
+  // licenseNbr: yup
+  //   .string()
+  //   .trim()
 
-    .required("License number is required")
-    .min(12)
-    .max(12)
-    .matches(/^[0-9]+$/, "Must be only digits")
-    .label('License number'),
+  //   .required("License number is required")
+  //   .min(12)
+  //   .max(12)
+  //   .matches(/^[0-9]+$/, "Must be only digits")
+  //   .label('License number'),
 
 
 });
 const Professionaldrivingcard = () => {
+  const isLoad = useSelector(state=>state?.isLoading?.isLoading)
   const user = useSelector(state=>state?.auth?.user)
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState(new Date())
   const [image, setImage] = useState({
-    frontDriver:'',
-    backDriver:'',
+    CinfrontCard:'',
+    CinbackCard:'',
   });
   const [load, setload] = useState(false)
   const dispatch = useDispatch()
@@ -99,23 +101,23 @@ const Professionaldrivingcard = () => {
 
     // console.log(values)
     const formData = new FormData();
-    formData.append('licenseNbr', values.licenseNbr);
-    formData.append('dateExp', date);
-    formData.append('frontDriverLicense', {
-      uri: image?.frontDriver ? image?.frontDriver : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
+    console.log("image?.CinfrontCard",image?.CinfrontCard)
+
+    formData.append('CinfrontCard', {
+      uri: image?.CinfrontCard ? image?.CinfrontCard?.uri : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
 
-    formData.append('backDriverLicense', {
-      uri: image?.backDriver ? image?.backDriver : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
+    formData.append('CinbackCard', {
+      uri: image?.CinbackCard ? image?.CinbackCard?.uri : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
     console.log(formData)
 
 
-    // dispatch(AddProfile(formData, navigation))
+    dispatch(AddDriverDoc_DriverLicence(formData, navigation))
 
     // formikActions.resetForm()
     formikActions.setSubmitting(false);
@@ -129,8 +131,15 @@ const Professionaldrivingcard = () => {
 
   }
   return (
-    <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
+    <>
+     <FAB
+    icon="arrow-left"
+    style={styles.fab}
+    onPress={() => navigation.navigate("Registration")}
+  />
 
+    <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
+{isLoad? <AppLoader /> : null}
     <CostomFormik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -141,14 +150,15 @@ const Professionaldrivingcard = () => {
     <View
     style={styles.item}
     >
-     <Pressable style={{ position: 'absolute', top: 0, left: 0,padding:10 }} onPress={() => navigation.navigate("Registration")}>
-    {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
+     {/* <Pressable style={{ position: 'absolute', top: 0, left: 0,padding:10 }} onPress={() => navigation.navigate("Registration")}>
+
     <BackSvg width={31} height={31} />
-  </Pressable>
+  </Pressable> */}
 
     <View>
 
-  <Text style={[styles.title, {top:15}]}>Professional driver card (front side)</Text>
+  <Text style={[styles.title, {top:15}]}>
+Pièce d'identité (Carte recto)</Text>
   <View style={styles.formCon}>
 
   <View style={styles.textBoxCon}>
@@ -158,7 +168,7 @@ const Professionaldrivingcard = () => {
   // source={{
   //   uri:image.frontDriver? image.frontDriver?.uri:"https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png"
   // }}
-  source={image.frontDriver? {uri:image.frontDriver?.uri}:require('../../../assets/images1/driveCard.png')}
+  source={image.CinfrontCard? {uri:image.CinfrontCard?.uri}:require('../../../assets/images1/driveCard.png')}
   style={{width:Dimensions.get("screen").width*0.8, height:Dimensions.get("screen").height*0.3,marginVertical:-50}}
   resizeMode="contain"
   />
@@ -171,8 +181,8 @@ const Professionaldrivingcard = () => {
 <ButtonCustom
 style={styles.LoginBtn}
 loginBtnLbl={styles.loginBtnLbl}
-btnName={image.frontDriver ?"Edit Photo" : "Add a photo"}
-onPress={()=>selectPhotoTapped("frontDriver")}
+btnName={image.CinfrontCard ?"Edit Photo" : "Add a photo"}
+onPress={()=>selectPhotoTapped("CinfrontCard")}
 />
 </View>
 
@@ -187,7 +197,7 @@ onPress={()=>selectPhotoTapped("frontDriver")}
 
     <View>
 
-  <Text style={styles.title}>Professional driver card (back side)</Text>
+  <Text style={styles.title}>Pièce d'identité (Dos de carte)</Text>
   <View style={styles.formCon}>
 
   <View style={styles.textBoxCon}>
@@ -199,7 +209,7 @@ onPress={()=>selectPhotoTapped("frontDriver")}
   //   uri:image?.backDriver? image?.backDriver?.uri:"https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png"
   // }
   // }
-  source={image.backDriver? {uri:image.backDriver?.uri}:require('../../../assets/images1/driveCard.png')}
+  source={image.CinbackCard? {uri:image.CinbackCard?.uri}:require('../../../assets/images1/driveCard.png')}
   style={{width:Dimensions.get("screen").width*0.8, height:Dimensions.get("screen").height*0.3, marginVertical:-50}}
   resizeMode="contain"
   />
@@ -212,8 +222,8 @@ onPress={()=>selectPhotoTapped("frontDriver")}
 <ButtonCustom
 style={styles.LoginBtn}
 loginBtnLbl={styles.loginBtnLbl}
-btnName={image?.backDriver ?"Edit Photo" : "Add a photo"}
-onPress={()=>selectPhotoTapped("backDriver")}
+btnName={image?.CinbackCard ?"Edit Photo" : "Add a photo"}
+onPress={()=>selectPhotoTapped("CinbackCard")}
 />
 </View>
 
@@ -232,12 +242,21 @@ onPress={()=>selectPhotoTapped("backDriver")}
           </View>
             </CostomFormik>
     </KeyboardAwareScrollView>
+    </>
   )
 }
 
 export default Professionaldrivingcard
 
 const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    zIndex:900,
+    // margin: 16,
+    Left: 0,
+    // bottom: 0,
+    top:0
+  },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -326,7 +345,7 @@ const styles = StyleSheet.create({
   },
   LoginBtn2: {
     marginTop: 15,
-    backgroundColor: "#2df793", // Change background color to white
+    // backgroundColor: "#2df793", // Change background color to white
     borderRadius: 60,
     shadowColor: "black",
 

@@ -11,7 +11,7 @@ import Login from '../../components/Auth/Login';
 import { GetRequest } from './demandesActions';
 import { GetCurrentAccess } from './accessAction';
 // const BASE_URL= 'https://convoyage.onrender.com'
-const BASE_URL= 'http://192.168.1.16:3600'
+const BASE_URL= 'https://convoyage.onrender.com'
 
 
 export const registerUser =  (userData, navigation ) => (dispatch) => {
@@ -186,7 +186,7 @@ export const verifyEmail = (userData, navigation)=>(dispatch)=> {
 
 export const deleteaccount = (userData, navigation)=>(dispatch)=> {
 
-    axios.post(`https://xgenboxv2.onrender.com/api/users/deleteaccount`, userData)
+    axios.post(`https://convoyage.onrender.com/api/users/deleteaccount`, userData)
     .then(async(res) => {
         dispatch({
             type: SET_VERIFIED,
@@ -333,7 +333,7 @@ export const resendOtp = (email)=>dispatch=> {
 }
 
 export const resendOTPDeleteAccount = (email)=>dispatch=> {
-    axios.post(`https://xgenboxv2.onrender.com/api/users/resendOTPDeleteAccount`, email)
+    axios.post(`https://convoyage.onrender.com/api/users/resendOTPDeleteAccount`, email)
     .then(async(res) => {
 
             dispatch({
@@ -386,7 +386,7 @@ export const makeRequestMunicipal =  (userData, navigation ) => (dispatch) => {
     }).catch((err) => {
 
     });
-    axios.post(`https://xgenboxv2.onrender.com/api/demande-municipal`, userData, {
+    axios.post(`https://convoyage.onrender.com/api/demande-municipal`, userData, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'multipart/form-data'
@@ -543,7 +543,7 @@ export const getUserByEmail = (info,navigation)=>dispatch=>{
 
 const data = {email, name:familyName+' '+givenName,avatar:photo, googleId:id, tokenId:idToken}
 
-    axios.get(`https://xgenboxv2.onrender.com/api/users/getUserByEmail/${info.user.email}`)
+    axios.get(`https://convoyage.onrender.com/api/users/getUserByEmail/${info.user.email}`)
     .then(res => {
 
         dispatch({
@@ -565,7 +565,7 @@ const data = {email, name:familyName+' '+givenName,avatar:photo, googleId:id, to
 }
 
 export const registerGoogleUser = (userData, navigation ) => (dispatch) => {
-    axios.post(`https://xgenboxv2.onrender.com/api/users/registerGoogleUser`, userData)
+    axios.post(`https://convoyage.onrender.com/api/users/registerGoogleUser`, userData)
         .then(async(res) => {
             dispatch({
                 type: SET_ERRORS,

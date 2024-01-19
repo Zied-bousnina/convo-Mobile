@@ -15,33 +15,26 @@ import DatePicker from 'react-native-date-picker'
 import LoginButton from '../../../components/Buttons/LoginButton'
 import BackSvg from '../../../components/svg/BackSvg'
 import { useNavigation } from '@react-navigation/native'
-import { IconButton } from 'react-native-paper'
+import { FAB } from 'react-native-paper'
+import AppLoader from '../../../components/Animations/AppLoader'
+import { AddDriverDoc_DriverLicence } from '../../../redux/actions/userActions'
 const initialValues = {
-  licenseNbr:'',
-  dateExp:'',
+
 
 
 };
 const validationSchema = yup.object({
-  licenseNbr: yup
-    .string()
-    .trim()
-
-    .required("License number is required")
-    .min(12)
-    .max(12)
-    .matches(/^[0-9]+$/, "Must be only digits")
-    .label('License number'),
 
 
 });
-const AgentReferralCode = () => {
+const ProofOfAddress = () => {
+  const isLoad = useSelector(state=>state?.isLoading?.isLoading)
   const user = useSelector(state=>state?.auth?.user)
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState(new Date())
   const [image, setImage] = useState({
-    frontDriver:'',
-    backDriver:'',
+    proofOfAddress:'',
+
   });
   const [load, setload] = useState(false)
   const dispatch = useDispatch()
@@ -100,23 +93,18 @@ const AgentReferralCode = () => {
 
     // console.log(values)
     const formData = new FormData();
-    formData.append('licenseNbr', values.licenseNbr);
-    formData.append('dateExp', date);
-    formData.append('frontDriverLicense', {
-      uri: image?.frontDriver ? image?.frontDriver : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
+
+    formData.append('proofOfAddress', {
+      uri: image?.proofOfAddress ? image?.proofOfAddress?.uri : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
 
-    formData.append('backDriverLicense', {
-      uri: image?.backDriver ? image?.backDriver : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
-      type: 'image/jpg',
-      name: new Date()+ '_profile'
-    });
+
     console.log(formData)
 
 
-    // dispatch(AddProfile(formData, navigation))
+    dispatch(AddDriverDoc_DriverLicence(formData, navigation))
 
     // formikActions.resetForm()
     formikActions.setSubmitting(false);
@@ -130,55 +118,57 @@ const AgentReferralCode = () => {
 
   }
   return (
-    <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
+    <>
+       <FAB
+    icon="arrow-left"
+    style={styles.fab}
+    onPress={() => navigation.navigate("Registration")}
+  />
 
+    {isLoad? <AppLoader /> : null}
+    <KeyboardAwareScrollView behavior="position" style={styles.mainCon}>
     <CostomFormik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleCreateDriverLicense}
             >
 
+
     <View
     style={styles.item}
     >
-     {/* <View > */}
-     <View style={{ position: 'absolute', top: 0, left: 0, padding: 10, paddingBottom: -10 }}>
-  <IconButton
-  icon={"arrow-left"
-  }
-  mode='outlined'
-  onPress={() =>{
-    console.log("fhghh")
-     navigation.navigate("Registration")}}>
-    {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
 
-  </IconButton>
-</View>
-{/* // </View> */}
     <View>
 
-  <Text style={styles.title}>Enter your recruiter's referral code</Text>
+  <Text style={styles.title}>justificatif de domicile<Text style={{fontSize:18, fontWeight:"400", color:"#ccc"}}></Text></Text>
   <View style={styles.formCon}>
 
   <View style={styles.textBoxCon}>
 
 <View style={styles.textCon}>
-  <AppInput
-    name="licenseNbr"
-    placeholder="Referral code"
-    style={styles.textInput}
-    placeholderTextColor={'#aaa'}
+  <Image
+  // source={{
+  //   uri:image.proofOfAddress? image.proofOfAddress?.uri:"https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png"
+  // }}
+  source={image.proofOfAddress? {uri:image.proofOfAddress?.uri}:require('../../../assets/images1/driveCard.png')}
+  style={{width:Dimensions.get("screen").width*0.8, height:Dimensions.get("screen").height*0.3,marginVertical:-50}}
+  resizeMode="contain"
   />
 </View>
 </View>
-
-
-
-
-
-
-
           </View>
+
+          <View style={[styles.loginCon]}>
+
+<ButtonCustom
+style={styles.LoginBtn}
+loginBtnLbl={styles.loginBtnLbl}
+btnName={image.proofOfAddress ?"Edit Photo" : "Add a photo"}
+onPress={()=>selectPhotoTapped("proofOfAddress")}
+/>
+</View>
+
+
 
     </View>
 
@@ -193,12 +183,21 @@ const AgentReferralCode = () => {
           </View>
             </CostomFormik>
     </KeyboardAwareScrollView>
+    </>
   )
 }
 
-export default AgentReferralCode
+export default ProofOfAddress
 
 const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    zIndex:900,
+    // margin: 16,
+    Left: 0,
+    // bottom: 0,
+    top:0
+  },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
           fontWeight: 'bold',
           textAlign: 'left',
-          marginTop: 20,
+          // marginTop: 20,
           color:"#333540",
           paddingHorizontal:5,
           textAlign: 'center',
@@ -306,7 +305,7 @@ const styles = StyleSheet.create({
     flex: 1, // Make sure the container takes up the full width
     justifyContent: "center", // Center its children horizontally
     alignItems: "center",
-    // marginTop:2,
+    marginTop:-20,
     marginBottom:20
   }
 })

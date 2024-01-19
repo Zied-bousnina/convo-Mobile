@@ -6,7 +6,7 @@ import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAn
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
-import {AddCurrentLocation, ChangeStatus, getUsersById, updatePassword} from '../../../redux/actions/userActions';
+import {AddCurrentLocation, ChangeStatus, findBasicInfoByUserId, getUsersById, updatePassword} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {AccepteMission, AcceptedMission, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
@@ -406,7 +406,14 @@ const getDistanceFromLatLonInKm=()=>{
 
   }, [dispatch,lastMission.length  ]);
 
+  const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
 
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(findBasicInfoByUserId(dispatch));
+    }, [])
+  );
   useFocusEffect(
     React.useCallback(() => {
       dispatch({
@@ -1266,7 +1273,7 @@ onPress={()=>{
         // buttonColor={
         //     "#fff"
         // }
-        icon="home-account" mode="outlined" onPress={() => {}}>
+        icon="home-account" mode="outlined" onPress={() => navigatin.navigate("ProfileScreen")}>
         Mon Profil
   </BTNPaper>
   </View>
@@ -1279,7 +1286,7 @@ onPress={()=>{
         // buttonColor={
         //     "#fff"
         // }
-        icon="file-document" mode="outlined" onPress={() => {}}>
+        icon="file-document" mode="outlined" onPress={() => {navigation.navigate("Registration")}}>
         Mes Documents
   </BTNPaper>
   </View>

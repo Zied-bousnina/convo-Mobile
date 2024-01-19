@@ -23,7 +23,7 @@ import { createSelector } from 'reselect';
 // import { GetMissions } from './demandesActions';
 import {API_URL} from '@env';
 // const BASE_URL= 'https://convoyage.onrender.com'
-const BASE_URL= 'http://192.168.1.16:3600'
+const BASE_URL= 'https://convoyage.onrender.com'
 
 export const AddDemande = (userData, navigation) => dispatch => {
 

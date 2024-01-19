@@ -1,20 +1,64 @@
 /* eslint-disable prettier/prettier */
 import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AcceptedMission, Findfactures, GetMissions } from '../../../redux/actions/demandesActions';
+import { GetProfile } from '../../../redux/actions/profile.actions';
+import { findBasicInfoByUserId } from '../../../redux/actions/userActions';
 const ProfileSection = () => {
   const navigatin = useNavigation()
   const user= useSelector(state=>state?.auth?.user)
+  const PAGE_LIMIT = 5;
+  const profile = useSelector(state=>state?.profile?.profile)
+  const currentUser2 = useSelector(state=>state?.auth)
+  const item_list = useSelector((state) => state.missions.missions.items);
+  const dispatch = useDispatch()
+  const missionTerminee = useSelector((state) => state?.AcceptedMissions?.mission?.missions);
+  const navigation = useNavigation()
+  const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
+console.log(basicInfo)
+  useEffect(() => {
+    dispatch(findBasicInfoByUserId());
+
+  }, [basicInfo?._id])
+  useEffect(() => {
+    //
+    dispatch(
+        AcceptedMission(),
+    );
+  }, [dispatch,missionTerminee?.length ]);
+  useEffect(() => {
+  dispatch(GetProfile())
+  }, [profile?._id])
+  useEffect(() => {
+
+      dispatch(
+        GetMissions({
+          page: 0,
+          limit: PAGE_LIMIT,
+          skip: 0 * PAGE_LIMIT,
+        }),
+      );
+    }, [dispatch, item_list.length  ]);
+    const factures = useSelector((state) => state?.factures?.factures);
+    useEffect(() => {
+
+      dispatch(
+        Findfactures(),
+      );
+    }, [dispatch,factures?.length ]);
   // console.log(state)
   return (
     <View style={styles.userCard}>
         <View>
-          <Image source={{ uri: 'https://www.bootdey.com/img/Content/avatar/avatar1.png' }} style={styles.userPhoto} />
+          <Image source={{ uri: profile?.avatar ?
+          basicInfo?.avatar : "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+           }} style={styles.userPhoto} />
 
         </View>
         <View style={styles.userInfo}>
@@ -23,7 +67,7 @@ const ProfileSection = () => {
         </View>
         <TouchableOpacity
         onPress={
-          () => navigatin.navigate("profileSettings")
+          () => navigatin.navigate("ProfileScreen")
         }
         >
         <Icon2 name="arrow-forward-ios" size={30} color="#999" />

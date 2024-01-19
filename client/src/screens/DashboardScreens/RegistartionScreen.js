@@ -1,20 +1,55 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import UserDashboardScreen from './UserDashboardScreen'
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { Pressable, Dimensions } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Linking } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { LogOut } from '../../redux/actions/authActions';
 import ButtonCustom from '../../components/Buttons/ButtonCustom';
 import Fonts from '../../../src/assets/fonts';
-
+import { findBasicInfoByUserId, findDriverDoc } from '../../redux/actions/userActions';
+import { Icon as IconPaper, MD3Colors } from 'react-native-paper';
+import BasicInfo from './Registartion/BasicInfo';
 const RegistartionScreen = () => {
     const dispatch = useDispatch()
     const navigation = useNavigation()
+    const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
+
+    useEffect(() => {
+      dispatch(findBasicInfoByUserId(dispatch));
+
+    }, [basicInfo?._id])
+
+
+
+    useFocusEffect(
+      React.useCallback(() => {
+        dispatch(findBasicInfoByUserId(dispatch));
+      }, [])
+    );
+
+    const DriverDoc = useSelector(state=>state?.document?.document?.driverDocuments)
+
+
+
+
+    useFocusEffect(
+      React.useCallback(() => {
+        dispatch(findDriverDoc(dispatch));
+      }, [])
+    );
+
+    useEffect(() => {
+      dispatch(findDriverDoc(dispatch));
+
+    }, [DriverDoc?._id])
+
+    console.log("DriverDoc", DriverDoc)
+    // console;log()
     const handleLogOut= _ => {
       console.log("logout")
       dispatch(
@@ -47,14 +82,20 @@ const RegistartionScreen = () => {
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
         <Text style={{ marginLeft: 10, fontSize: 16, color: 'black' }}>
-          Basic info
+        Informations de base
         </Text>
       </View>
-      <Icon1
-        name="arrow-forward-ios"
-        size={20}
-        color={'#2df793'}
-      />
+      {
+        BasicInfo &&
+
+      <IconPaper
+    source="check"
+    color={
+      "#2df793"
+    }
+    size={20}
+  />
+      }
     </Pressable>
     <Pressable
       onPress={()=>navigation.navigate("DriverLicense")}
@@ -64,16 +105,22 @@ const RegistartionScreen = () => {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={{ marginLeft: 10, fontSize: 16, color: 'black' }}>
-          Driver license
+        Permis de conduire
         </Text>
       </View>
-      <Icon1
-        name="arrow-forward-ios"
-        size={20}
-        color={'#2df793'}
-      />
+     {
+      DriverDoc?.permisConduirebackCard && DriverDoc?.permisConduirefrontCard &&
+
+      <IconPaper
+    source="check"
+    color={
+      "#2df793"
+    }
+    size={20}
+  />
+      }
     </Pressable>
-    <Pressable
+    {/* <Pressable
       onPress={()=>navigation.navigate("IdConfirmation")}
       style={
         styles.item}
@@ -83,12 +130,18 @@ const RegistartionScreen = () => {
           ID confirmation
         </Text>
       </View>
-      <Icon1
-        name="arrow-forward-ios"
-        size={20}
-        color={'#2df793'}
-      />
-    </Pressable>
+     {
+        BasicInfo &&
+
+      <IconPaper
+    source="check"
+    color={
+      "#2df793"
+    }
+    size={20}
+  />
+      }
+    </Pressable> */}
     <Pressable
       onPress={()=>navigation.navigate("ProfessionalDrivingCard")}
       style={
@@ -96,30 +149,43 @@ const RegistartionScreen = () => {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={{ marginLeft: 10, fontSize: 16, color: 'black' }}>
-          بطاقة القيادة المهنية
+
+Pièce d'identité
         </Text>
       </View>
-      <Icon1
-        name="arrow-forward-ios"
-        size={20}
-        color={'#2df793'}
-      />
+     {
+      DriverDoc?.CinbackCard&& DriverDoc?.CinfrontCard &&
+
+      <IconPaper
+    source="check"
+    color={
+      "#2df793"
+    }
+    size={20}
+  />
+      }
     </Pressable>
     <Pressable
-      onPress={()=>navigation.navigate("AgentReferralCode")}
+      onPress={()=>navigation.navigate("Assurence")}
       style={
         styles.item}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={{ marginLeft: 10, fontSize: 16, color: 'black' }}>
-          Agent Referral Code
+        Certificat d'assurance
         </Text>
       </View>
-      <Icon1
-        name="arrow-forward-ios"
-        size={20}
-        color={'#2df793'}
-      />
+     {
+      DriverDoc?.assurance &&
+
+      <IconPaper
+    source="check"
+    color={
+      "#2df793"
+    }
+    size={20}
+  />
+      }
     </Pressable>
     <Pressable
       onPress={()=>navigation.navigate("ExploitCard")}
@@ -128,17 +194,23 @@ const RegistartionScreen = () => {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={{ marginLeft: 10, fontSize: 16, color: 'black' }}>
-          بطاقة إستغلال
+        K-Bis
         </Text>
       </View>
-      <Icon1
-        name="arrow-forward-ios"
-        size={20}
-        color={'#2df793'}
-      />
+     {
+      DriverDoc?.kbis &&
+
+      <IconPaper
+    source="check"
+    color={
+      "#2df793"
+    }
+    size={20}
+  />
+      }
     </Pressable>
     <Pressable
-      onPress={()=>navigation.navigate("VehicleInfo")}
+      onPress={()=>navigation.navigate("ProofOfAddress")}
       style={
         [styles.item,
         {
@@ -149,28 +221,22 @@ const RegistartionScreen = () => {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={{ marginLeft: 10, fontSize: 16, color: 'black' }}>
-          Vehicle info
+        Un justificatif de domicile
         </Text>
       </View>
-      <Icon1
-        name="arrow-forward-ios"
-        size={20}
-        color={'#2df793'}
-      />
+     {
+      DriverDoc?.proofOfAddress &&
+
+      <IconPaper
+    source="check"
+    color={
+      "#2df793"
+    }
+    size={20}
+  />
+      }
     </Pressable>
-    <View style={styles.loginCon}>
 
-            <ButtonCustom
-              style={styles.LoginBtn}
-              loginBtnLbl={styles.loginBtnLbl}
-              btnName={ "Done"}
-          onPress={()=>navigation.navigate("Registration")}
-              />
-<View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-
-        </View>
-
-          </View>
   </View>
   )
 }

@@ -1,10 +1,45 @@
 import { View, Text, Dimensions, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ButtonCustom from '../../components/Buttons/ButtonCustom'
 import Fonts from '../../../src/assets/fonts';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { findBasicInfoByUserId, findDriverDoc } from '../../redux/actions/userActions';
 const OnlineRegistration = () => {
   const navigation =useNavigation()
+
+  const dispatch = useDispatch()
+  // const navigation = useNavigation()
+  const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
+
+  useEffect(() => {
+    dispatch(findBasicInfoByUserId(dispatch));
+
+  }, [basicInfo?._id])
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(findBasicInfoByUserId(dispatch));
+    }, [])
+  );
+
+  const DriverDoc = useSelector(state=>state?.document?.document?.driverDocuments)
+
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(findDriverDoc(dispatch));
+    }, [])
+  );
+
+  useEffect(() => {
+    dispatch(findDriverDoc(dispatch));
+
+  }, [DriverDoc?._id])
   return (
     <View
       style={{
@@ -35,13 +70,24 @@ const OnlineRegistration = () => {
           color:"#333540",
           paddingHorizontal:5
         }}
-      >City \ Courier : Not Verified</Text>
+      >Informations de base \ Permis de conduire: {
+        DriverDoc?.permisConduirebackCard &&
+        DriverDoc?.permisConduirefrontCard &&
+        DriverDoc?.CinbackCard &&
+        DriverDoc?.CinfrontCard &&
+        DriverDoc?.kbis &&
+        DriverDoc?.assurance &&
+        DriverDoc?.proofOfAddress ?
+        <Text style={{color:"#038946"}}>Vérifié</Text>:
+        <Text style={{color:"#ff0000"}}>Incomplète</Text>
+      }
+      </Text>
       <View style={styles.loginCon}>
 
             <ButtonCustom
               style={styles.LoginBtn}
               loginBtnLbl={styles.loginBtnLbl}
-              btnName={ "City \\ Courier"}
+              btnName={ "Informations de base \\ Permis de conduire"}
           onPress={()=>navigation.navigate("Registration")}
               />
 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
@@ -69,7 +115,7 @@ const styles = StyleSheet.create({
 
   },
   LoginBtn: {
-    backgroundColor: "#2df793",
+    // backgroundColor: "#2df793",
     borderRadius: 20,
     shadowColor: "black",
     borderColor: 'transparent',

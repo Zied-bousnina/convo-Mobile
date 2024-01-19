@@ -50,3 +50,5 @@ export const SET_LAST_MISSION = "SET_LAST_MISSION";
 export const SET_RESET_STATE = "SET_RESET_STATE";
 export const SET_FIRST_LOGIN = "SET_FIRST_LOGIN";
 export const SET_FACTURES = "SET_FACTURES";
+export const SET_DOCUMENT = "SET_DOCUMENT";
+export const SET_INFO_DRIVER = "SET_INFO_DRIVER";

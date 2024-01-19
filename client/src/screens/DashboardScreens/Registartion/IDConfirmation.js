@@ -15,6 +15,7 @@ import DatePicker from 'react-native-date-picker'
 import LoginButton from '../../../components/Buttons/LoginButton'
 import { useNavigation } from '@react-navigation/native'
 import BackSvg from '../../../components/svg/BackSvg'
+import { Button, IconButton } from 'react-native-paper'
 const initialValues = {
 
 
@@ -121,10 +122,16 @@ const DriverLicense = () => {
     style={styles.item}
     >
   <View style={{ position: 'absolute', top: 0, left: 0, padding: 10, paddingBottom: -10 }}>
-  <Pressable onPress={() => navigation.navigate("Registration")}>
+  <IconButton
+  icon={"arrow-left"
+  }
+  mode='outlined'
+  onPress={() =>{
+    console.log("fhghh")
+     navigation.navigate("Registration")}}>
     {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
-    <BackSvg width={31} height={31} />
-  </Pressable>
+
+  </IconButton>
 </View>
 
 
@@ -229,6 +236,14 @@ onPress={()=>selectPhotoTapped("IDImage")}
 export default DriverLicense
 
 const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    zIndex:900,
+    // margin: 16,
+    Left: 0,
+    // bottom: 0,
+    top:0
+  },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -317,7 +332,7 @@ const styles = StyleSheet.create({
   },
   LoginBtn2: {
     marginTop: 15,
-    backgroundColor: "#2df793", // Change background color to white
+    // backgroundColor: "#2df793", // Change background color to white
     borderRadius: 60,
     shadowColor: "black",
 

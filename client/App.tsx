@@ -75,6 +75,9 @@ import AcceptationScreen from './src/screens/DashboardScreens/DriverDashboard/Ac
 import MissionDetails2 from './src/screens/DashboardScreens/DriverDashboard/MissionDetails2';
 import MesMission from './src/screens/DashboardScreens/DriverDashboard/MesMission';
 import axios from 'axios';
+import ProfileScreen from './src/screens/DashboardScreens/DriverDashboard/ProfileScreen';
+import Assurence from './src/screens/DashboardScreens/Registartion/Assurance';
+import ProofOfAddress from './src/screens/DashboardScreens/Registartion/ProofOfAddress';
 // import MissionDetails2 from './src/screens/DashboardScreens/DriverDashboard/missionDetails2';
 function App(): JSX.Element {
   PushNotification.configure({onRegister: function (token) { },onNotification: function (notification) {},onAction: function (notification) { },onRegistrationError: function(err) {console.error(err.message, err);}, popInitialNotification: true,requestPermissions: true,requestPermissions: Platform.OS === 'ios'});
@@ -82,7 +85,12 @@ function App(): JSX.Element {
   const missions = useSelector(({ missions }) => missions?.missions);
   const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
   const user = useSelector(state => state?.auth);
+  const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
 
+  useEffect(() => {
+    store.dispatch(findBasicInfoByUserId());
+
+  }, [basicInfo?._id])
 
   useEffect(() => {
     // sendNotification()
@@ -119,7 +127,7 @@ function App(): JSX.Element {
   const appearance = useColorScheme();
   const setAppTheme = useCallback(async () => {
     const IS_FIRST = await get('IS_FIRST');
-    // console.log(IS_FIRST);
+
     if (IS_FIRST === null) {
       save('Theme', appearance);
       save('IsDefault', true);
@@ -138,19 +146,18 @@ function App(): JSX.Element {
 
   const fetchUser = async ()=>  {
     const user = await AsyncStorage.getItem('jwtToken');
-    console.log(user)
+
     if (user) {
       const decode = jwt_decode(user);
       axios.get(`${API_URL}/api/users/checkTokenValidity`)
       .then(res => {
-        console.log(res)
-        console.log("//", decode)
+
       store.dispatch(setCurrentUser(decode));
       SetAuthToken(user);
       })
       .catch(err => {
         store.dispatch(LogOut())
-        console.log(err)
+
       })
      // Corrected typo here
     }else {
@@ -160,7 +167,7 @@ function App(): JSX.Element {
   }
 
 useEffect(() => {
-  console.log("fetched")
+
   fetchUser()
 
 
@@ -286,7 +293,7 @@ useEffect(() => {
        /> */}
        <Drawer.Screen
          name="CityPage"
-         options={{drawerLabel: 'City', title: 'City',
+         options={{drawerLabel: 'Home', title: 'Home',
 
          drawerIcon: ({ focused, size }) => (
           <Icon2
@@ -332,7 +339,7 @@ useEffect(() => {
 
         <Drawer.Screen
          name="SafetyPage"
-         options={{drawerLabel: 'Safety', title: 'Safety',
+         options={{drawerLabel: 'Sécurité', title: 'Sécurité',
          drawerIcon: ({ focused, size }) => (
           <Icon4
               name="safety-check"
@@ -344,7 +351,7 @@ useEffect(() => {
        />
         <Drawer.Screen
          name="SettingsPage"
-         options={{drawerLabel: 'Settings', title: 'Settings',
+         options={{drawerLabel: 'paramètres', title: 'paramètres',
          drawerIcon: ({ focused, size }) => (
           <Icon3
               name="setting"
@@ -355,7 +362,7 @@ useEffect(() => {
         }}
          component={SettingsScreen}
        />
-       <Drawer.Screen
+       {/* <Drawer.Screen
          name="FaqPage"
          options={{drawerLabel: 'FAQ', title: 'FAQ',
          drawerIcon: ({ focused, size }) => (
@@ -368,8 +375,8 @@ useEffect(() => {
 
         }}
          component={FAQScreen}
-       />
-       <Drawer.Screen
+       /> */}
+       {/* <Drawer.Screen
          name="SupportPage"
          options={{drawerLabel: 'Support', title: 'Support',
          drawerIcon: ({ focused, size }) => (
@@ -381,7 +388,7 @@ useEffect(() => {
       ),
         }}
          component={SupportScreen}
-       />
+       /> */}
        <Drawer.Screen
          name="OnlineRegistrationPage"
          options={{drawerLabel: 'Online Registration', title: 'Online Registration',
@@ -404,6 +411,15 @@ useEffect(() => {
         drawerItemStyle: { display: 'none' }, // Hide the item
       }}
       component={ProfileSettings}
+    />
+      <Drawer.Screen
+      name="ProfileScreen"
+      options={{
+        drawerLabel: () => null, // Hide the label
+
+        drawerItemStyle: { display: 'none' }, // Hide the item
+      }}
+      component={ProfileScreen}
     />
     <Drawer.Screen
       name="Destination"
@@ -492,7 +508,7 @@ useEffect(() => {
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
-        title:"بطاقة القيادة المهنية"
+        title:"Pièce d'identité "
       }}
       component={Professionaldrivingcard}
     />
@@ -514,9 +530,31 @@ useEffect(() => {
         drawerLabel: () => null, // Hide the label
         drawerItemStyle: { display: 'none' }, // Hide the item
         // header:"  Header",
-        title:"بطاقة إستغلال"
+        title:"K-Bis"
       }}
       component={ExploitCard}
+    />
+    <Drawer.Screen
+      name="ProofOfAddress"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+        title:"justificatif de domicile"
+      }}
+      component={ProofOfAddress}
+    />
+    <Drawer.Screen
+      name="Assurence"
+
+      options={{
+        drawerLabel: () => null, // Hide the label
+        drawerItemStyle: { display: 'none' }, // Hide the item
+        // header:"  Header",
+        title:"Certificat d'assurance"
+      }}
+      component={Assurence}
     />
      <Drawer.Screen
       name="VehicleInfo"
@@ -593,6 +631,7 @@ useEffect(() => {
         </Stack.Navigator>
         )}
  <Stack.Screen name="profileSettings" component={ProfileSettings} />
+ <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
 
       </NavigationContainer>
     </>

@@ -1026,7 +1026,7 @@ const renderItem2 = ({ item, index }) => (
           }
           style={
             {
-              backgroundColor:'#878585',
+              // backgroundColor:'#878585',
               padding:20,
               margin:20,
               borderRadius:10
@@ -1037,18 +1037,18 @@ const renderItem2 = ({ item, index }) => (
 
           >
             <Dialog.Title
-            style={{
-              color:"#000000"
-            }}
+            // style={{
+            //   color:"#000000"
+            // }}
             >Alert</Dialog.Title>
             <Dialog.Content>
               <Text variant="bodyMedium">{Error}</Text>
             </Dialog.Content>
             <Dialog.Actions
-            style={{
-              // justifyContent:'center',
-              color:"#000000"
-            }}
+            // style={{
+            //   // justifyContent:'center',
+            //   color:"#000000"
+            // }}
             >
               <BTNPaper onPress={
                 ()=> {

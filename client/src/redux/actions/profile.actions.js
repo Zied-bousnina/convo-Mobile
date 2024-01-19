@@ -9,7 +9,7 @@ import { CreateScore } from "./scoreAction";
 
 // import {API_URL} from '@env';
 
-const BASE_URL= 'http://192.168.1.16:3600'
+const BASE_URL= 'https://convoyage.onrender.com'
 
 export const AddProfile =   (userData, navigation ) => (dispatch) => {
 
@@ -33,6 +33,7 @@ export const AddProfile =   (userData, navigation ) => (dispatch) => {
 
   })
       .then(async(res) => {
+        navigation.navigate("ProfileScreen")
 
 
         dispatch(CreateScore())

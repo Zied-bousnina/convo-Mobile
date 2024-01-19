@@ -15,13 +15,24 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import ProfileSection from './Components/ProfileSection';
-import { SocialIcon } from 'react-native-elements'
+import { Image, SocialIcon } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native';
 import Icon5 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon6 from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { LogOut } from '../../redux/actions/authActions';
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const handleLogOut= _ => {
+    console.log("logout")
+    dispatch(
+      LogOut()
+    )
+
+
+  }
   return (
     <SafeAreaView style={{flex: 1}}>
       {/*Top Large Image */}
@@ -57,11 +68,11 @@ const CustomSidebarMenu = (props) => {
                color={  'black'}
            />
   <Text style={{ marginLeft: 10, fontSize: 16, color: 'black'  }}>
-    My Account
+  Mon compte
   </Text>
 </TouchableOpacity>
  <TouchableOpacity
-  onPress={()=>navigation.navigate("OnlineRegistrationPage")}
+  onPress={()=>navigation.navigate("Registration")}
   style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
   <Icon6
                name="edit"
@@ -69,7 +80,15 @@ const CustomSidebarMenu = (props) => {
                color={  'black'}
            />
   <Text style={{ marginLeft: 10, fontSize: 16, color: 'black'  }}>
-  Online Registration
+  Mes Documents
+  </Text>
+</TouchableOpacity>
+ <TouchableOpacity
+  onPress={()=>handleLogOut()}
+  style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+
+  <Text style={{ marginLeft: 10, fontSize: 16, color: 'red'  }}>
+  déconnecter
   </Text>
 </TouchableOpacity>
 
@@ -85,13 +104,12 @@ const CustomSidebarMenu = (props) => {
           onPress={toggleMode}
               /> */}
 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-<SocialIcon
-  type='facebook'
-/>
-<SocialIcon
-  type='instagram'
+<Image
+              source={require('../../../src/assets/images1/oie_WD3KDnV4xkJx.png')}
+              style={{ width: 150, height: 150 }}
+              resizeMode="contain"
+            />
 
-/>
         </View>
 
           </View>

@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import axios from "axios"
-import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_USER2, SET_ERRORS, SET_FIRST_LOGIN, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
+import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_USER2, SET_DOCUMENT, SET_ERRORS, SET_FIRST_LOGIN, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
 import { setLoading } from "./authActions"
 import { socket } from "../../../socket"
 import {API_UxRL} from '@env';
 // const BASE_URL= 'https://convoyage.onrender.com'
-const BASE_URL= 'http://192.168.1.16:3600'
+const BASE_URL= 'https://convoyage.onrender.com'
 export const GetCurrentAccessList =  () => (dispatch) => {
   axios.get(`https://xgenboxv2.onrender.com/api/users/access/getCurrentAccessList`)
       .then(async(res) => {
@@ -40,7 +40,7 @@ export const updatePassword = (userData) => dispatch => {
   })
 
   axios
-      .post(`${BASE_URL}/api/users/updatePassword`, userData)
+      .post(`https://convoyage.onrender.com/api/users/updatePassword`, userData)
       .then(res => {
           dispatch({
               type: SET_FIRST_LOGIN,
@@ -281,7 +281,7 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
     payload:true
 })
 
-  axios.post(`${BASE_URL}/api/basicInfo`, userData, {
+  axios.post(`https://convoyage.onrender.com/api/basicInfo`, userData, {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data'
@@ -292,7 +292,7 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
       .then(async(res) => {
 
         // dispatch(CreateScore())
-
+        navigation.navigate("Registration")
         dispatch({
           type: SET_BASIC_INFO,
           payload: res.data
@@ -332,11 +332,67 @@ export const AddBasicInfo =  (userData, navigation ) => (dispatch) => {
 
       )
 }
+export const AddDriverDoc_DriverLicence =  (userData, navigation ) => (dispatch) => {
+console.log('"ssss',userData)
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+
+  axios.post(`https://convoyage.onrender.com/api/users/driver/UpdateDocDriver`, userData, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data'
+      // 'Authorization': 'Bearer ' + token
+    }
+
+  })
+      .then(async(res) => {
+
+        // dispatch(CreateScore())
+        console.log('then')
+        navigation.navigate("Registration")
+
+        dispatch(
+          setLoading(true)
+        )
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+      })
+      .catch( (err) =>{
+        console.log('err', err)
+
+        dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+      })
+      dispatch({
+        type:SET_IS_LOADING,
+        payload:false
+    })
+        setTimeout(() => {
+          dispatch(
+            setLoading(false)
+          )
+
+        }, 3000);
+      }
+
+      )
+}
 export const AddCurrentLocation =  (userData, navigation ) => (dispatch) => {
 
 
 
-  axios.post(`${BASE_URL}/api/users/AddAddress`, userData,)
+  axios.post(`https://convoyage.onrender.com/api/users/AddAddress`, userData,)
       .then(async(res) => {
 
 
@@ -349,12 +405,29 @@ export const AddCurrentLocation =  (userData, navigation ) => (dispatch) => {
       )
 }
 export const findBasicInfoByUserId =(dispatch) => ()=>{
-  axios.get(`${BASE_URL}/api/basicInfo/findBasicProfileById`)
+  axios.get(`https://convoyage.onrender.com/api/basicInfo/findBasicProfileById`)
       .then(async(res) => {
+        console.log(res)
 
 
         dispatch({
           type: SET_BASIC_INFO,
+          payload: res.data?.basicInfo
+        })
+      })
+      .catch( (err) =>{
+
+    }
+
+      )
+}
+export const findDriverDoc =(dispatch) => ()=>{
+  axios.get(`https://convoyage.onrender.com/api/users/driver/finDocByDriver`)
+      .then(async(res) => {
+
+
+        dispatch({
+          type: SET_DOCUMENT,
           payload: res.data
         })
       })
@@ -366,7 +439,7 @@ export const findBasicInfoByUserId =(dispatch) => ()=>{
 }
 export const GetCurrentUser = (navigation)=>dispatch=>{
 
-  axios.get(`${BASE_URL}/api/users/users/currentUser`)
+  axios.get(`https://convoyage.onrender.com/api/users/users/currentUser`)
   .then(res => {
 
 
@@ -412,7 +485,7 @@ dispatch({
   type:SET_IS_SECCESS,
   payload:false
 })
-  axios.post(`${BASE_URL}/api/users/SetUserStatus`,data)
+  axios.post(`https://convoyage.onrender.com/api/users/SetUserStatus`,data)
       .then(async(res) => {
 
         dispatch({
@@ -451,7 +524,7 @@ dispatch({
 }
 
 export const getUsersById =() => (dispatch)=>{
-  axios.get(`${BASE_URL}/api/users/getUsersById`)
+  axios.get(`https://convoyage.onrender.com/api/users/getUsersById`)
       .then(async(res) => {
 
 
@@ -475,7 +548,7 @@ export const GenerateFacture = (data)=> (dispatch)=>{
     payload:true
 })
 
- return axios.post(`${BASE_URL}/api/users/facture/fetchFactureByDriver`,data)
+ return axios.post(`https://convoyage.onrender.com/api/users/facture/fetchFactureByDriver`,data)
       .then(async(res) => {
 
         dispatch({
