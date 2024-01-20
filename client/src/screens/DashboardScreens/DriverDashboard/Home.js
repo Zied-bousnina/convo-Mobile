@@ -688,11 +688,14 @@ formikActions.setSubmitting(false)
     })
     .catch((error) => {
       //
-      setError(error?.response?.data?.message)
-      console.log(error?.response?.data?.message)
-      setvisible(false)
-      setvisibleError(true)
-      setvisible(false)
+      if(error?.response?.data?.message !="Internal Server Error") {
+
+        setError(error?.response?.data?.message)
+        console.log(error?.response?.data?.message)
+        setvisible(false)
+        setvisibleError(true)
+        setvisible(false)
+      }
       // setvisibleError(true)
 
     });
@@ -889,7 +892,12 @@ formikActions.setSubmitting(false)
             }}
             >Alert</Dialog.Title>
             <Dialog.Content>
-              <Text variant="bodyMedium">{Error}</Text>
+              <Text variant="bodyMedium"
+              style={{
+                color:"#000000"
+              }}
+
+              >{Error}</Text>
             </Dialog.Content>
             <Dialog.Actions
             style={{

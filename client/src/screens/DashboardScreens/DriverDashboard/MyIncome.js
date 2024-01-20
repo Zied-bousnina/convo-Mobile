@@ -528,6 +528,8 @@ const generereFacture = ()=> {
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: 10,
+              // marginBottom: 50,
+              // bottom:50
             }}>
 
           </View>
@@ -536,6 +538,8 @@ const generereFacture = ()=> {
 
 
             {factures   ?
+            <>
+
 
               <FlashList
               showsVerticalScrollIndicator={true}
@@ -562,7 +566,7 @@ const generereFacture = ()=> {
         // style={{ marginBottom: 50 }}
         contentContainerStyle={{
 
-          // marginBottom: 50
+          // marginBottom: 500
         }}
         maxToRenderPerBatch={5}
         removeClippedSubviews={true}
@@ -608,6 +612,19 @@ const generereFacture = ()=> {
         // inverted
 
       />
+      <View
+            style={{
+              // flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 10,
+              marginBottom: 60,
+              // bottom:50
+            }}>
+
+          </View>
+          </>
 
 
 

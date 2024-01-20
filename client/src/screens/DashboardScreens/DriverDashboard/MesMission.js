@@ -172,6 +172,7 @@ if(
       title: title,
       message: message,
       onPress: () => {
+
         // Navigate to the "MissionDetails" screen with the provided parameters
         navigation.navigate("MissionDetails", {
           demandeId: mission._id,
@@ -466,6 +467,7 @@ socket.on("message received", (newMessage) => {
 )
 
 
+// console.log("uuuuuuuuuuuuuuuuuuuuuuuuu", item_list)
   return (
 
 

@@ -10,7 +10,7 @@ import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {AccepteMission, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
@@ -523,7 +523,12 @@ dispatch(FindLastMission())
 
   });
 }
+useFocusEffect(
+  React.useCallback(() => {
+    console.log("Status D****************************************************************************", status)
 
+  }, [])
+);
 const savePhotos =()=> {
 
   const formData = new FormData();
@@ -559,10 +564,13 @@ payload: [],
   .catch((error) => {
     // alert("Erreur de chargement")
     // Vous avez déjà une mission en cours !
-    setError(error?.response?.data?.message)
-    console.log(error?.response?.data?.message)
-    setvisible(false)
-    setvisibleError(true)
+    if(error?.response?.data?.message !="Internal Server Error") {
+      setError(error?.response?.data?.message)
+
+      console.log(error?.response?.data?.message)
+      setvisible(false)
+      setvisibleError(true)
+    }
 
   });
 }
@@ -1042,7 +1050,11 @@ const renderItem2 = ({ item, index }) => (
             // }}
             >Alert</Dialog.Title>
             <Dialog.Content>
-              <Text variant="bodyMedium">{Error}</Text>
+              <Text variant="bodyMedium"
+              style={{
+                color:"#000000"
+              }}
+              >{Error}</Text>
             </Dialog.Content>
             <Dialog.Actions
             // style={{

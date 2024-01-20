@@ -26,6 +26,8 @@ const ListRequest = memo((data, key) => {
       // dispatch(DeleteDEmande(data?.data?._id))
     }
 console.log(data)
+
+console.log("status", data?.data?.mission?.status)
     const truncateText = (text, maxLength) => {
       console.log(text)
       // return "h";
