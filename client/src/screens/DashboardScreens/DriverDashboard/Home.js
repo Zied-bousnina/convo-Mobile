@@ -1273,7 +1273,7 @@ onPress={()=>{
         // buttonColor={
         //     "#fff"
         // }
-        icon="home-account" mode="outlined" onPress={() => navigatin.navigate("ProfileScreen")}>
+        icon="home-account" mode="outlined" onPress={() => navigation.navigate("ProfileScreen")}>
         Mon Profil
   </BTNPaper>
   </View>
