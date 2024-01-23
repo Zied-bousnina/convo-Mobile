@@ -26,7 +26,7 @@ const CustomSidebarMenu = (props) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const handleLogOut= _ => {
-    console.log("logout")
+
     dispatch(
       LogOut()
     )

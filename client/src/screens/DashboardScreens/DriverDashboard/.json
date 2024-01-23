@@ -1,0 +1,320 @@
+item_list [
+    {
+        "__v": 0,
+        "_id": "65ad2fa016572e004eca0ed3",
+        "createdAt": "2024-01-21T14:52:16.208Z",
+        "distance": "2.5484127269290315",
+        "mission": {
+            "__v": 0,
+            "_id": "65ad2efe06a76b2b744c0167",
+            "address": [Object
+            ],
+            "comment": "sdsdsds",
+            "createdAt": "2024-01-21T14:49:34.984Z",
+            "dateDepart": "2024-01-14T23:00:00.000Z",
+            "demareeMissionImages": [Array
+            ],
+            "destination": [Object
+            ],
+            "distance": "2.5484127269290315",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule par un convoyeur",
+            "postalAddress": "5, Old Bailey, Blackfriars, City of London, Greater London, England, EC4M 7NG, United Kingdom",
+            "postalDestination": "Leroy Street, Bermondsey Village, Walworth, London Borough of Southwark, London, Greater London, England, SE1 4SW, United Kingdom",
+            "status": "Confirmée",
+            "termineemissionImages": [Array
+            ],
+            "updatedAt": "2024-01-21T14:52:16.357Z",
+            "user": "6552999be6e0f30042d67a91",
+            "vehicleType": "berline "
+        },
+        "montant": 57.72269854387354,
+        "rectification": 0,
+        "remunerationAmount": 25.096825453858063,
+        "status": "Confirmée",
+        "updatedAt": "2024-01-21T14:52:16.208Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65ad1fa031d03a004ebb2aa6",
+        "categorie": "659867c2d47032004e64e126",
+        "createdAt": "2024-01-21T13:44:00.701Z",
+        "distance": "6.273974105061004",
+        "mission": {
+            "__v": 0,
+            "_id": "65ad1f7d31d03a004ebb29f8",
+            "address": [Object
+            ],
+            "createdAt": "2024-01-21T13:43:25.118Z",
+            "dateDepart": "2024-01-07T23:00:00.000Z",
+            "demareeMissionImages": [Array
+            ],
+            "destination": [Object
+            ],
+            "distance": "6.273974105061004",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule par un convoyeur",
+            "postalAddress": "Ibn Sina, ابن سينا 2, الكبارية, Tunis, 2066, Tunisia",
+            "postalDestination": "المحمدية, معتمدية المحمدية, Ben Arous, 1145, Tunisia",
+            "status": "Confirmée",
+            "termineemissionImages": [Array
+            ],
+            "updatedAt": "2024-01-21T13:44:00.842Z",
+            "user": "6552999be6e0f30042d67a91",
+            "vehicleType": "sportive ~ luxe  "
+        },
+        "montant": 74.86028088328061,
+        "rectification": 0,
+        "remunerationAmount": 32.54794821012201,
+        "status": "Confirmée",
+        "updatedAt": "2024-01-21T13:44:00.701Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65ad213131d03a004ebb2c8d",
+        "categorie": "659867c2d47032004e64e126",
+        "createdAt": "2024-01-21T13:50:41.184Z",
+        "distance": "1523.571799627149",
+        "mission": {
+            "__v": 0,
+            "_id": "65ad212431d03a004ebb2c32",
+            "address": [Object
+            ],
+            "createdAt": "2024-01-21T13:50:28.459Z",
+            "dateDepart": "2023-12-31T23:00:00.000Z",
+            "demareeMissionImages": [Array
+            ],
+            "destination": [Object
+            ],
+            "distance": "1523.571799627149",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule par un convoyeur",
+            "postalAddress": "Les Quatre Vents, La Chapelle-Vicomtesse, Vendôme, Loir-et-Cher, Centre-Val de Loire, Metropolitan France, 41270, France",
+            "postalDestination": "الفضول, معتمدية كسرى, Siliana, Tunisia",
+            "status": "Confirmée",
+            "termineemissionImages": [Array
+            ],
+            "updatedAt": "2024-01-21T13:50:41.326Z",
+            "user": "6552999be6e0f30042d67a91",
+            "vehicleType": "monoespace -van "
+        },
+        "montant": 17109.37569571221,
+        "rectification": 0,
+        "remunerationAmount": 7438.8589981357445,
+        "status": "Confirmée",
+        "updatedAt": "2024-01-21T13:50:41.184Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65ad1b677a860d5b00e897a5",
+        "categorie": "659867c2d47032004e64e126",
+        "createdAt": "2024-01-21T13:25:59.999Z",
+        "distance": "5.355832345316817",
+        "mission": {
+            "__v": 0,
+            "_id": "65ad1aa67a860d5b00e8972f",
+            "address": [Object
+            ],
+            "createdAt": "2024-01-21T13:22:46.294Z",
+            "dateDepart": "2024-01-01T23:00:00.000Z",
+            "demareeMissionImages": [Array
+            ],
+            "destination": [Object
+            ],
+            "distance": "5.355832345316817",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule par un convoyeur",
+            "postalAddress": "Jardin d'El Menzah 1, الفتح, معتمدية المنزه, Tunis,
+            2096, Tunisia", "postalDestination": "نهج البساتين, خزندار, باردو, Tunis,
+            2017, Tunisia", "status": "Confirmée", "termineemissionImages": [Array], "updatedAt": "2024-01-21T13: 26: 00.064Z", "user": "6552999be6e0f30042d67a91", "vehicleType": "berline "}, "montant": 70.63682878845735, "rectification": 0, "remunerationAmount": 30.711664690633633, "status": "Confirmée", "updatedAt": "2024-01-21T13: 25: 59.999Z"}, {"__v": 0, "_id": "65acdb0495600b004dd3f57b", "categorie": "659867c2d47032004e64e126", "createdAt": "2024-01-21T08: 51: 16.465Z", "distance": "38.98424627443321", "mission": {"__v": 0, "_id": "65acda9d95600b004dd3f426", "address": [Object], "createdAt": "2024-01-21T08: 49: 33.068Z", "dateDepart": "2024-01-24T23: 00: 00.000Z", "demareeMissionImages": [Array], "destination": [Object], "distance": "38.98424627443321", "driverIsAuto": true, "missionType": "transport véhicule par un convoyeur", "postalAddress": "بئر حليمة, معتمدية زغوان, Zaghouan Governorate,
+            1121, Tunisia", "postalDestination": "بئر الشاوش, معتمدية الناظور, Zaghouan Governorate, Tunisia", "status": "Confirmée", "termineemissionImages": [Array], "updatedAt": "2024-01-21T13: 08: 24.631Z", "user": "658b4532b697da6224bf6978", "vehicleType": "sportive ~ luxe  "}, "montant": 829.6849254886642, "partner": {"Newsocket": [Array], "__v": 256, "_id": "658b4532b697da6224bf6978", "addressPartner": "MT", "contactName": "zied", "createdAt": "2023-12-26T21: 27: 14.140Z", "driverIsVerified": false, "email": "partner@test.tn", "firstLogin": false, "googleId": null, "isBlocked": false, "kbis": "https: //res.cloudinary.com/dcuafrhwc/image/upload/v1703626032/pdf_uploads/kbis_1703626032914.png", "name": "zied", "onligne": false, "password": "$2a$10$Vu4FpOnqUhNZmGwqhR79E./2ttZGMEPcf0ssxDRnd/289hQ2jX3dS", "phoneNumber": "56981500", "role": "PARTNER", "siret": "585 855 555 55554", "updatedAt": "2024-01-22T23:14:20.362Z", "verified": true}, "rectification": 50, "remunerationAmount": 16, "status": "Confirmée", "updatedAt": "2024-01-21T08:51:35.982Z"}, {"__v": 0, "_id": "65ad1bdd7a860d5b00e8983c", "categorie": "659867c2d47032004e64e126", "createdAt": "2024-01-21T13:27:57.472Z", "distance": "1.8286877180116299",
+            "mission": {
+                "__v": 0,
+                "_id": "65ad1bd27a860d5b00e897e2",
+                "address": [Object
+                ],
+                "createdAt": "2024-01-21T13:27:46.012Z",
+                "dateDepart": "2024-01-29T23:00:00.000Z",
+                "demareeMissionImages": [Array
+                ],
+                "destination": [Object
+                ],
+                "distance": "1.8286877180116299",
+                "driverIsAuto": true,
+                "missionType": "transport véhicule par un convoyeur",
+                "postalAddress": "Blackfriars NR (South Bank East), Hopton Street, Bankside, Southwark, London Borough of Southwark, London, Greater London, England, SE1 9JH, United Kingdom",
+                "postalDestination": "Ark Globe Academy, Harper Road, Browning Estate, Walworth, London Borough of Southwark, London, Greater London, England, SE1 6AG, United Kingdom",
+                "status": "Confirmée",
+                "termineemissionImages": [Array
+                ],
+                "updatedAt": "2024-01-21T13:27:57.579Z",
+                "user": "6552999be6e0f30042d67a91",
+                "vehicleType": "monoespace -van "
+            },
+            "montant": 54.41196350285349,
+            "rectification": 0,
+            "remunerationAmount": 23.65737543602326,
+            "status": "Confirmée",
+            "updatedAt": "2024-01-21T13:27:57.472Z"
+        }
+    ]
+ LOG  item_list [
+        {
+            "__v": 0,
+            "_id": "65ad2fa016572e004eca0ed3",
+            "createdAt": "2024-01-21T14:52:16.208Z",
+            "distance": "2.5484127269290315",
+            "mission": {
+                "__v": 0,
+                "_id": "65ad2efe06a76b2b744c0167",
+                "address": [Object
+                ],
+                "comment": "sdsdsds",
+                "createdAt": "2024-01-21T14:49:34.984Z",
+                "dateDepart": "2024-01-14T23:00:00.000Z",
+                "demareeMissionImages": [Array
+                ],
+                "destination": [Object
+                ],
+                "distance": "2.5484127269290315",
+                "driverIsAuto": true,
+                "missionType": "transport véhicule par un convoyeur",
+                "postalAddress": "5, Old Bailey, Blackfriars, City of London, Greater London, England, EC4M 7NG, United Kingdom",
+                "postalDestination": "Leroy Street, Bermondsey Village, Walworth, London Borough of Southwark, London, Greater London, England, SE1 4SW, United Kingdom",
+                "status": "Confirmée",
+                "termineemissionImages": [Array
+                ],
+                "updatedAt": "2024-01-21T14:52:16.357Z",
+                "user": "6552999be6e0f30042d67a91",
+                "vehicleType": "berline "
+            },
+            "montant": 57.72269854387354,
+            "rectification": 0,
+            "remunerationAmount": 25.096825453858063,
+            "status": "Confirmée",
+            "updatedAt": "2024-01-21T14:52:16.208Z"
+        },
+        {
+            "__v": 0,
+            "_id": "65ad1fa031d03a004ebb2aa6",
+            "categorie": "659867c2d47032004e64e126",
+            "createdAt": "2024-01-21T13:44:00.701Z",
+            "distance": "6.273974105061004",
+            "mission": {
+                "__v": 0,
+                "_id": "65ad1f7d31d03a004ebb29f8",
+                "address": [Object
+                ],
+                "createdAt": "2024-01-21T13:43:25.118Z",
+                "dateDepart": "2024-01-07T23:00:00.000Z",
+                "demareeMissionImages": [Array
+                ],
+                "destination": [Object
+                ],
+                "distance": "6.273974105061004",
+                "driverIsAuto": true,
+                "missionType": "transport véhicule par un convoyeur",
+                "postalAddress": "Ibn Sina, ابن سينا 2, الكبارية, Tunis, 2066, Tunisia",
+                "postalDestination": "المحمدية, معتمدية المحمدية, Ben Arous, 1145, Tunisia",
+                "status": "Confirmée",
+                "termineemissionImages": [Array
+                ],
+                "updatedAt": "2024-01-21T13:44:00.842Z",
+                "user": "6552999be6e0f30042d67a91",
+                "vehicleType": "sportive ~ luxe  "
+            },
+            "montant": 74.86028088328061,
+            "rectification": 0,
+            "remunerationAmount": 32.54794821012201,
+            "status": "Confirmée",
+            "updatedAt": "2024-01-21T13:44:00.701Z"
+        },
+        {
+            "__v": 0,
+            "_id": "65ad213131d03a004ebb2c8d",
+            "categorie": "659867c2d47032004e64e126",
+            "createdAt": "2024-01-21T13:50:41.184Z",
+            "distance": "1523.571799627149",
+            "mission": {
+                "__v": 0,
+                "_id": "65ad212431d03a004ebb2c32",
+                "address": [Object
+                ],
+                "createdAt": "2024-01-21T13:50:28.459Z",
+                "dateDepart": "2023-12-31T23:00:00.000Z",
+                "demareeMissionImages": [Array
+                ],
+                "destination": [Object
+                ],
+                "distance": "1523.571799627149",
+                "driverIsAuto": true,
+                "missionType": "transport véhicule par un convoyeur",
+                "postalAddress": "Les Quatre Vents, La Chapelle-Vicomtesse, Vendôme, Loir-et-Cher, Centre-Val de Loire, Metropolitan France, 41270, France",
+                "postalDestination": "الفضول, معتمدية كسرى, Siliana, Tunisia",
+                "status": "Confirmée",
+                "termineemissionImages": [Array
+                ],
+                "updatedAt": "2024-01-21T13:50:41.326Z",
+                "user": "6552999be6e0f30042d67a91",
+                "vehicleType": "monoespace -van "
+            },
+            "montant": 17109.37569571221,
+            "rectification": 0,
+            "remunerationAmount": 7438.8589981357445,
+            "status": "Confirmée",
+            "updatedAt": "2024-01-21T13:50:41.184Z"
+        },
+        {
+            "__v": 0,
+            "_id": "65ad1b677a860d5b00e897a5",
+            "categorie": "659867c2d47032004e64e126",
+            "createdAt": "2024-01-21T13:25:59.999Z",
+            "distance": "5.355832345316817",
+            "mission": {
+                "__v": 0,
+                "_id": "65ad1aa67a860d5b00e8972f",
+                "address": [Object
+                ],
+                "createdAt": "2024-01-21T13:22:46.294Z",
+                "dateDepart": "2024-01-01T23:00:00.000Z",
+                "demareeMissionImages": [Array
+                ],
+                "destination": [Object
+                ],
+                "distance": "5.355832345316817",
+                "driverIsAuto": true,
+                "missionType": "transport véhicule par un convoyeur",
+                "postalAddress": "Jardin d'El Menzah 1, الفتح, معتمدية المنزه, Tunis,
+                2096, Tunisia", "postalDestination": "نهج البساتين, خزندار, باردو, Tunis,
+                2017, Tunisia", "status": "Confirmée", "termineemissionImages": [Array], "updatedAt": "2024-01-21T13: 26: 00.064Z", "user": "6552999be6e0f30042d67a91", "vehicleType": "berline "}, "montant": 70.63682878845735, "rectification": 0, "remunerationAmount": 30.711664690633633, "status": "Confirmée", "updatedAt": "2024-01-21T13: 25: 59.999Z"}, {"__v": 0, "_id": "65acdb0495600b004dd3f57b", "categorie": "659867c2d47032004e64e126", "createdAt": "2024-01-21T08: 51: 16.465Z", "distance": "38.98424627443321", "mission": {"__v": 0, "_id": "65acda9d95600b004dd3f426", "address": [Object], "createdAt": "2024-01-21T08: 49: 33.068Z", "dateDepart": "2024-01-24T23: 00: 00.000Z", "demareeMissionImages": [Array], "destination": [Object], "distance": "38.98424627443321", "driverIsAuto": true, "missionType": "transport véhicule par un convoyeur", "postalAddress": "بئر حليمة, معتمدية زغوان, Zaghouan Governorate,
+                1121, Tunisia", "postalDestination": "بئر الشاوش, معتمدية الناظور, Zaghouan Governorate, Tunisia", "status": "Confirmée", "termineemissionImages": [Array], "updatedAt": "2024-01-21T13: 08: 24.631Z", "user": "658b4532b697da6224bf6978", "vehicleType": "sportive ~ luxe  "}, "montant": 829.6849254886642, "partner": {"Newsocket": [Array], "__v": 256, "_id": "658b4532b697da6224bf6978", "addressPartner": "MT", "contactName": "zied", "createdAt": "2023-12-26T21: 27: 14.140Z", "driverIsVerified": false, "email": "partner@test.tn", "firstLogin": false, "googleId": null, "isBlocked": false, "kbis": "https: //res.cloudinary.com/dcuafrhwc/image/upload/v1703626032/pdf_uploads/kbis_1703626032914.png", "name": "zied", "onligne": false, "password": "$2a$10$Vu4FpOnqUhNZmGwqhR79E./2ttZGMEPcf0ssxDRnd/289hQ2jX3dS", "phoneNumber": "56981500", "role": "PARTNER", "siret": "585 855 555 55554", "updatedAt": "2024-01-22T23:14:20.362Z", "verified": true}, "rectification": 50, "remunerationAmount": 16, "status": "Confirmée", "updatedAt": "2024-01-21T08:51:35.982Z"}, {"__v": 0, "_id": "65ad1bdd7a860d5b00e8983c", "categorie": "659867c2d47032004e64e126", "createdAt": "2024-01-21T13:27:57.472Z", "distance": "1.8286877180116299",
+                "mission": {
+                    "__v": 0,
+                    "_id": "65ad1bd27a860d5b00e897e2",
+                    "address": [Object
+                    ],
+                    "createdAt": "2024-01-21T13:27:46.012Z",
+                    "dateDepart": "2024-01-29T23:00:00.000Z",
+                    "demareeMissionImages": [Array
+                    ],
+                    "destination": [Object
+                    ],
+                    "distance": "1.8286877180116299",
+                    "driverIsAuto": true,
+                    "missionType": "transport véhicule par un convoyeur",
+                    "postalAddress": "Blackfriars NR (South Bank East), Hopton Street, Bankside, Southwark, London Borough of Southwark, London, Greater London, England, SE1 9JH, United Kingdom",
+                    "postalDestination": "Ark Globe Academy, Harper Road, Browning Estate, Walworth, London Borough of Southwark, London, Greater London, England, SE1 6AG, United Kingdom",
+                    "status": "Confirmée",
+                    "termineemissionImages": [Array
+                    ],
+                    "updatedAt": "2024-01-21T13:27:57.579Z",
+                    "user": "6552999be6e0f30042d67a91",
+                    "vehicleType": "monoespace -van "
+                },
+                "montant": 54.41196350285349,
+                "rectification": 0,
+                "remunerationAmount": 23.65737543602326,
+                "status": "Confirmée",
+                "updatedAt": "2024-01-21T13:27:57.472Z"
+            }
+        ]

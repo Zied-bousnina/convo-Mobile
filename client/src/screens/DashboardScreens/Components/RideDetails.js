@@ -38,7 +38,8 @@ const RideDetails = ({route}) => {
     data
 
   } =  route.params
-  console.log(data)
+
+
   return (
     <>
  <TouchableOpacity

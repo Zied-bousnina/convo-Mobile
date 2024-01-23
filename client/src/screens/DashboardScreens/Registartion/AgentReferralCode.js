@@ -66,12 +66,12 @@ const AgentReferralCode = () => {
     launchImageLibrary(options, (response) => {
 
 
-      // console.log('Response = ', response);
+
       if (response.didCancel) {
-        // console.log('User cancelled image picker');
+
         setToastMsg('User cancelled image picker');
       } else if (response.error) {
-        // console.log('ImagePicker Error: ', response.error);
+
         setToastMsg('ImagePicker Error: ' + response.error);
       } else {
         const uri = response.assets[0].uri;
@@ -86,19 +86,19 @@ const AgentReferralCode = () => {
           ...image,
           [imageType]:source
         })
-        // console.log(source)
+
       }
     });
   }
 
-// console.log(image? 'data:image/png;base64'+image : null)
+
 
   const handleCreateDriverLicense = async (values, formikActions)=> {
     setload(true)
 
     dispatch(setLoading(true));
 
-    // console.log(values)
+
     const formData = new FormData();
     formData.append('licenseNbr', values.licenseNbr);
     formData.append('dateExp', date);
@@ -113,7 +113,7 @@ const AgentReferralCode = () => {
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
-    console.log(formData)
+
 
 
     // dispatch(AddProfile(formData, navigation))
@@ -121,7 +121,7 @@ const AgentReferralCode = () => {
     // formikActions.resetForm()
     formikActions.setSubmitting(false);
 
-    // console.log(isLoading)
+
     setTimeout(() => {
     setload(false)
 
@@ -148,7 +148,7 @@ const AgentReferralCode = () => {
   }
   mode='outlined'
   onPress={() =>{
-    console.log("fhghh")
+
      navigation.navigate("Registration")}}>
     {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
 

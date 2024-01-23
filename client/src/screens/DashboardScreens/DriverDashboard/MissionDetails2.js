@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {AccepteMission, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
+import {AccepteMission, ConfirmeeMissionByDriver, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
 import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
@@ -71,6 +71,7 @@ const MissionDetails2 = ({route}) => {
   const isLOad = useSelector(state=>state?.isLoading?.isLoading)
   const [userConnected_id, setuserConnected_id] = useState()
   const [visibleError, setvisibleError] = useState(false)
+  const [DateError, setDateError] = useState(false)
   const [Error, setError] = useState()
   useEffect(() => {
     // Handle connection
@@ -129,6 +130,12 @@ if(
   // -------------------------------------------------------------
   const [noti, setnoti] = useState([])
   const [newMission, setnewMission] = useState(false)
+  const isDateUnderCurrentDate = (inputDate) => {
+    const targetDate = new Date(inputDate);
+    const currentDate = new Date();
+
+    return targetDate < currentDate;
+  };
 
   const sendNotification = (mission, navigation) => {
 
@@ -321,7 +328,7 @@ socket.on('error', (error) => {
       };
 
       fetchData();
-  }, [getCurrentLocation, requestLocationPermission]);
+  }, [currentLocation?.latitude, currentLocation?.longitude]);
 
 
   const PAGE_LIMIT = 5;
@@ -525,7 +532,7 @@ dispatch(FindLastMission())
 }
 useFocusEffect(
   React.useCallback(() => {
-    console.log("Status D****************************************************************************", status)
+
 
   }, [])
 );
@@ -567,7 +574,7 @@ payload: [],
     if(error?.response?.data?.message !="Internal Server Error") {
       setError(error?.response?.data?.message)
 
-      console.log(error?.response?.data?.message)
+
       setvisible(false)
       setvisibleError(true)
     }
@@ -936,6 +943,33 @@ const renderItem2 = ({ item, index }) => (
             }>
     <Text style={{color:"white"}}>Terminée Mission</Text>
   </BTNPaper>:
+  status=='Confirmée' ?
+
+<BTNPaper
+          style={{
+              marginRight:-10,
+              backgroundColor:"#27AE60"
+          }}
+          loading={isLOad} mode="contained"
+  //          onPress={() =>{
+  //         dispatch(AccepteMission(
+  //             lastMission?.mission?._id
+
+  //         ))
+  //         dispatch({
+  //     type: SET_LAST_MISSION,
+  //     payload: [],
+  //   });
+  // dispatch(FindLastMission())
+  //         }
+  //         }
+onPress={()=>{
+//
+dispatch(ConfirmeeMissionByDriver(devisId, navigation))
+}}
+          >
+  Confirmée
+</BTNPaper>:
   <BTNPaper
               style={{
             backgroundColor:"#8B5CF6",
@@ -944,7 +978,15 @@ const renderItem2 = ({ item, index }) => (
         }}
         mode="contained"
             loading={isLOad}  onPress={() =>{
-           setvisible(true) }
+              const result = isDateUnderCurrentDate(dateDepart)
+              if(result){
+                setvisible(true)
+              }else{
+                setDateError(true)
+                // setvisible(true)
+              }
+          //  setvisible(true)
+            }
             }>
    <Text style={{color:"white"}}>Démarrée Mission</Text>
   </BTNPaper>
@@ -1065,6 +1107,55 @@ const renderItem2 = ({ item, index }) => (
               <BTNPaper onPress={
                 ()=> {
                   setvisibleError(false)
+                }
+              }
+              style={{
+                color:"#8B5CF6"
+              }}
+              >Done</BTNPaper>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+        <Portal>
+          <Dialog visible={DateError} onDismiss={
+
+            ()=> {
+              setDateError(false)
+            }
+          }
+          style={
+            {
+              // backgroundColor:'#878585',
+              padding:20,
+              margin:20,
+              borderRadius:10
+              }
+
+          }
+
+
+          >
+            <Dialog.Title
+            // style={{
+            //   color:"#000000"
+            // }}
+            >Alert</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium"
+              style={{
+                color:"#000000"
+              }}
+              >Vous ne pouvez pas démarrer la mission avant la date de départ</Text>
+            </Dialog.Content>
+            <Dialog.Actions
+            // style={{
+            //   // justifyContent:'center',
+            //   color:"#000000"
+            // }}
+            >
+              <BTNPaper onPress={
+                ()=> {
+                  setDateError(false)
                 }
               }
               style={{

@@ -23,9 +23,9 @@ const ListRequest2 = memo((data, key) => {
     const actionDelete = () => {
       // dispatch(DeleteDEmande(data?.data?._id))
     }
-console.log(data)
+
     const truncateText = (text, maxLength) => {
-      console.log(text)
+
       // return "h";
       return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text;
     };
@@ -67,7 +67,7 @@ console.log(data)
           // sheetRef.current.open();
 
 
-          // console.log("hello zied ")
+
         }
      }
      >
@@ -93,7 +93,11 @@ console.log(data)
 
             <Image
               style={{ width: 50, height: 50, borderRadius: 25 }}
-              source={{ uri:'https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon'
+              source={{  uri:data?.data?.partner?.profile?.avatar ?
+                data?.data?.partner?.profile?.avatar :
+                data?.data?.profile?.avatar ?
+                data?.data?.profile?.avatar :
+                'https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon'
             //   item?.avatar
               }}
             />
@@ -106,7 +110,12 @@ console.log(data)
                 }}>
 
 
-            <Text style={styles.text}>Partenaire: {data?.data?.partner?.contactName}
+            <Text style={styles.text}>{
+              data?.data?.partner?.contactName ?
+              ("Partenaire: " + data?.data?.partner?.contactName)
+               :
+              "Admin"
+            }
            {/* {item?.user?.email} */}
            </Text>
           <Text  style={styles.text}>Départ:

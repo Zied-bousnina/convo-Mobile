@@ -17,7 +17,7 @@ const SettingsScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const handleLogOut= _ => {
-    console.log("logout")
+
     dispatch(
       LogOut()
     )
@@ -33,7 +33,7 @@ const SettingsScreen = () => {
 
 
   const resendOTP = () => {
-    console.log(user?.email)
+
     dispatch(resendOTPDeleteAccount({email:user?.email}))
   };
 
@@ -43,7 +43,7 @@ const SettingsScreen = () => {
       userId:user?.id,
       otp: code,
     };
-    console.log(userData)
+
     dispatch(deleteaccount(userData, navigation))
 
   }
@@ -141,7 +141,7 @@ const SettingsScreen = () => {
                 style={{width: '80%', height: 70}}
                 codeInputFieldStyle={{color: '#000'}}
                 onCodeFilled={code =>hanndleDeleteAccount(code)
-                // console.log(code)
+
                 }
                 // clearInputs
 
@@ -170,7 +170,7 @@ const SettingsScreen = () => {
 
 
               onPress={ ()=>{
-                console.log("ge")
+
                 resendOTP()
   setModalVisible(true)
               }}

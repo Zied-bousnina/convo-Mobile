@@ -5,12 +5,9 @@ import AnimatedLoader from 'react-native-animated-loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 const FindDriverScreen = ({route}) => {
-    console.log("----------route",route?.params)
+
     const {address, destination, comments, offer} = route?.params
-    console.log(address)
-    console.log(destination)
-    console.log(comments)
-    console.log(offer)
+
 
     const webviewRef = useRef(null);
     const [endpoint, setEndpoint] = useState('');

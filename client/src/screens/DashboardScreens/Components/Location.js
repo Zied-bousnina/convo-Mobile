@@ -67,10 +67,7 @@ const Location = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        // console.log(
-        //   '------------------------------------------------------------------------------------------------',
-        //   position,
-        // );
+
         setCurrentLocation(position.coords);
       },
       error => console.log(error),
@@ -82,7 +79,6 @@ const Location = () => {
 
 
 
-  // console.log('icon ', Icon.getImageSourceSync('line-chart', 60, 'green'));
 
 
   const webviewRef = useRef(null);
@@ -91,7 +87,7 @@ const Location = () => {
 
   const [endpoint, setEndpoint] = useState('');
   const [response, setResponse] = useState('');
-  // console.log(endpoint)
+
 
   const handleEndpointChange = (text) => {
     setEndpoint(text);
@@ -105,14 +101,13 @@ const Location = () => {
       const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${endpoint}.json?access_token=pk.eyJ1IjoiemllZDE0NDEiLCJhIjoiY2xvOGgyYnNuMDA3bjJrcWxrb3VvdXBlYyJ9.dPaxxre7QPTB2F_Psyt4nQ`;
       const response = await axios.get(url);
       setResponse(response.data.features[0].center);
-      // console.log(response.data.features[0].center)
+
     } catch (error) {
       console.error(error);
     }
   };
 
-  // console.log("latitude :",response[0])
-  // console.log("Longitude :",response[1])
+
   const html_script = `
  <!DOCTYPE html>
  <html>
@@ -263,9 +258,9 @@ const Location = () => {
  </body>
  </html>
  `;
-//  console.log(destination)
+
  setDesti = ()=> {
-  // console.log(response)
+
   dispatch({
     type: SET_LOCATION,
     payload: {

@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, findBasicInfoByUserId, getUsersById, updatePassword} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {AccepteMission, AcceptedMission, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
+import {AccepteMission, AcceptedMission, ConfirmeeMissionByDriver, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
 import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
@@ -59,6 +59,7 @@ const validationSchema = yup.object({
 
 const Home = () => {
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
+  const [DateError, setDateError] = useState(false)
   const [visibleError, setvisibleError] = useState(false)
   const user = useSelector(({ currentUser }) => currentUser?.user);
   const [enRoute, setenRoute] = useState(isEnRoute)
@@ -245,7 +246,7 @@ setnewMission(false)
 
 
       // alert("gggg")
-       if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
+       if((newMessage?.status == "Confirmée" || newMessage?.status == "En retard" || newMessage?.status == "Confirmée driver" ) && (newMessage?.mission?.driver ==currentUser2?.user?.id ||newMessage?.mission?.driverIsAuto  )){
 
         setnoti(
           [...noti, newMessage]
@@ -380,7 +381,7 @@ const getDistanceFromLatLonInKm=()=>{
       };
 
       fetchData();
-  }, [getCurrentLocation, requestLocationPermission]);
+  }, [currentLocation?.latitude, currentLocation?.longitude]);
 
   const showPasswordHandler = navigation => {
     setshow(!show);
@@ -543,6 +544,12 @@ formikActions.setSubmitting(false)
 
     )
   }
+  const isDateUnderCurrentDate = (inputDate) => {
+    const targetDate = new Date(inputDate);
+    const currentDate = new Date();
+
+    return targetDate < currentDate;
+  };
   const selectPhotoTapped = () => {
     const options = {
       title: 'Select Photo',
@@ -691,7 +698,7 @@ formikActions.setSubmitting(false)
       if(error?.response?.data?.message !="Internal Server Error") {
 
         setError(error?.response?.data?.message)
-        console.log(error?.response?.data?.message)
+
         setvisible(false)
         setvisibleError(true)
         setvisible(false)
@@ -917,6 +924,55 @@ formikActions.setSubmitting(false)
             </Dialog.Actions>
           </Dialog>
         </Portal>
+        <Portal>
+          <Dialog visible={DateError} onDismiss={
+
+            ()=> {
+              setDateError(false)
+            }
+          }
+          style={
+            {
+              // backgroundColor:'#878585',
+              padding:20,
+              margin:20,
+              borderRadius:10
+              }
+
+          }
+
+
+          >
+            <Dialog.Title
+            // style={{
+            //   color:"#000000"
+            // }}
+            >Alert</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium"
+              style={{
+                color:"#000000"
+              }}
+              >Vous ne pouvez pas démarrer la mission avant la date de départ</Text>
+            </Dialog.Content>
+            <Dialog.Actions
+            // style={{
+            //   // justifyContent:'center',
+            //   color:"#000000"
+            // }}
+            >
+              <BTNPaper onPress={
+                ()=> {
+                  setDateError(false)
+                }
+              }
+              style={{
+                color:"#8B5CF6"
+              }}
+              >Done</BTNPaper>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
 
   <ScrollView
   refreshControl={
@@ -990,7 +1046,7 @@ formikActions.setSubmitting(false)
       </View>
       }
 {
-    lastMission  && (lastMission?.mission?.status =='Affectée'|| lastMission?.mission?.status =='En retard' || lastMission?.mission?.status =='Démarrée' || lastMission?.mission?.status =='Confirmée')  &&
+    lastMission  && (lastMission?.mission?.status =='Affectée'|| lastMission?.mission?.status =='En retard' || lastMission?.mission?.status =='Démarrée' || lastMission?.mission?.status =='Confirmée' || lastMission?.mission?.status =='Confirmée driver')  &&
 
 <>
 
@@ -1086,6 +1142,34 @@ textColor={
             }>
     Terminée
   </BTNPaper>:
+  lastMission?.mission?.status=='Confirmée' ?
+
+  <BTNPaper
+            style={{
+                marginRight:-10,
+                backgroundColor:"#27AE60"
+            }}
+            loading={isLOad} mode="contained"
+    //          onPress={() =>{
+    //         dispatch(AccepteMission(
+    //             lastMission?.mission?._id
+
+    //         ))
+    //         dispatch({
+    //     type: SET_LAST_MISSION,
+    //     payload: [],
+    //   });
+    // dispatch(FindLastMission())
+    //         }
+    //         }
+onPress={()=>{
+  //
+  dispatch(ConfirmeeMissionByDriver(lastMission?.mission?._id, navigation))
+}}
+            >
+    Confirmée
+  </BTNPaper>
+  :
   <BTNPaper
             style={{
                 marginRight:-10
@@ -1105,7 +1189,13 @@ textColor={
     //         }
 onPress={()=>{
   //
-  setvisible(true)
+  const result = isDateUnderCurrentDate(lastMission?.mission?.mission?.dateDepart)
+              if(result){
+                setvisible(true)
+              }else{
+                setDateError(true)
+                // setvisible(true)
+              }
 }}
             >
     Démarée
@@ -1120,7 +1210,11 @@ onPress={()=>{
 
             <Image
               style={{ width: 50, height: 50, borderRadius: 25 }}
-              source={{ uri:'https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon'
+              source={{ uri:lastMission?.profile?.avatar ?
+                lastMission?.profile?.avatar :
+                lastMission?.profile?.avatar ?
+                lastMission?.profile?.avatar :
+                'https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon'
             //   item?.avatar
               }}
             />
@@ -1435,7 +1529,7 @@ onPress={()=>{
   }}>
 
     {/* savePhotos()}}> */}
-  enregistrer t
+  enregistrer
   </BTNPaper>:
   <BTNPaper icon="content-save-all" mode="outlined" loading={isLOad} onPress={() => {
 

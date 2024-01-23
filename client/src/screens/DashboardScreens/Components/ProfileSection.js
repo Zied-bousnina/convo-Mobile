@@ -21,7 +21,7 @@ const ProfileSection = () => {
   const missionTerminee = useSelector((state) => state?.AcceptedMissions?.mission?.missions);
   const navigation = useNavigation()
   const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
-console.log(basicInfo)
+
   useEffect(() => {
     dispatch(findBasicInfoByUserId());
 
@@ -52,7 +52,8 @@ console.log(basicInfo)
         Findfactures(),
       );
     }, [dispatch,factures?.length ]);
-  // console.log(state)
+
+
   return (
     <View style={styles.userCard}>
         <View>

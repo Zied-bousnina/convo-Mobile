@@ -39,7 +39,7 @@ const MapComponent = () => {
     dispatch(fetchBins())
 
   }, [bins])
-  // console.log("Bins",bins)
+
 
   const binLocations = [
     {lat: 36.798, lon: 30.588, fullness: true},
@@ -128,12 +128,9 @@ const MapComponent = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        // console.log(
-        //   '------------------------------------------------------------------------------------------------',
-        //   position,
-        // );
+
         setCurrentLocation(position.coords);
-        // console.log("position.coor", position.coords)
+
         dispatch(AddCurrentLocation({
           address:{
             latitude: position.coords.latitude,
@@ -162,7 +159,7 @@ const fetchData = async () => {
   }
 
   if (requestCount >= MAX_REQUESTS_PER_HOUR) {
-    // console.log("Request limit exceeded for the hour. Please try again later.");
+
     return;
   }
 
@@ -184,7 +181,7 @@ const fetchData = async () => {
   while (retryCount < 3) { // Limit the number of retries
     try {
       const response = await axios.request(options);
-      // console.log('---------------------------------------------------------------');
+
       setCurrentAddress(response.data);
       requestCount++; // Increment the request count
       break; // If the request is successful, break out of the retry loop
@@ -205,11 +202,11 @@ const fetchData = async () => {
 fetchData();
 
 
-  // console.log('icon ', Icon.getImageSourceSync('line-chart', 60, 'green'));
+
   const fullBins =  binLocations.filter(bin => bin.fullness === true )[0];
   const lat = fullBins.lat
   const long = fullBins.lon
-  // console.log(fullBins)
+
   const html_script = `
  <!DOCTYPE html>
  <html>
@@ -394,13 +391,13 @@ fullBins.forEach(bin => {
       <WebView
       onTouchMove={
         () => {
-          // console.log("touched")
+
           sheetRef.current.close()
         }
       }
       onTouchEnd={
         () => {
-          // console.log("touched")
+
           sheetRef.current.open()
         }
       }

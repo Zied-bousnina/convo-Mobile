@@ -27,13 +27,13 @@ const isLoad = useSelector(state=>state?.isLoading?.isLoading)
     dispatch(FindRequestDemande(navigation))
 
   }, [requests])
-  // console.log("Requests_______________________", requests)
+
 
   // useEffect(() => {
   //   sheetRef.current.close()
   // }, [])
   const actionDelete = async () => {
-    console.log(selectedItem?._id);
+
     sheetRef.current.close();
 
     // Dispatch the DeleteDEmande action
@@ -54,7 +54,7 @@ const isLoad = useSelector(state=>state?.isLoading?.isLoading)
 
 <Pressable
 onPress={()=>{sheetRef.current.open()
-console.log(e)
+
 setselectedItem(e)
 }}
 >

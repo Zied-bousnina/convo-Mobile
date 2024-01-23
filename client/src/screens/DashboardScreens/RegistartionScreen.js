@@ -48,10 +48,10 @@ const RegistartionScreen = () => {
 
     }, [DriverDoc?._id])
 
-    console.log("DriverDoc", DriverDoc)
+
     // console;log()
     const handleLogOut= _ => {
-      console.log("logout")
+
       dispatch(
         LogOut()
       )

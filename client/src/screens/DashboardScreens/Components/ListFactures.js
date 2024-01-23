@@ -17,6 +17,7 @@ const ListFactures = memo((data, key) => {
   const [itemsPerPage, onItemsPerPageChange] = React.useState(
     numberOfItemsPerPageList[0]
   );
+  // console.log("data?.data?.factures",data?.data?.factures)
 
     const originalDateString = data?.data?.createdAt;
     const date = new Date(originalDateString);
@@ -29,10 +30,9 @@ const ListFactures = memo((data, key) => {
     const actionDelete = () => {
       // dispatch(DeleteDEmande(data?.data?._id))
     }
-console.log(data)
+
     const truncateText = (text, maxLength) => {
-      console.log(text)
-      // return "h";
+
       return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text;
     };
     const getDistanceFromLatLonInKm=()=>{
@@ -191,12 +191,24 @@ console.log(data)
       </DataTable.Header>
 
       {data?.data?.factures.slice(from, to).map((item) => (
+
         <DataTable.Row key={item._id}>
           <DataTable.Cell
-          
+          style={{
+            color:"black"
+          }}
+
           >{item.mission?.postalAddress}</DataTable.Cell>
-          <DataTable.Cell numeric>{item.mission?.postalDestination}</DataTable.Cell>
-          <DataTable.Cell numeric>{item.mission?.distance}</DataTable.Cell>
+          <DataTable.Cell
+          style={{
+            color:"black"
+          }}
+          numeric>{item.mission?.postalDestination}</DataTable.Cell>
+          <DataTable.Cell
+          style={{
+            color:"black"
+          }}
+          numeric>{item.mission?.distance}</DataTable.Cell>
         </DataTable.Row>
       ))}
 

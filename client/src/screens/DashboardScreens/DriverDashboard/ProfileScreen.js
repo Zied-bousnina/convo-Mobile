@@ -29,7 +29,7 @@ const ProfileScreen = () => {
         dispatch(findBasicInfoByUserId(dispatch));
       }, [])
     );
-    console.log("basicInfo5", basicInfo)
+
     useEffect(() => {
       //
       dispatch(
@@ -56,7 +56,7 @@ const ProfileScreen = () => {
           Findfactures(),
         );
       }, [dispatch,factures?.length ]);
-    console.log(profile)
+
 
   return (
     <ImageBackground

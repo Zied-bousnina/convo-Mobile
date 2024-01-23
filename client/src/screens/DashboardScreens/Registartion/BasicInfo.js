@@ -98,7 +98,7 @@ const BasicInfo = () => {
   // --------------------End Gove-------------------------------------
 
   const addImage=()=>{};
-  // console.log("image", user?.avatar ? 'data:image/png;base64,'+user?.avatar : null)
+
   const setToastMsg = msg=> {
     ToastAndroid.showWithGravity(
       msg,
@@ -119,12 +119,12 @@ const BasicInfo = () => {
     launchImageLibrary(options, (response) => {
 
 
-      // console.log('Response = ', response);
+
       if (response.didCancel) {
-        // console.log('User cancelled image picker');
+
         setToastMsg('User cancelled image picker');
       } else if (response.error) {
-        // console.log('ImagePicker Error: ', response.error);
+
         setToastMsg('ImagePicker Error: ' + response.error);
       } else {
         const uri = response.assets[0].uri;
@@ -136,19 +136,19 @@ const BasicInfo = () => {
           name,
         }
         setImage(source)
-        // console.log(source)
+
       }
     });
   }
 
-// console.log(image? 'data:image/png;base64'+image : null)
+
 
   const handleCreateProfile = async (values, formikActions)=> {
     setload(true)
 
     dispatch(setLoading(true));
 
-    // console.log(values)
+
     const formData = new FormData();
     formData.append('firstName', values.firstName);
     formData.append('lastName', values.lastName);
@@ -160,7 +160,7 @@ const BasicInfo = () => {
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
-    console.log(formData)
+
 
 
     dispatch(AddBasicInfo(formData, navigation))
@@ -168,7 +168,7 @@ const BasicInfo = () => {
     // formikActions.resetForm()
     formikActions.setSubmitting(false);
 
-    // console.log(isLoading)
+
     setTimeout(() => {
     setload(false)
 
@@ -184,15 +184,14 @@ const BasicInfo = () => {
     setTimeout(() => {
       setload(false)
 
-      // console.log("logout")
+
       dispatch(LogOut(navigation))
       navigation.navigate('Login')
     }, 3000);
 
 
   }
-  // console.log(image.uri)
-  // console.log("image is ", image? setToastMsg("yes") : null)
+
 
 
 

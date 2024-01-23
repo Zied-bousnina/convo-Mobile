@@ -102,7 +102,7 @@ const ProfileSettings = () => {
   const [load, setload] = useState(false)
   const [image, setImage] = useState(profile?.avatar ? {uri:profile?.avatar} : '');
   const isLoad = useSelector(state=>state?.isLoading?.isLoading)
-console.log(profile)
+
 
    // --------------------Gove-------------------------------------
    useEffect(() => {
@@ -118,7 +118,7 @@ console.log(profile)
 
     fetchGovernorates();
   }, [governorates?.governorates?.length]);
-  console.log(governorates)
+
 
   const municipales = governorates?.governorates?.filter(
     (item, index) => item.name === selectedValue,
@@ -126,7 +126,7 @@ console.log(profile)
   // --------------------End Gove-------------------------------------
 
   const addImage=()=>{};
-  // console.log("image", user?.avatar ? 'data:image/png;base64,'+user?.avatar : null)
+
   const setToastMsg = msg=> {
     ToastAndroid.showWithGravity(
       msg,
@@ -147,12 +147,12 @@ console.log(profile)
     launchImageLibrary(options, (response) => {
 
 
-      // console.log('Response = ', response);
+
       if (response.didCancel) {
-        // console.log('User cancelled image picker');
+
         setToastMsg('User cancelled image picker');
       } else if (response.error) {
-        // console.log('ImagePicker Error: ', response.error);
+
         setToastMsg('ImagePicker Error: ' + response.error);
       } else {
         const uri = response.assets[0].uri;
@@ -164,19 +164,19 @@ console.log(profile)
           name,
         }
         setImage(source)
-        // console.log(source)
+
       }
     });
   }
 
-// console.log(image? 'data:image/png;base64'+image : null)
+
 
   const handleCreateProfile = async (values, formikActions)=> {
     setload(true)
 
     dispatch(setLoading(true));
 
-    // console.log(values)
+
     const formData = new FormData();
     formData.append('tel', values.tel);
     formData.append('address', values.address ?
@@ -194,7 +194,7 @@ console.log(profile)
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
-    console.log(image?.uri)
+
 
 
     dispatch(AddProfile(formData, navigation))
@@ -202,7 +202,7 @@ console.log(profile)
     // formikActions.resetForm()
     formikActions.setSubmitting(false);
 
-    // console.log(isLoading)
+
     setTimeout(() => {
     setload(false)
 
@@ -217,7 +217,7 @@ console.log(profile)
     setTimeout(() => {
       setload(false)
 
-      // console.log("logout")
+
       dispatch(LogOut(navigation))
       navigation.navigate('Login')
     }, 3000);

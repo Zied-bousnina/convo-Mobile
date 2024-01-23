@@ -242,6 +242,64 @@ export const TermineeMission = (demandeId,images, navigation) => dispatch => {
       throw err; // Rethrow the error if needed
     });
 };
+export const ConfirmeeMissionByDriver = (demandeId, navigation) => dispatch => {
+
+  dispatch({
+    type: SET_IS_LOADING,
+    payload: true,
+  });
+
+ return axios
+    .post(
+      `${BASE_URL}/api/users/ConfirmeMissionByDriver/${demandeId}`
+    )
+    .then( res => {
+
+
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+
+
+      // navigation.navigate('city')
+      navigation.navigate('Missions')
+      // navigation.navigate("AcceptationScreen",{
+      //   demandeId:res?.data?.demand?._id,
+      //   distance:res?.data?.demand?.distance,
+      //   address:res?.data?.demand?.address,
+      //   destination:res?.data?.demand?.destination,
+      //   comments:res?.data?.demand?.comments,
+      //   // offer:data?.data?.offer,
+      //   status:res?.data?.demand?.status,
+      //   postalAddress:res?.data?.demand?.postalAddress,
+      //   postalDestination:res?.data?.demand?.postalDestination,
+      //   // postalCode:data?.data?.postalCode,
+      //   // postalDestinationCode:data?.data?.postalDestinationCode,
+
+      // })
+      // navigation.navigate("AcceptationScreen",userData )
+      return res.data; // Return data if needed
+    })
+    .catch(err => {
+
+      dispatch({
+        type: SET_ERRORS,
+        payload: err?.response?.data,
+      });
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: false,
+      });
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 3000);
+      throw err; // Rethrow the error if needed
+    });
+};
 export const RefuseMission = (demandeId, navigation) => dispatch => {
 
   dispatch({

@@ -251,6 +251,7 @@ socket.on('error', (error) => {
         setCurrentLocation(position.coords);
 
 
+
         if(isEnabled) {
           // setTimeout(() => {
 
@@ -286,7 +287,7 @@ socket.on('error', (error) => {
     } else {
       getCurrentLocation();
     }
-  }, [getCurrentLocation, requestLocationPermission]);
+  }, [currentLocation?.latitude, currentLocation?.longitude]);
 
 
   const PAGE_LIMIT = 5;

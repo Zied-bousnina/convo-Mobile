@@ -407,7 +407,7 @@ export const AddCurrentLocation =  (userData, navigation ) => (dispatch) => {
 export const findBasicInfoByUserId =(dispatch) => ()=>{
   axios.get(`https://convoyage.onrender.com/api/basicInfo/findBasicProfileById`)
       .then(async(res) => {
-        console.log(res)
+        // console.log(res)
 
 
         dispatch({

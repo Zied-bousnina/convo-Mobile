@@ -206,7 +206,7 @@ if(
 
 
 socket.on('error', (error) => {
-    console.error('Socket error:', error);
+    // console.error('Socket error:', error);
 });
 socket.on("MissionAccepted",async ()=> {
   setnewMission(true)
@@ -350,7 +350,7 @@ socket.on("message received", (newMessage) => {
       };
 
       fetchData();
-  }, [getCurrentLocation, requestLocationPermission]);
+  }, [currentLocation?.latitude, currentLocation?.longitude]);
 
 
   const [value, setValue] = React.useState('enCours');
@@ -410,7 +410,7 @@ socket.on("message received", (newMessage) => {
       );
     }
   };
-
+// console.log("item_list", item_list)
   const enRouteAction = ()=> {
     // setenRoute(!enRoute)
 
@@ -467,7 +467,7 @@ socket.on("message received", (newMessage) => {
 )
 
 
-// console.log("uuuuuuuuuuuuuuuuuuuuuuuuu", item_list)
+
   return (
 
 

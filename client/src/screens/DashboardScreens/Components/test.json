@@ -1,104 +1,205 @@
-{
-    "NotSuccess": {
-        "NotSuccess": false
+[
+    {
+        "__v": 0,
+        "_id": "65a401ca57464868045eb0d5",
+        "createdAt": "2024-01-14T15:46:18.415Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "0",
+        "updatedAt": "2024-01-14T15:46:18.415Z"
     },
-    "ReqestFindDriver": {
-        "comments": "",
-        "destination": {
-            "latitude": 0,
-            "longitude": 0,
-            "postalAddress": ""
+    {
+        "__v": 0,
+        "_id": "65a41a2028c4dc004d87c961",
+        "createdAt": "2024-01-14T17:30:08.836Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "0",
+        "updatedAt": "2024-01-14T17:30:08.836Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a449c5443501004d2abf4a",
+        "createdAt": "2024-01-14T20:53:25.987Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "45",
+        "updatedAt": "2024-01-14T20:53:25.987Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a56df97b52d3004e0b022f",
+        "createdAt": "2024-01-15T17:40:09.052Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "50",
+        "updatedAt": "2024-01-15T17:40:09.052Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a56e087b52d3004e0b0236",
+        "createdAt": "2024-01-15T17:40:24.490Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "50",
+        "updatedAt": "2024-01-15T17:40:24.490Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a58c7386a188004e3559d8",
+        "createdAt": "2024-01-15T19:50:11.753Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "55",
+        "updatedAt": "2024-01-15T19:50:11.753Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a9299419a60f0f84e9a783",
+        "createdAt": "2024-01-18T13:37:24.523Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "34",
+        "updatedAt": "2024-01-18T13:37:24.523Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a92b0519a60f0f84e9a7ec",
+        "createdAt": "2024-01-18T13:43:33.550Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "74",
+        "updatedAt": "2024-01-18T13:43:33.550Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a92c0919a60f0f84e9a81c",
+        "createdAt": "2024-01-18T13:47:53.630Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "70",
+        "updatedAt": "2024-01-18T13:47:53.630Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a938ea19a60f0f84e9aa05",
+        "createdAt": "2024-01-18T14:42:50.485Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "50",
+        "updatedAt": "2024-01-18T14:42:50.485Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a93aa319a60f0f84e9aa87",
+        "createdAt": "2024-01-18T14:50:11.456Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "0",
+        "updatedAt": "2024-01-18T14:50:11.456Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65a940974b6d3e13e45c8351",
+        "createdAt": "2024-01-18T15:15:35.667Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "50",
+        "updatedAt": "2024-01-18T15:15:35.667Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65abf643ea67e7004e76db4e",
+        "createdAt": "2024-01-20T16:35:15.983Z",
+        "mission": null,
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "0",
+        "updatedAt": "2024-01-20T16:35:15.983Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65ad1268628f0d004eb96d99",
+        "createdAt": "2024-01-21T12:47:36.380Z",
+        "mission": {
+            "__v": 2,
+            "_id": "65abf89962d30f8af41b5c10",
+            "address": [Object
+            ],
+            "createdAt": "2024-01-20T16:45:13.900Z",
+            "dateDepart": "2024-01-15T23:00:00.000Z",
+            "demareeMissionImages": [Array
+            ],
+            "destination": [Object
+            ],
+            "distance": "1923.815540028153",
+            "driver": "659aea02d1eb35004e61c65a",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule par un convoyeur",
+            "postalAddress": "Standard Chartered, 1, Basinghall Avenue, Barbican, City of London, Greater London, England, EC2V 5DE, United Kingdom",
+            "postalDestination": "الشرفة, معتمدية السبيخة, Kairouan, Tunisia",
+            "status": "Terminée",
+            "termineemissionImages": [Array
+            ],
+            "updatedAt": "2024-01-21T12:47:36.666Z",
+            "user": "658b4532b697da6224bf6978",
+            "vehicleType": "sportive ~ luxe  "
         },
-        "location": {
-            "latitude": 36.8019783,
-            "longitude": 10.9403387
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "48",
+        "updatedAt": "2024-01-21T12:47:36.380Z"
+    },
+    {
+        "__v": 0,
+        "_id": "65af93ffa30b51004e2a6685",
+        "createdAt": "2024-01-23T10:25:03.256Z",
+        "mission": {
+            "__v": 2,
+            "_id": "65ad11187a860d5b00e892d3",
+            "address": [Object
+            ],
+            "createdAt": "2024-01-21T12:42:00.809Z",
+            "dateDepart": "2024-01-15T23:00:00.000Z",
+            "demareeMissionImages": [Array
+            ],
+            "destination": [Object
+            ],
+            "distance": "66.43615278693785",
+            "driver": "659aea02d1eb35004e61c65a",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule par un convoyeur",
+            "postalAddress": "الاقصاب, معتمدية قعفور, Siliana, Tunisia",
+            "postalDestination": "Autoroute
+A2, Friouet, بئر الشاوش, معتمدية الناظور, Zaghouan Governorate,
+            1163, Tunisia", "status": "Terminée", "termineemissionImages": [Array], "updatedAt": "2024-01-23T10: 25: 03.553Z", "user": "6552999be6e0f30042d67a91", "vehicleType": "sportive ~ luxe  "}, "partner": "659aea02d1eb35004e61c65a", "payed": false, "totalAmmount": "185.7446111477514", "updatedAt": "2024-01-23T10: 25: 03.256Z"}, {"__v": 0, "_id": "65afa8e6b93e1e004e46e748", "createdAt": "2024-01-23T11: 54: 14.379Z", "mission": {"__v": 2, "_id": "65afa4d4b93e1e004e46e3f3", "address": [Object], "createdAt": "2024-01-23T11: 36: 52.336Z", "dateDepart": "2024-01-08T23: 00: 00.000Z", "demareeMissionImages": [Array], "destination": [Object], "distance": "188.53958658291498",
+            "driver": "659aea02d1eb35004e61c65a",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule 0km par porte voiture",
+            "postalAddress": "Slouguia, السلوقية, معتمدية تستور, Béja, 9014, Tunisia",
+            "postalDestination": "بئر بوصبيع, معتمدية بئر الحفي, Sidi Bouzid, Tunisia",
+            "status": "Terminée",
+            "termineemissionImages": [Array
+            ],
+            "updatedAt": "2024-01-23T11:54:14.670Z",
+            "user": "658b4532b697da6224bf6978",
+            "vehicleType": "monoespace -van "
         },
-        "offer": ""
-    },
-    "access": {
-        "access": []
-    },
-    "accessListUser": {
-        "accessList": {}
-    },
-    "auth": {
-        "ifBlocked": true,
-        "isAdmin": false,
-        "isConnected": true,
-        "isLoading": false,
-        "isMunicipal": false,
-        "isPrivateCompany": false,
-        "isUser": true,
-        "isVerified": true,
-        "request": {},
-        "user": {
-            "email": "Email@test.tn",
-            "exp": 9007200953314098,
-            "iat": 1698573107,
-            "id": "653e2adeba5938004241a398",
-            "isBlocked": false,
-            "name": "test",
-            "role": "USER",
-            "verified": true
-        }
-    },
-    "bins": {
-        "bins": {}
-    },
-    "cleaningService": {
-        "requestsCleaning": {},
-        "requestsSent": {}
-    },
-    "demandesMunicipal": {
-        "AllUsers": {},
-        "usersInProgress": {}
-    },
-    "errors": {
-        "emailSent": false,
-        "errors": {},
-        "isLoading": true
-    },
-    "fetchBinByMunicipal": {
-        "BinListByMunicipal": {}
-    },
-    "fetchBins": {
-        "fetchBins": {
-            "pointBins": [Array
-            ]
-        }
-    },
-    "isLoading": {
-        "isLoading": false
-    },
-    "mail": {
-        "emailSent": false,
-        "errors": {},
-        "isLoading": true,
-        "isResend": false,
-        "isResendFailure": false,
-        "isResendLoading": false,
-        "isResendSuccess": false,
-        "isValid": true,
-        "isVerified": true
-    },
-    "mailSent": {
-        "MailSent": false
-    },
-    "profile": {
-        "profile": [],
-        "profileIsEmpty": true
-    },
-    "request": {
-        "request": {},
-        "requestIsEmpty": true
-    },
-    "scores": {
-        "score": {}
-    },
-    "someAccessUsersList": {
-        "SomeAccess": []
-    },
-    "success": {
-        "success": false
+        "partner": "659aea02d1eb35004e61c65a",
+        "payed": false,
+        "totalAmmount": "763.697932914575",
+        "updatedAt": "2024-01-23T11:54:14.379Z"
     }
-}
+]

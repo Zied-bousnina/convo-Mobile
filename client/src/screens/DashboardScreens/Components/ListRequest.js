@@ -4,7 +4,7 @@ import React, { memo, useEffect, useRef } from 'react'
 import { Button, Icon, Image } from 'react-native-elements'
 import { ListItem } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
-import { AccepteMission, DeleteDEmande, TermineeMission } from '../../../redux/actions/demandesActions';
+import { AccepteMission, ConfirmeeMissionByDriver, DeleteDEmande, TermineeMission } from '../../../redux/actions/demandesActions';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import haversine from 'haversine'; // You may need to install this library using `npm install haversine`
 
@@ -25,11 +25,18 @@ const ListRequest = memo((data, key) => {
     const actionDelete = () => {
       // dispatch(DeleteDEmande(data?.data?._id))
     }
-console.log(data)
+// console.log(data?.data?.mission?.dateDepart)
+const isDateUnderCurrentDate = (inputDate) => {
+  const targetDate = new Date(inputDate);
+  const currentDate = new Date();
 
-console.log("status", data?.data?.mission?.status)
+  return targetDate < currentDate;
+};
+
+// console.log(`Is the date ${data?.data?.mission?.dateDepart} under the current date? ${isDateUnderCurrentDate(data?.data?.mission?.dateDepart)}`);
+
     const truncateText = (text, maxLength) => {
-      console.log(text)
+
       // return "h";
       return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text;
     };
@@ -110,7 +117,7 @@ console.log("status", data?.data?.mission?.status)
             // dateArrivee : data?.data?.mission?.dateArrivee,
 
           })
-          // console.log("hello zied ")
+
         }
      }
      >
@@ -136,7 +143,12 @@ console.log("status", data?.data?.mission?.status)
 
             <Image
               style={{ width: 50, height: 50, borderRadius: 25 }}
-              source={{ uri:'https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon'
+              source={{
+                uri:data?.data?.partner?.profile?.avatar ?
+                data?.data?.partner?.profile?.avatar :
+                data?.data?.profile?.avatar ?
+                data?.data?.profile?.avatar :
+                'https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon'
             //   item?.avatar
               }}
             />
@@ -149,7 +161,14 @@ console.log("status", data?.data?.mission?.status)
                 }}>
 
 
-            <Text style={styles.text}>Partenaire: {data?.data?.partner?.contactName}
+            <Text style={styles.text}>
+            {
+              data?.data?.partner?.contactName ?
+              ("Partenaire: " + data?.data?.partner?.contactName)
+               :
+              "Admin"
+            }
+            {/* Partenaire: {data?.data?.partner?.contactName} */}
            {/* {item?.user?.email} */}
            </Text>
           <Text  style={styles.text}>Départ:
@@ -236,7 +255,7 @@ console.log("status", data?.data?.mission?.status)
              loading={isLOad}
             onPress={() => {
               navigateDetails()
-            //   console.log(data?.data?._id)
+
             // dispatch(TermineeMission(
             //   data?.data?._id
 
@@ -245,15 +264,44 @@ console.log("status", data?.data?.mission?.status)
 
             }}
             mode="contained">
-              Mission Terminée
-            </BTNPaper>
+               Terminée Mission
+            </BTNPaper>:
+            data?.data?.status=='Confirmée' ?
+
+<BTNPaper
+          style={{
+              marginRight:-10,
+              // backgroundColor:"#27AE60",
+              // buttonColor:"#27AE60"
+
+          }}
+          loading={isLOad} mode="elevated"
+  //          onPress={() =>{
+  //         dispatch(AccepteMission(
+  //             lastMission?.mission?._id
+
+  //         ))
+  //         dispatch({
+  //     type: SET_LAST_MISSION,
+  //     payload: [],
+  //   });
+  // dispatch(FindLastMission())
+  //         }
+  //         }
+onPress={()=>{
+//
+navigateDetails()
+}}
+          >
+  Confirmée
+</BTNPaper>
             :
             <BTNPaper
             mode="outlined"
             loading={isLOad}
             onPress={() => {
               navigateDetails()
-      //         console.log(data?.data?._id)
+
       //         dispatch(AccepteMission(
       //           data?.data?._id
 
@@ -269,7 +317,7 @@ console.log("status", data?.data?.mission?.status)
     // dispatch(FindLastMission())
             }}
             >
-              Mission démarée
+              démarée Mission
             </BTNPaper>
             }
 

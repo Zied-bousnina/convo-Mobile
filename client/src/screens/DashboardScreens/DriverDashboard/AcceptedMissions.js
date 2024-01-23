@@ -174,7 +174,7 @@ if(
     } else {
       getCurrentLocation();
     }
-  }, [getCurrentLocation, requestLocationPermission]);
+  }, [currentLocation?.latitude, currentLocation?.longitude]);
 
 
   const PAGE_LIMIT = 5;

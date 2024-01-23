@@ -67,12 +67,12 @@ const Professionaldrivingcard = () => {
     launchImageLibrary(options, (response) => {
 
 
-      // console.log('Response = ', response);
+
       if (response.didCancel) {
-        // console.log('User cancelled image picker');
+
         setToastMsg('User cancelled image picker');
       } else if (response.error) {
-        // console.log('ImagePicker Error: ', response.error);
+
         setToastMsg('ImagePicker Error: ' + response.error);
       } else {
         const uri = response.assets[0].uri;
@@ -87,21 +87,21 @@ const Professionaldrivingcard = () => {
           ...image,
           [imageType]:source
         })
-        // console.log(source)
+
       }
     });
   }
 
-// console.log(image? 'data:image/png;base64'+image : null)
+
 
   const handleCreateDriverLicense = async (values, formikActions)=> {
     setload(true)
 
     dispatch(setLoading(true));
 
-    // console.log(values)
+
     const formData = new FormData();
-    console.log("image?.CinfrontCard",image?.CinfrontCard)
+
 
     formData.append('CinfrontCard', {
       uri: image?.CinfrontCard ? image?.CinfrontCard?.uri : `https://png.pngtree.com/png-clipart/20230824/original/pngtree-drivers-license-driver-card-id-picture-image_8407548.png`,
@@ -114,7 +114,7 @@ const Professionaldrivingcard = () => {
       type: 'image/jpg',
       name: new Date()+ '_profile'
     });
-    console.log(formData)
+
 
 
     dispatch(AddDriverDoc_DriverLicence(formData, navigation))
@@ -122,7 +122,7 @@ const Professionaldrivingcard = () => {
     // formikActions.resetForm()
     formikActions.setSubmitting(false);
 
-    // console.log(isLoading)
+
     setTimeout(() => {
     setload(false)
 

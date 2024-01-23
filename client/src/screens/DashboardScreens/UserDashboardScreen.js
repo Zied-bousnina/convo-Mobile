@@ -13,7 +13,7 @@ const UserDashboardScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const handleLogOut= _ => {
-    console.log("logout")
+
     dispatch(
       LogOut()
     )

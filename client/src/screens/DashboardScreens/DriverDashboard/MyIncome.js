@@ -310,7 +310,7 @@ socket.on("message received", (newMessage) => {
       };
 
       fetchData();
-  }, [getCurrentLocation, requestLocationPermission]);
+  }, [ currentLocation?.latitude, currentLocation?.longitude]);
 
 
   const [value, setValue] = React.useState('enCours');
@@ -335,7 +335,7 @@ socket.on("message received", (newMessage) => {
 
     }, [])
   );
-  // console.log(factures)
+
 
 
   const PAGE_LIMIT = 5;
