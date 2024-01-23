@@ -966,6 +966,32 @@ const renderItem2 = ({ item, index }) => (
 onPress={()=>{
 //
 dispatch(ConfirmeeMissionByDriver(devisId, navigation))
+
+.then((data) => {
+      socket.emit("MissionAccepted")
+
+      dispatch({
+            type: SET_LAST_MISSION,
+            payload: [],
+          });
+        dispatch(FindLastMission())
+        setvisible(false)
+
+
+    })
+    .catch((error) => {
+      //
+      if(error?.response?.data?.message !="Internal Server Error") {
+
+        setError(error?.response?.data?.message)
+
+        setvisible(false)
+        setvisibleError(true)
+        setvisible(false)
+      }
+      // setvisibleError(true)
+
+    });
 }}
           >
   Confirmée

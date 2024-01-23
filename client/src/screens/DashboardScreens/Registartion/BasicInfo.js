@@ -282,7 +282,7 @@ const handleSkip = ()=> {
                   placeholder="First Name"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  value={basicInfo?.firstName}
+                  defaultValue={basicInfo?.firstName}
                 />
               </View>
             </View>
@@ -295,7 +295,8 @@ const handleSkip = ()=> {
                   placeholder="Last Name"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  value={basicInfo?.lastName}
+                  // value={basicInfo?.lastName}
+                  defaultValue={basicInfo?.lastName}
                 />
               </View>
             </View>

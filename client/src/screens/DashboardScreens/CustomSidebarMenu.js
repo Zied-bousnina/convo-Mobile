@@ -8,6 +8,7 @@ import {
   View,
   StyleSheet,
   Text,
+  Dimensions,
 } from 'react-native';
 import Fonts from '../../../src/assets/fonts';
 import {
@@ -22,6 +23,7 @@ import Icon6 from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { LogOut } from '../../redux/actions/authActions';
+import Logo from '../../components/svg/LOGO';
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -103,12 +105,11 @@ const CustomSidebarMenu = (props) => {
               btnName={isDriverMode ? "Passenger Mode" : "Driver Mode"}
           onPress={toggleMode}
               /> */}
-<View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-<Image
-              source={require('../../../src/assets/images1/oie_WD3KDnV4xkJx.png')}
-              style={{ width: 150, height: 150 }}
-              resizeMode="contain"
-            />
+<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+<Logo
+                    width={Dimensions.get('window').width*0.4}
+                    height={Dimensions.get('window').height*0.2}
+                    />
 
         </View>
 
@@ -159,9 +160,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   loginCon: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     paddingVertical: 10,
-  paddingBottom:100
+  // paddingBottom:100
   }
 
 });

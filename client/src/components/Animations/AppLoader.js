@@ -6,7 +6,28 @@ const AppLoader = () => {
     <View
         style={[StyleSheet.absoluteFillObject, styles.container]}
     >
-     <ActivityIndicator size="large" color="#2df793" />
+       <LottieView
+        // source={{
+        //     uri: 'https://assets7.lottiefiles.com/packages/lf20_rb0swn6j.json'
+        //     // uri: 'https://assets7.lottiefiles.com/packages/lf20_RGVbkI.json'
+        // }}
+        source={{
+            uri: 'https://assets7.lottiefiles.com/private_files/lf30_l8csvun7.json'
+        }}
+        colorFilters={[
+        {
+          keypath: "button",
+          color: "#F00000",
+        },
+        {
+          keypath: "Sending Loader",
+          color: "#F00000",
+        },
+      ]}
+      style={{width: "100%", height: "100%"}}
+      autoPlay
+      loop
+        />
 
     </View>
   )

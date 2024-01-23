@@ -390,7 +390,7 @@ const styling = theme=>StyleSheet.create({
     loginIcon: {
       alignSelf: 'center',
       top:-70,
-      left:-30
+      // left:-0
     },
     formCon: {
       flexDirection: 'column',
@@ -461,7 +461,7 @@ const styling = theme=>StyleSheet.create({
     },
 
     LoginBtn: {
-      backgroundColor:  "#2df793",
+      backgroundColor:  "#1b394a",
       borderRadius: 20,
       marginTop:20
     },

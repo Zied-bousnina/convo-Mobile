@@ -420,8 +420,8 @@ StyleSheet.create({
   },
   loginIcon: {
     alignSelf: 'center',
-    top:-70,
-    left:-30
+    // top:-70,
+    // left:-30
   },
   formCon: {
     flexDirection: 'column',
@@ -495,7 +495,7 @@ StyleSheet.create({
     fontFamily: Fonts.type.NotoSansSemiBold,
   },
   LoginBtn: {
-    backgroundColor: "#2df793",
+    backgroundColor: "#1b394a",
     borderRadius: 20,
     shadowColor: Colors[theme]?.black,
     borderColor: 'transparent',

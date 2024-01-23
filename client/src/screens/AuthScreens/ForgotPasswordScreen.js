@@ -316,7 +316,7 @@ StyleSheet.create({
   },
 
   LoginBtn: {
-    backgroundColor: Colors[theme]?.primary,
+    backgroundColor:"#1b394a",
     borderRadius: 20,
     shadowColor: Colors[theme]?.black,
   },
