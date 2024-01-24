@@ -632,6 +632,7 @@ formikActions.setSubmitting(false)
     setImage(newImageArray);
   };
 
+  console.log( lastMission?.mission?.mission)
   const savePhotosTerminéé =()=> {
 
 
@@ -1280,11 +1281,15 @@ onPress={()=>{
     source="clock-outline"
     color={MD3Colors.secondary40}
     size={20}
-  /> {new Date(lastMission?.mission?.mission?.dateDepart).toLocaleTimeString('en-US', {
+  /> {
+    lastMission?.mission?.mission?.dateDepart ?
+    new Date(lastMission?.mission?.mission?.dateDepart).toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
-  })}
+  })
+  : null
+  }
               {/* {formattedDate} */}
               </Text>
             </View>

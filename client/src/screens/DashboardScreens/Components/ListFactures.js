@@ -69,7 +69,20 @@ const ListFactures = memo((data, key) => {
   };
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, data?.data?.factures.length);
+  const tvaRate = 20;
+  const calculateTVA = (montantHT, tvaRate) => {
 
+    const TVA = montantHT * (tvaRate / 100);
+    const montantTTC = montantHT + TVA;
+    const montantPur = montantHT - TVA;
+
+    return {
+      montantHT,
+      TVA,
+      montantTTC,
+      montantPur
+    };
+  };
   React.useEffect(() => {
     setPage(0);
   }, [itemsPerPage]);
@@ -79,7 +92,7 @@ const ListFactures = memo((data, key) => {
 
 
 <Card.Title
-    title={`Facture N°${(data?.data?._id).toString().slice(-5)}`}
+    title={`Facture N°: ${(data?.data?.numFacture).toString().slice(-5)}`}
     subtitle={`de ${
       new Date(data?.data?.from).toLocaleDateString('en-US', {
     month: '2-digit',
@@ -114,31 +127,33 @@ const ListFactures = memo((data, key) => {
     fontFamily:"Roboto-Bold",
     fontSize:12
      }}
-     right={(prps)=> {
-        return(
-          <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
-          <Text style={{ color: "black",
-    fontFamily:"Roboto-Bold",
-    fontSize:12
-     }}> {Number(data?.data?.totalAmmount).toLocaleString('fr-FR', {style:'currency', currency: 'EUR'})}</Text>
-          <IconButton
-          style={{backgroundColor:"#8B5CF6",borderRadius:5}}
-          labelStyle={{color:"white"}}
-          icon="eye"
-          mode="contained"
-          onPress={() => {
-            // navigation.navigate('FactureDetails', { data: data?.data })
-            showModal()
-            }}
-        >
+     right={(prps) => {
+  const montantPur = calculateTVA(Number(data?.data?.totalAmmount), tvaRate).montantPur;
 
-        </IconButton>
-          </View>
-        )
+  return (
+    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+      <Text style={{
+        color: "black",
+        fontFamily: "Roboto-Bold",
+        fontSize: 12
+      }}>
+        {montantPur.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+      </Text>
+      <IconButton
+        style={{ backgroundColor: "#8B5CF6", borderRadius: 5 }}
+        labelStyle={{ color: "white" }}
+        icon="eye"
+        mode="contained"
+        onPress={() => {
+          // navigation.navigate('FactureDetails', { data: data?.data })
+          showModal()
+        }}
+      >
+      </IconButton>
+    </View>
+  );
+}}
 
-
-     }
-     }
 
 
   />
