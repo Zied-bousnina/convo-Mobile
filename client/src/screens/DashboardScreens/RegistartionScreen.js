@@ -12,13 +12,14 @@ import { LogOut } from '../../redux/actions/authActions';
 import ButtonCustom from '../../components/Buttons/ButtonCustom';
 import Fonts from '../../../src/assets/fonts';
 import { findBasicInfoByUserId, findDriverDoc } from '../../redux/actions/userActions';
-import { Icon as IconPaper, MD3Colors } from 'react-native-paper';
+import { Button, Icon as IconPaper, MD3Colors } from 'react-native-paper';
 import BasicInfo from './Registartion/BasicInfo';
+import { socket } from '../../../socket';
 const RegistartionScreen = () => {
     const dispatch = useDispatch()
     const navigation = useNavigation()
     const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
-
+    const currentUser2 = useSelector(state=>state?.auth)
     useEffect(() => {
       dispatch(findBasicInfoByUserId(dispatch));
 
@@ -236,6 +237,31 @@ Pièce d'identité
   />
       }
     </Pressable>
+
+
+    <View style={styles.loginCon}>
+    <Button
+disabled={
+  (BasicInfo &&
+      DriverDoc?.permisConduirebackCard && DriverDoc?.permisConduirefrontCard &&
+      DriverDoc?.CinbackCard&& DriverDoc?.CinfrontCard &&
+      DriverDoc?.assurance &&
+      DriverDoc?.kbis &&
+      DriverDoc?.proofOfAddress) ? false : true
+}
+     mode="contained" onPress={() => {
+      socket.emit('validate_me', {userId:currentUser2?.user?.id, role:"ADMIN"
+      })
+      console.log("currentUser2?.user?.id",currentUser2?.user?.id)
+     }}>
+    Valider
+mon compte
+  </Button>
+
+    {/* </Button> */}
+
+
+  </View>
 
   </View>
   )

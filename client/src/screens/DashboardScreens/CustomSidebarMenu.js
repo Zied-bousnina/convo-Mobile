@@ -90,7 +90,7 @@ const CustomSidebarMenu = (props) => {
   style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
 
   <Text style={{ marginLeft: 10, fontSize: 16, color: 'red'  }}>
-  déconnecter
+  Se déconnecter
   </Text>
 </TouchableOpacity>
 

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 import isEmpty from "../../utils/isEmpty"
-import { SET_ERRORS, SET_USER, SET_LOADING, SET_FIRST_LOGIN } from "../types"
+import { SET_ERRORS, SET_USER, SET_LOADING, SET_FIRST_LOGIN, SET_DRIVER_VERIFIED } from "../types"
 
 const initialState = {
     isConnected: false,
@@ -12,7 +12,8 @@ const initialState = {
 
     ifBlocked:true,
     user: {},
-    isFirstTime:false
+    isFirstTime:false,
+    driverDocumentsIsVerified:false,
 
 
 
@@ -40,6 +41,12 @@ export default function(state = initialState, action) {
                 return {
                     ...state,
                     isFirstTime: action.payload
+                }
+
+            case SET_DRIVER_VERIFIED:
+                return {
+                    ...state,
+                    driverDocumentsIsVerified: action.payload
                 }
 
         default:

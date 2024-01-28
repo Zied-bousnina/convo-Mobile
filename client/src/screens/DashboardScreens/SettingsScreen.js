@@ -190,7 +190,7 @@ const SettingsScreen = () => {
         </View>
       </Modal>
 
-  <Pressable
+  {/* <Pressable
     onPress={handleLogOut}
     style={{
       flexDirection: 'row',
@@ -209,7 +209,7 @@ const SettingsScreen = () => {
       size={20}
       color={'black'}
     />
-  </Pressable>
+  </Pressable> */}
   <Pressable
     onPress={()=>{
       resendOTP()
@@ -224,7 +224,7 @@ const SettingsScreen = () => {
   >
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <Text style={{ marginLeft: 10, fontSize: 16, color: 'red' }}>
-        Delete Account
+      Supprimer le compte
       </Text>
     </View>
     <Icon1

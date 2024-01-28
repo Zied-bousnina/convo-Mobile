@@ -17,23 +17,36 @@ import MyIncome from './MyIncome'
 import Rating from './Rating'
 import { socket } from '../../../../socket'
 import { useDispatch, useSelector } from 'react-redux'
-import { AddCurrentLocation, GetCurrentUser } from '../../../redux/actions/userActions'
+import { AddCurrentLocation, GetCurrentUser, checkDriverDocumentIsCompleted } from '../../../redux/actions/userActions'
 import Geolocation from 'react-native-geolocation-service';
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import AcceptedMissions from './AcceptedMissions'
 import Home from './Home'
 import MesMission from './MesMission'
 import { Modal } from 'react-native-paper'
 const Tab = createBottomTabNavigator();
 const Dashboard = () => {
+  const dispatch = useDispatch()
   const currentUser = useSelector(state=>state?.currentUser2?.users?.user)
   const currentUser2 = useSelector(state=>state?.auth)
   const user = useSelector(state => state?.auth);
 
+  useEffect(() => {
+    dispatch(checkDriverDocumentIsCompleted(dispatch))
 
+  }, [user?.driverDocumentsIsVerified])
+
+  console.log(user)
+
+  useFocusEffect(
+    React.useCallback(() => {
+
+      dispatch(checkDriverDocumentIsCompleted(dispatch))
+
+    }, [])
+  );
   const [themeValue, setThemeValue] = useState('');
   const themes = useColorScheme();
-  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(GetCurrentUser())
       // dispatch(removeSeenMsg([]))
@@ -178,24 +191,21 @@ if(
                     </View>
                 )
             }}  name="Dashboard" component={Home}/>
+            {user?.driverDocumentsIsVerified &&
+            <>
+
+
+
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>(
                     <View style={{alignItems:'center'}} >
                          <Icon6 name={focused ? 'route' : 'route'} size={20} color={focused ? "#26cbfc": "#999"} />
                          {/* <Text style={{color: focused ? '#fff':'grey',fontFamily:'Roboto-Bold', fontSize:10}} >Scan</Text>    */}
-                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Mes Missions</Text>
+                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Missions</Text>
                     </View>
                 )
             }}  name="Missions" component={MesMission}/>
-{/* <Tab.Screen options={{
-                tabBarIcon:({focused})=>(
-                    <View style={{alignItems:'center'}} >
-                         <Icon6 name={focused ? 'route' : 'route'} size={20} color={focused ? "#26cbfc": "#999"} />
 
-                         <Text style={{color: focused ? "#26cbfc": "#999",fontFamily:'Roboto-Bold', fontSize:10}} >Accepted mission</Text>
-                    </View>
-                )
-            }}  name="scan" component={AcceptedMissions}/> */}
 <Tab.Screen options={{
                 tabBarIcon:({focused})=>(
                     <View style={{alignItems:'center'}} >
@@ -204,6 +214,8 @@ if(
                     </View>
                 )
             }}  name="recents" component={MyIncome}/>
+            </>
+            }
 
 
 

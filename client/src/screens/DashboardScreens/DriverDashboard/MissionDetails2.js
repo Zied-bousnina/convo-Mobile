@@ -922,6 +922,7 @@ const renderItem2 = ({ item, index }) => (
         }}
         mode="contained"
             loading={isLOad}  onPress={() =>{
+              setImage([])
               setvisible(true)
 //             dispatch(TermineeMission(
 //                 devisId,
@@ -941,7 +942,7 @@ const renderItem2 = ({ item, index }) => (
 //     dispatch(FindLastMission())
             }
             }>
-    <Text style={{color:"white"}}>Terminée Mission</Text>
+    <Text style={{color:"white"}}>Terminer Mission</Text>
   </BTNPaper>:
   status=='Confirmée' ?
 
@@ -965,6 +966,7 @@ const renderItem2 = ({ item, index }) => (
   //         }
 onPress={()=>{
 //
+setImage([])
 dispatch(ConfirmeeMissionByDriver(devisId, navigation))
 
 .then((data) => {
@@ -973,6 +975,7 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
       dispatch({
             type: SET_LAST_MISSION,
             payload: [],
+
           });
         dispatch(FindLastMission())
         setvisible(false)
@@ -1006,7 +1009,9 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
             loading={isLOad}  onPress={() =>{
               const result = isDateUnderCurrentDate(dateDepart)
               if(result){
+                setImage([])
                 setvisible(true)
+
               }else{
                 setDateError(true)
                 // setvisible(true)
@@ -1014,7 +1019,7 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
           //  setvisible(true)
             }
             }>
-   <Text style={{color:"white"}}>Démarrée Mission</Text>
+   <Text style={{color:"white"}}>Démarrer Mission</Text>
   </BTNPaper>
 
      }

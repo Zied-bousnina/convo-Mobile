@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import axios from "axios"
-import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_USER2, SET_DOCUMENT, SET_ERRORS, SET_FIRST_LOGIN, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
+import { SET_BASIC_INFO, SET_CURRENT_ACCESS_LIST, SET_CURRENT_USER, SET_CURRENT_USER2, SET_DOCUMENT, SET_DRIVER_VERIFIED, SET_ERRORS, SET_FIRST_LOGIN, SET_IS_LOADING, SET_IS_SECCESS, SET_SOME_ACCESS_LIST_USERS } from "../types"
 import { setLoading } from "./authActions"
 import { socket } from "../../../socket"
 import {API_UxRL} from '@env';
@@ -421,6 +421,72 @@ export const findBasicInfoByUserId =(dispatch) => ()=>{
 
       )
 }
+
+export const checkDriverDocumentIsCompleted = (dispatch) => ()=>{
+
+  dispatch({
+    type:SET_IS_LOADING,
+    payload:true
+})
+dispatch({
+  type: SET_ERRORS,
+  payload: {}
+})
+return axios.get(`https://convoyage.onrender.com/api/users/driver/checkDriverDocumentIsCompleted`)
+      .then(async(res) => {
+        // console.log(res)
+        dispatch({
+          type: SET_ERRORS,
+          payload: {}
+        })
+        dispatch({
+          type: SET_DRIVER_VERIFIED,
+          payload: res.data?.driverIsVerified
+
+        })
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+
+        return res.data;
+      }
+      )
+      .catch( (err) =>{
+        console.log(err)
+        dispatch({
+          type: SET_ERRORS,
+          payload: err?.response?.data
+        })
+        dispatch({
+          type:SET_IS_LOADING,
+          payload:false
+      })
+      dispatch({
+        type: SET_DRIVER_VERIFIED,
+        payload: false
+
+      })
+        throw err;
+      }
+      )
+
+}
+
+export const deleteAllSocketByDriver = (dispatch) => ()=>{
+  axios.get(`https://convoyage.onrender.com/api/users/driver/deleteAllSocketByUser`)
+      .then(async(res) => {
+        return res.data;
+      }
+      )
+      .catch( (err) =>{
+        throw err;
+      }
+      )
+    }
+
+
+
 export const findDriverDoc =(dispatch) => ()=>{
   axios.get(`https://convoyage.onrender.com/api/users/driver/finDocByDriver`)
       .then(async(res) => {

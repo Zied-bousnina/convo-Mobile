@@ -264,7 +264,7 @@ const isDateUnderCurrentDate = (inputDate) => {
 
             }}
             mode="contained">
-               Terminée Mission
+                Terminer Mission
             </BTNPaper>:
             data?.data?.status=='Confirmée' ?
 
@@ -317,7 +317,7 @@ navigateDetails()
     // dispatch(FindLastMission())
             }}
             >
-              démarée Mission
+              Démarrer Mission
             </BTNPaper>
             }
 

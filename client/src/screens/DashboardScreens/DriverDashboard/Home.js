@@ -6,7 +6,7 @@ import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAn
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
-import {AddCurrentLocation, ChangeStatus, findBasicInfoByUserId, getUsersById, updatePassword} from '../../../redux/actions/userActions';
+import {AddCurrentLocation, ChangeStatus, checkDriverDocumentIsCompleted, deleteAllSocketByDriver, findBasicInfoByUserId, getUsersById, updatePassword} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {AccepteMission, AcceptedMission, ConfirmeeMissionByDriver, FindLastMission, GetMissions, TermineeMission} from '../../../redux/actions/demandesActions';
@@ -62,11 +62,11 @@ const Home = () => {
   const [DateError, setDateError] = useState(false)
   const [visibleError, setvisibleError] = useState(false)
   const user = useSelector(({ currentUser }) => currentUser?.user);
+  const user2 = useSelector(state => state?.auth);
   const [enRoute, setenRoute] = useState(isEnRoute)
   const [Error, setError] = useState()
   const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
   const [selectedItem, setselectedItem] = useState({});
-
   const sheetRef = useRef(null);
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -75,6 +75,34 @@ const Home = () => {
   const [show, setshow] = useState(false);
   const lineAnimation = useRef(new Animated.Value(0)).current;
   const [userConnected_id, setuserConnected_id] = useState()
+  const [raison, setraison] = useState("")
+  useEffect(() => {
+    dispatch(checkDriverDocumentIsCompleted(dispatch))
+    .then((data) => {
+      if(data?.driverDocumentsIsVerified){
+        setIsEnabled(true)
+      }
+    })
+    .catch((error) => {
+      if(error?.response?.data?.message !="Internal Server Error") {
+
+        setError(error?.response?.data?.message)
+
+        setvisible(false)
+        setvisibleError(true)
+        setvisible(false)
+        if(error?.response?.data?.message =="Oops! Vos documents ont été refusés par l'administrateur"){
+          setraison(error?.response?.data?.raison)
+
+      }
+    }
+      //
+    })
+
+
+
+  }, [user2?.driverDocumentsIsVerified])
+
   useEffect(() => {
     // Handle connection
     socket.on('connect', () => {
@@ -413,6 +441,27 @@ const getDistanceFromLatLonInKm=()=>{
   useFocusEffect(
     React.useCallback(() => {
       dispatch(findBasicInfoByUserId(dispatch));
+      dispatch(checkDriverDocumentIsCompleted(dispatch))
+      .then((data) => {
+        if(data?.driverDocumentsIsVerified){
+          setIsEnabled(true)
+        }
+      })
+      .catch((error) => {
+        if(error?.response?.data?.message !="Internal Server Error") {
+
+          setError(error?.response?.data?.message)
+
+          setvisible(false)
+          setvisibleError(true)
+          setvisible(false)
+          if(error?.response?.data?.message =="Oops! Vos documents ont été refusés par l'administrateur"){
+            setraison(error?.response?.data?.raison)
+
+        }
+        }
+        //
+      })
     }, [])
   );
   useFocusEffect(
@@ -432,6 +481,27 @@ const getDistanceFromLatLonInKm=()=>{
   const renderItem = useCallback(({ item }) => <ListRequest disable key={uniqueId()} data={item} />,[])
 
   const loadItemsStart =async  () => {
+    dispatch(checkDriverDocumentIsCompleted(dispatch))
+    .then((data) => {
+      if(data?.driverDocumentsIsVerified){
+        setIsEnabled(true)
+      }
+    })
+    .catch((error) => {
+      if(error?.response?.data?.message !="Internal Server Error") {
+
+        setError(error?.response?.data?.message)
+
+        setvisible(false)
+        setvisibleError(true)
+        setvisible(false)
+        if(error?.response?.data?.message =="Oops! Vos documents ont été refusés par l'administrateur"){
+          setraison(error?.response?.data?.raison)
+
+      }
+      }
+      //
+    })
 
 
     if (page * PAGE_LIMIT >=0  && !isLoading) {
@@ -514,6 +584,27 @@ const getDistanceFromLatLonInKm=()=>{
     {length: PAGE_LIMIT, offset: PAGE_LIMIT * index, index}
 )
 const onRefresh = React.useCallback(() => {
+  dispatch(checkDriverDocumentIsCompleted(dispatch))
+  .then((data) => {
+    if(data?.driverDocumentsIsVerified){
+      setIsEnabled(true)
+    }
+  })
+  .catch((error) => {
+    if(error?.response?.data?.message !="Internal Server Error") {
+
+      setError(error?.response?.data?.message)
+
+      setvisible(false)
+      setvisibleError(true)
+      setvisible(false)
+      if(error?.response?.data?.message =="Oops! Vos documents ont été refusés par l'administrateur"){
+        setraison(error?.response?.data?.raison)
+
+    }
+    }
+    //
+  })
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
@@ -884,7 +975,7 @@ formikActions.setSubmitting(false)
           }
           style={
             {
-              backgroundColor:'#878585',
+              // backgroundColor:'#878585',
               padding:20,
               margin:20,
               borderRadius:10
@@ -905,7 +996,21 @@ formikActions.setSubmitting(false)
                 color:"#000000"
               }}
 
-              >{Error}</Text>
+              >{Error}
+              </Text>
+              {
+               raison &&
+                  <Text variant="bodyMedium"
+                  style={{
+                    color:"#000000"
+                  }}
+
+                  >raison: {raison}
+                  </Text>
+
+              }
+
+
             </Dialog.Content>
             <Dialog.Actions
             style={{
@@ -1004,6 +1109,7 @@ formikActions.setSubmitting(false)
 }}>
       <BTN
       icon={``} mode="contained" onPress={async() =>{
+        dispatch(deleteAllSocketByDriver(dispatch))
         onRefresh()
 
             dispatch({
@@ -1051,6 +1157,9 @@ formikActions.setSubmitting(false)
 
 <>
 
+    {
+      user2?.driverDocumentsIsVerified ?
+      <>
 
     <Text
         style={{
@@ -1064,6 +1173,8 @@ formikActions.setSubmitting(false)
     >
         Dernière mission publiée
     </Text>
+
+
      <Pressable style={styles.taskContainer}
      onPress={
         () => {
@@ -1336,8 +1447,45 @@ onPress={()=>{
             </View> */}
 
         </Pressable>
+        </>
+        :
+        <>
+
+
+
+
+ <Pressable style={styles.taskContainer}
+
+ >
+
+<Text>
+
+{Error}
+</Text>
+ {
+               raison &&
+                  <Text variant="bodyMedium"
+                  style={{
+                    color:"#F05E5E"
+                  }}
+
+                  >raison: {raison}
+                  </Text>
+
+              }
+
+
+        {/* <View style={styles.showMoreContainer}>
+          <Text style={styles.showMoreText}>Click To Report User</Text>
+        </View> */}
+
+    </Pressable>
+    </>
+    }
 </>
 }
+{
+  user2?.driverDocumentsIsVerified &&
 
       <View  style={{
           position: 'absolute',
@@ -1366,8 +1514,11 @@ onPress={()=>{
     {/* Press me */}
   </BTNPaper>
       </View>
+}
 <View>
 
+{
+  user2?.driverDocumentsIsVerified &&
       <Text
         style={{
             fontSize: 24,
@@ -1379,12 +1530,18 @@ onPress={()=>{
         }}>
         Mes Services
       </Text>
+}
         <View style={styles.taskContainer}>
         <View
                 style={{
                     margin:10
                 }}
         >
+
+{
+  user2?.driverDocumentsIsVerified &&
+  <>
+
 
 
         <BTNPaper
@@ -1396,6 +1553,8 @@ onPress={()=>{
         }}>
         Mes Rénumérations
   </BTNPaper>
+    </>
+}
   </View>
   <View
                 style={{
@@ -1428,6 +1587,7 @@ onPress={()=>{
 </View>
 
 </View>
+
 
 
       <BottomSheet

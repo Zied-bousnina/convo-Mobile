@@ -6,7 +6,7 @@ import {View, ActivityIndicator, ToastAndroid, Pressable,FlatList, PermissionsAn
 import React, {useEffect, useState, useRef} from 'react';
 import Switch from 'react-native-switch-toggles';
 import {useDispatch, useSelector} from 'react-redux';
-import {AddCurrentLocation, ChangeStatus, getUsersById} from '../../../redux/actions/userActions';
+import {AddCurrentLocation, ChangeStatus, deleteAllSocketByDriver, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {AcceptedMission, FindLastMission, GetMissions} from '../../../redux/actions/demandesActions';
@@ -497,7 +497,7 @@ socket.on("message received", (newMessage) => {
             marginBottom: 10,
             marginLeft:10
         }}
->Mes missions</Text>
+>Missions</Text>
  <SegmentedButtons
         value={value}
 
@@ -530,11 +530,11 @@ socket.on("message received", (newMessage) => {
         buttons={[
           {
             value: 'enCours',
-            label: 'en cours',
+            label: 'Disponible',
           },
           {
             value: 'terminee',
-            label: 'Terminée',
+            label: 'Terminer',
           },
 
         ]}
@@ -560,6 +560,7 @@ socket.on("message received", (newMessage) => {
 }}>
       <BTN
       icon={``} mode="contained" onPress={async() =>{
+        dispatch(deleteAllSocketByDriver(dispatch))
 
             dispatch({
         type: SET_LAST_MISSION,
