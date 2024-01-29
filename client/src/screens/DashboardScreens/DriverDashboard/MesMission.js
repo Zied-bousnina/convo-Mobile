@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AddCurrentLocation, ChangeStatus, deleteAllSocketByDriver, getUsersById} from '../../../redux/actions/userActions';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {AcceptedMission, FindLastMission, GetMissions} from '../../../redux/actions/demandesActions';
+import {AcceptedMission, FindLastMission, GetMissions, Mes_missions} from '../../../redux/actions/demandesActions';
 import ListRequest from '../Components/ListRequest';
 import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
 import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
@@ -27,7 +27,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
 import { Button as BTN, Icon, MD3Colors, SegmentedButtons } from 'react-native-paper';
-import { ACCEPTED_MISSIONS, SET_EN_ROUTE, SET_LAST_MISSION, SET_REQUEST, SET_RESET_STATE } from '../../../redux/types';
+import { ACCEPTED_MISSIONS, SET_EN_ROUTE, SET_LAST_MISSION, SET_MES_MISSIONS, SET_REQUEST, SET_RESET_STATE } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -355,12 +355,16 @@ socket.on("message received", (newMessage) => {
 
   const [value, setValue] = React.useState('enCours');
   const missionTerminee = useSelector((state) => state?.AcceptedMissions?.mission?.missions);
+  const mes_mission = useSelector((state) => state?.mesMission?.mission?.missions);
   useEffect(() => {
     //
     dispatch(
         AcceptedMission(),
     );
-  }, [dispatch,missionTerminee?.length ]);
+
+    dispatch(Mes_missions(dispatch))
+  }, [dispatch,mes_mission?.length ]);
+
   //
 
   const PAGE_LIMIT = 5;
@@ -386,7 +390,7 @@ socket.on("message received", (newMessage) => {
 
   const loadItemsStart =async  () => {
 
-
+    dispatch(Mes_missions(dispatch))
     if (page * PAGE_LIMIT >=0  && !isLoading) {
       dispatch(
         GetMissions({
@@ -399,7 +403,7 @@ socket.on("message received", (newMessage) => {
   };
   const loadItemsEnd =async  () => {
 
-
+    dispatch(Mes_missions(dispatch))
     if (page * PAGE_LIMIT < count && !isLoading) {
       dispatch(
         GetMissions({
@@ -504,12 +508,18 @@ socket.on("message received", (newMessage) => {
         onValueChange={
           async (value) => {
             setValue(value)
+            dispatch({
+        type: SET_MES_MISSIONS,
+        payload: {},
+      });
+            dispatch(Mes_missions(dispatch))
             await loadItemsStart()
             dispatch({
         type: SET_LAST_MISSION,
         payload: [],
       });
     dispatch(FindLastMission())
+
     dispatch({
         type: ACCEPTED_MISSIONS,
         payload: [],
@@ -533,8 +543,12 @@ socket.on("message received", (newMessage) => {
             label: 'Disponible',
           },
           {
+            value: 'Mes_missions',
+            label: 'Mes_missions',
+          },
+          {
             value: 'terminee',
-            label: 'Terminer',
+            label: 'Terminée',
           },
 
         ]}
@@ -560,6 +574,11 @@ socket.on("message received", (newMessage) => {
 }}>
       <BTN
       icon={``} mode="contained" onPress={async() =>{
+        dispatch({
+        type: SET_MES_MISSIONS,
+        payload: {},
+      });
+        dispatch(Mes_missions(dispatch))
         dispatch(deleteAllSocketByDriver(dispatch))
 
             dispatch({
@@ -657,6 +676,82 @@ socket.on("message received", (newMessage) => {
         onRefresh={
 
           async () => {
+            dispatch({
+        type: SET_MES_MISSIONS,
+        payload: {},
+      });
+            dispatch(Mes_missions(dispatch))
+            dispatch({
+        type: SET_LAST_MISSION,
+        payload: [],
+      });
+    dispatch(FindLastMission())
+    dispatch({
+        type: ACCEPTED_MISSIONS,
+        payload: [],
+
+    })
+    dispatch({
+        type: SET_REQUEST,
+        payload: [],
+      });
+    loadItemsStart()
+    dispatch(AcceptedMission())
+    dispatch({
+  type: SET_RESET_STATE
+});
+
+            await loadItemsStart()}
+        }
+        refreshing={
+          isLoading
+        }
+        // inverted
+
+      />:
+             value == "Mes_missions" ?
+              <FlashList
+              showsVerticalScrollIndicator={true}
+              SkeletonPlaceholder={
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item
+                    width={Dimensions.get('window').width}
+                    height={500}
+                    borderRadius={10}
+                    marginBottom={10}
+
+                  />
+
+                </SkeletonPlaceholder>
+
+              }
+        data={mes_mission}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        ListFooterComponent={renderLoader}
+        onEndReached={async () => await loadItemsEnd()}
+        getItemLayout={getItemLayout}
+        onEndReachedThreshold={0}
+        // style={{ marginBottom: 50 }}
+        contentContainerStyle={{
+
+          // marginBottom: 50
+        }}
+        maxToRenderPerBatch={5}
+        removeClippedSubviews={true}
+        // windowSize={5}
+        initialNumToRender={5}
+        estimatedItemSize={
+          500
+        }
+        onRefresh={
+
+          async () => {
+            dispatch({
+        type: SET_MES_MISSIONS,
+        payload: {}
+      });
+            dispatch(Mes_missions(dispatch))
             dispatch({
         type: SET_LAST_MISSION,
         payload: [],

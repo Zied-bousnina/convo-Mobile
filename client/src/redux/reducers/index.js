@@ -31,6 +31,7 @@ import lastMissionReducer from './lastMission.reducer';
 import facturesReducers from './factures.reducers';
 import DriverDocumentReducer from './DriverDocument.reducer';
 import BasicInfo2Reducer from './BasicInfo2.reducer';
+import mesMissionReducer from './mesMission.reducer';
 
 
 export default  combineReducers({
@@ -64,7 +65,8 @@ export default  combineReducers({
     lastMission:lastMissionReducer,
     factures: facturesReducers,
     document: DriverDocumentReducer,
-    infoDriver: BasicInfo2Reducer
+    infoDriver: BasicInfo2Reducer,
+    mesMission: mesMissionReducer
 
 
 

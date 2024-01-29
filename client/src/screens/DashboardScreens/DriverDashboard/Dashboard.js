@@ -36,7 +36,7 @@ const Dashboard = () => {
 
   }, [user?.driverDocumentsIsVerified])
 
-  console.log(user)
+  // console.log(user)
 
   useFocusEffect(
     React.useCallback(() => {

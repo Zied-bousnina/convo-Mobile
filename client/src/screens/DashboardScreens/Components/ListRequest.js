@@ -293,7 +293,7 @@ onPress={()=>{
 navigateDetails()
 }}
           >
-  Confirmée
+  Confirmer
 </BTNPaper>
             :
             <BTNPaper

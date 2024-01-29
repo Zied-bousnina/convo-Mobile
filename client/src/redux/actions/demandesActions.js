@@ -14,6 +14,7 @@ import {
   SET_FACTURES,
   SET_IS_LOADING,
   SET_LAST_MISSION,
+  SET_MES_MISSIONS,
   SET_MISSIONS,
   SET_REQUEST,
 } from '../types';
@@ -621,5 +622,25 @@ export const AcceptedMission = () => dispatch => {
     });
 };
 
+export const Mes_missions = (dispatch) => dispatch => {
+
+  axios
+    .get(`${BASE_URL}/api/users/findMissionsConfirmeByUser`)
+    .then(async res => {
+
+
+      dispatch({
+        type: SET_MES_MISSIONS,
+        payload: res.data,
+      });
+    })
+    .catch(err => {
+
+      dispatch({
+        type: SET_ERRORS,
+        payload: err,
+      });
+    });
+};
 
 

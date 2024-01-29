@@ -59,6 +59,7 @@ const MissionDetails = ({route}) => {
     devisId
 
   } =  route.params
+  // console.log(distance)
 
 
   const [offer, setoffer] = useState(route.params?.offer)

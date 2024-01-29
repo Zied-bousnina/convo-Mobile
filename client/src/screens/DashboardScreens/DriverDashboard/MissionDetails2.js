@@ -56,6 +56,7 @@ const MissionDetails2 = ({route}) => {
         status
 
       } =  route.params
+      // console.log(distance)
   const isEnRoute = useSelector(state=> state?.enRoute?.enRoute)
 
   const user = useSelector(({ currentUser }) => currentUser?.user);
@@ -997,7 +998,7 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
     });
 }}
           >
-  Confirmée
+  Confirmer
 </BTNPaper>:
   <BTNPaper
               style={{

@@ -237,7 +237,7 @@ if(
 
 
 socket.on('error', (error) => {
-    console.error('Socket error:', error);
+    // console.error('Socket error:', error);
 });
 socket.on("MissionAccepted",async ()=> {
   setnewMission(true)
@@ -723,7 +723,7 @@ formikActions.setSubmitting(false)
     setImage(newImageArray);
   };
 
-  console.log( lastMission?.mission?.mission)
+  // console.log( lastMission?.mission?.mission)
   const savePhotosTerminéé =()=> {
 
 
@@ -1252,7 +1252,7 @@ textColor={
     // dispatch(FindLastMission())
             }
             }>
-    Terminée
+    Terminer
   </BTNPaper>:
   lastMission?.mission?.status=='Confirmée' ?
 
@@ -1305,7 +1305,7 @@ onPress={()=>{
     });
 }}
             >
-    Confirmée
+    Confirmer
   </BTNPaper>
   :
   <BTNPaper
@@ -1336,7 +1336,7 @@ onPress={()=>{
               }
 }}
             >
-    Démarée
+    Démarrer
   </BTNPaper>
 
      }
@@ -1503,7 +1503,7 @@ onPress={()=>{
       }}>
 {
   enRoute &&
- <> looking for en route request
+ <> Mode en route activé
  <Icon
     source="close"
     color={MD3Colors.error50}
@@ -1600,7 +1600,7 @@ onPress={()=>{
   <View style={styles.contentView}>
     {/* Title at the top center */}
     <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginTop: 10 }}>
-      En Route Requests
+    Activer le mode en route
     </Text>
 
     <View style={styles.buttonsContainer}>
