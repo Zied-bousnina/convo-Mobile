@@ -218,7 +218,7 @@ const SignUpScreen = () => {
          <View style={SignUpStyle.loginIcon}>
            {/* <SvgIcon icon={'signup'} width={300} height={300} /> */}
            <Logo
-                     width={Dimensions.get('window').width*0.6}
+                     width={Dimensions.get('window').width*0.5}
                      height={Dimensions.get('window').height*0.3}
                      />
 

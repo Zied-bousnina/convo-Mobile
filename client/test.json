@@ -1,78 +1,60 @@
 {
-    "__v": 0,
-    "_id": "65945d4c405de04f28c8b471",
-    "categorie": {
-        "__v": 0,
-        "_id": "6590aac44226c4004e3c7686",
-        "createdAt": "2023-12-30T23:41:56.088Z",
-        "description": "cat 1",
-        "unitPrice": 150,
-        "updatedAt": "2023-12-30T23:41:56.088Z"
-    },
-    "createdAt": "2024-01-02T19:00:28.190Z",
-    "distance": "335.6551733870821",
     "mission": {
         "__v": 0,
-        "_id": "658d981eb9976167743cbf46",
-        "address": {
-            "display_name": "75, Acme Road, North Watford, Watford, Hertfordshire, England, WD24 5AH, United Kingdom",
-            "latitude": "51.67107308087401",
-            "longitude": "-0.4044906926852932"
+        "_id": "65c38c783f6328004e8ef6a0",
+        "createdAt": "2024-02-07T13:58:16.576Z",
+        "distance": "54.95350348388416",
+        "mission": {
+            "__v": 0,
+            "_id": "65c38c3f3f6328004e8ef342",
+            "address": [Object
+            ],
+            "comment": "test",
+            "createdAt": "2024-02-07T13:57:19.853Z",
+            "demareeMissionImages": [Array
+            ],
+            "destination": [Object
+            ],
+            "distance": "54.95350348388416",
+            "driver": "65ae966954299e004eee134d",
+            "driverIsAuto": true,
+            "missionType": "transport véhicule par un convoyeur",
+            "postalAddress": "Sentier de la Cavée aux Loups, Verneuil-en-Halatte, Senlis, Oise, Hauts-de-France, Metropolitan France, 60550, France",
+            "postalDestination": "Rue des Galons, Les Renaults, Meudon-sur-Seine, Meudon, Boulogne-Billancourt, Hauts-de-Seine, Ile-de-France, Metropolitan France, 92190, France",
+            "status": "Confirmée driver",
+            "termineemissionImages": [Array
+            ],
+            "updatedAt": "2024-02-07T13:58:54.703Z",
+            "user": "65ba97e24d1502004e2befbc",
+            "vehicleType": "sportive ~ luxe  "
         },
-        "createdAt": "2023-12-28T15:45:34.334Z",
-        "dateDepart": "Fri Dec 29 2023 16:00:44 GMT+0100 (Central European Standard Time)",
-        "destination": {
-            "display_name": "Quai de l'Oise, Rieux, Clermont, Oise, Hauts-de-France, Metropolitan France, 60870, France",
-            "latitude": "49.29453121507309",
-            "longitude": "2.521843887536659"
+        "montant": 110.39999999999999,
+        "partner": {
+            "Newsocket": [Array
+            ],
+            "__v": 7,
+            "_id": "65ba97e24d1502004e2befbc",
+            "addressPartner": "13 allee des angelards",
+            "contactName": "car7",
+            "createdAt": "2024-01-31T18:56:34.762Z",
+            "driverIsVerified": false,
+            "email": "car7tn@gmail.com",
+            "firstLogin": false,
+            "googleId": null,
+            "isBlocked": false,
+            "kbis": "https://res.cloudinary.com/dcuafrhwc/image/upload/v1706727393/pdf_uploads/kbis_1706727393406.pdf",
+            "name": "car7tn",
+            "onligne": false,
+            "password": "$2a$10$ZwX4tUw/mN7dcyzgFIcPTOGHrnI4fX13wByvp61RJLL4Y.va0pVFW",
+            "phoneNumber": "111111",
+            "role": "PARTNER",
+            "siret": "333 435 569 56856",
+            "updatedAt": "2024-02-07T13:58:39.772Z",
+            "verified": true
         },
-        "distance": "335.6551733870821",
-        "driverIsAuto": true,
-        "missionType": "delivery",
-        "postalAddress": "75, Acme Road, North Watford, Watford, Hertfordshire, England, WD24 5AH, United Kingdom",
-        "postalDestination": "Quai de l'Oise, Rieux, Clermont, Oise, Hauts-de-France, Metropolitan France, 60870, France",
-        "status": "Accepted",
-        "updatedAt": "2024-01-01T00:11:04.084Z",
-        "user": "658b4532b697da6224bf6978",
-        "vehicleType": "car"
-    },
-    "montant": 50348.27600806231,
-    "partner": {
-        "Newsocket": [
-            [Object
-            ],
-            [Object
-            ],
-            [Object
-            ],
-            [Object
-            ],
-            [Object
-            ],
-            [Object
-            ]
-        ],
-        "__v": 58,
-        "_id": "658b4532b697da6224bf6978",
-        "addressPartner": "MT",
-        "contactName": "partner",
-        "createdAt": "2023-12-26T21:27:14.140Z",
-        "driverIsVerified": false,
-        "email": "partner@test.tn",
-        "firstLogin": false,
-        "googleId": null,
-        "isBlocked": false,
-        "kbis": "https://res.cloudinary.com/dcuafrhwc/image/upload/v1703626032/pdf_uploads/kbis_1703626032914.png",
-        "name": "partner",
-        "onligne": false,
-        "password": "$2a$10$CnS1SudHV1Pa2VhL08A8c.WNpofBZ3lzkkTQr3QfuChUJHqrL5s5.",
-        "phoneNumber": "56 981 501",
-        "role": "PARTNER",
-        "siret": "585 855 555 55554",
-        "updatedAt": "2024-01-02T19:00:30.156Z",
-        "verified": true
-    },
-    "rectification": 0,
-    "status": "Accepted",
-    "updatedAt": "2024-01-05T16:52:03.473Z"
+        "rectification": 20,
+        "remunerationAmount": 48,
+        "status": "Confirmée driver",
+        "updatedAt": "2024-02-07T13:58:54.559Z"
+    }
 }

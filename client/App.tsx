@@ -10,7 +10,8 @@ import React, { useCallback } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {
   StyleSheet,
-  Platform
+  Platform,
+  PermissionsAndroid
 } from 'react-native';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -79,6 +80,8 @@ import ProfileScreen from './src/screens/DashboardScreens/DriverDashboard/Profil
 import Assurence from './src/screens/DashboardScreens/Registartion/Assurance';
 import ProofOfAddress from './src/screens/DashboardScreens/Registartion/ProofOfAddress';
 // import MissionDetails2 from './src/screens/DashboardScreens/DriverDashboard/missionDetails2';
+import Geolocation from 'react-native-geolocation-service';
+import { socket } from './socket';
 function App(): JSX.Element {
   PushNotification.configure({onRegister: function (token) { },onNotification: function (notification) {},onAction: function (notification) { },onRegistrationError: function(err) {console.error(err.message, err);}, popInitialNotification: true,requestPermissions: true,requestPermissions: Platform.OS === 'ios'});
   const isDarkMode = useColorScheme() == 'dark';
@@ -86,7 +89,90 @@ function App(): JSX.Element {
   const [cuuerentLength, setcuuerentLength] = useState(missions?.length)
   const user = useSelector(state => state?.auth);
   const basicInfo = useSelector(state=>state?.BasicInfo?.basicInfo)
+  const currentUser2 = useSelector(state=>state?.auth)
+  const [currentLocation, setCurrentLocation] = useState(null);
+  let i = 0
+  // console.log("id",currentUser2?.user?.id)
+  const getCurrentLocation = useCallback(() => {
+    Geolocation.getCurrentPosition(
+      position => {
 
+        setCurrentLocation(position.coords);
+
+
+        // if(isEnabled) {
+          // setTimeout(() => {
+
+          //   dispatch(AddCurrentLocation({
+          //     address:{
+          //       latitude: position.coords.latitude,
+          //       longitude: position.coords.longitude
+          //     }
+          //   }, navigation))
+          // }, 4000);
+          socket.on('connect', () => {
+          // console.log("ghjhhj",position.coords.latitude )
+          socket.emit('locationUpdate', {userId:currentUser2?.user?.id,
+          location:{
+            latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+
+          }});
+        });
+        // }else{
+        //   socket.emit('offline_client', currentUser2?.user?.id)
+
+        // }
+
+      },
+      error => console.log(error),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    );
+
+
+  });
+
+  useEffect(() => {
+    // Function to send data
+
+      // Replace this with your actual logic to send data
+
+      const fetchData = async () => {
+        if (Platform.OS === 'android') {
+          // console.log('Sending data...',  currentLocation);
+          await requestLocationPermission();
+        } else {
+          getCurrentLocation();
+        }
+      };
+
+
+
+
+
+    // Set up an interval to call sendData every second (1000 milliseconds)
+    const intervalId = setInterval(() => {
+      if(currentUser2?.user?.id !=undefined ) {
+        fetchData();
+    }
+    }, 4000);
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+  const requestLocationPermission = useCallback(async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        // console.log("You can use the location")
+        getCurrentLocation();
+      }
+    } catch (err) {
+
+    }
+}, []);
   useEffect(() => {
     store.dispatch(findBasicInfoByUserId());
 

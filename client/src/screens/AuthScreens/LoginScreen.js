@@ -236,7 +236,7 @@ const LoginScreen = () => {
         fill2={ themeValue ? '#eb6352' : '#000000'}
         width={windowWidth * 0.8} height={windowHeight * 0.25} /> */}
         <Logo
-                    width={Dimensions.get('window').width*0.6}
+                    width={Dimensions.get('window').width*0.5}
                     height={Dimensions.get('window').height*0.4}
                     />
       </View>
@@ -306,7 +306,7 @@ const LoginScreen = () => {
 
             <View style={LoginStyle.forgotAction}>
   <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
-    <Text style={LoginStyle.forgotLbl}>Forgot Password?</Text>
+    <Text style={LoginStyle.forgotLbl}>Mot de passe oublié?</Text>
   </Pressable>
 
 </View>
@@ -323,7 +323,7 @@ const LoginScreen = () => {
                 console.log("don't")}}
               >
 
-              <Text style={LoginStyle.dontHaveAccountLbl}>Don't have an account yet?</Text>
+              <Text style={LoginStyle.dontHaveAccountLbl}>N'avez-vous pas encore de compte ?</Text>
               </Pressable>
           </View>
           {/* <View style={LoginStyle.deviderCon}>

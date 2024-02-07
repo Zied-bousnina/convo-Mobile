@@ -32,6 +32,7 @@ import { Button as BTN } from '@rneui/themed';
 import { AccepteMission, RefuseMission, decreaseOffer, increaseOffer } from '../../../redux/actions/demandesActions';
 import { useNavigation } from '@react-navigation/native';
 import HorizontalLinearStepper from '../Components/Stepper';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const MissionDetails = ({route}) => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -56,9 +57,33 @@ const MissionDetails = ({route}) => {
     missionType,
     dateDepart,
     remunerationAmount,
-    devisId
+    devisId,
+    status
 
   } =  route.params
+  console.log('latitude; ', address)
+  console.log('longitude; ', destination)
+  const deg2rad=(deg)=> {
+    return deg * (Math.PI/180)
+  }
+  const getDistanceFromLatLonInKm=()=>{
+    const lat1 = address?.latitude;
+  const lon1 = address?.longitude;
+  const lat2 = destination?.latitude;
+  const lon2 = destination?.longitude;
+    var R = 6371.0710; // Radius of the earth in km
+    var dLat = deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = deg2rad(lon2-lon1);
+    var a =
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon/2) * Math.sin(dLon/2)
+      ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+   return d
+  }
+  console.log('distance', getDistanceFromLatLonInKm())
   // console.log(distance)
 
 
@@ -184,7 +209,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
             destination,
             comments,
             offer,
-            // status,
+            status,
             postalAddress,
             postalDestination,
             // postalCode,
@@ -309,7 +334,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   placeholder="distance"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  value={`${Math.floor(distance).toString()} KM`}
+                  value={`${Math.floor(getDistanceFromLatLonInKm()).toString()} KM`}
                   editable = {false}
                   color={"#f66"}
                 />

@@ -15,7 +15,8 @@ import {Button, ButtonGroup, withTheme, Text} from '@rneui/themed';
 import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
 import {StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
-import {GestureHandlerRootView, ScrollView, TextInput} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-paper';
 import { useCallback } from 'react';
 import PushNotification from "react-native-push-notification";
 import { formatDistanceToNow } from 'date-fns';
@@ -63,6 +64,7 @@ const Home = () => {
   const [visibleError, setvisibleError] = useState(false)
   const user = useSelector(({ currentUser }) => currentUser?.user);
   const user2 = useSelector(state => state?.auth);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [enRoute, setenRoute] = useState(isEnRoute)
   const [Error, setError] = useState()
   const [isEnabled, setIsEnabled] = useState(!!user?.driverIsVerified);
@@ -76,6 +78,7 @@ const Home = () => {
   const lineAnimation = useRef(new Animated.Value(0)).current;
   const [userConnected_id, setuserConnected_id] = useState()
   const [raison, setraison] = useState("")
+  const [comment, setComment] = useState("")
   useEffect(() => {
     dispatch(checkDriverDocumentIsCompleted(dispatch))
     .then((data) => {
@@ -121,6 +124,29 @@ if(
 
       // }
     });
+    socket.on("getonline",()=> {
+      const fetchData = async () => {
+        if (Platform.OS === 'android') {
+          await requestLocationPermission();
+        } else {
+          getCurrentLocation();
+        }
+      };
+
+      fetchData();
+      console.log("updatetete ",currentLocation)
+      socket.emit('add-user', currentUser2?.user?.id, currentLocation);
+      // socket.emit('add-user', currentUser2?.user?.id);
+      // socket.emit('add-user', currentUser2?.user?.id, position.coords);
+      socket.emit('locationUpdate', {userId:currentUser2?.user?.id,
+      location:{
+        latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude
+
+      }});
+
+
+    })
 
     // Handle disconnection
     socket.on('disconnect', () => {
@@ -186,6 +212,7 @@ if(
       postalAddress,
       postalDestination,
     } = mission;
+    console.log("distance",distance)
 
     // Customize the notification message based on the mission information
     const title = `Mission ${status}`;
@@ -319,7 +346,7 @@ setnewMission(false)
       })
     );
   }, [dispatch, isEnabled, navigation, user?.driverIsVerified]);
-  const [currentLocation, setCurrentLocation] = useState(null);
+
   const [currentAddress, setCurrentAddress] = useState(null);
   // const navigation = useNavigation()
   const requestLocationPermission = useCallback(async () => {
@@ -334,6 +361,7 @@ setnewMission(false)
 
     }
 }, []);
+console.log(lastMission)
 const getDistanceFromLatLonInKm=()=>{
     const userLocation = [ lastMission?.mission?.mission?.address?.latitude /* user's latitude */, lastMission?.mission?.mission?.address?.longitude  /* user's longitude */];
   const destinationLocation = [
@@ -379,6 +407,9 @@ const getDistanceFromLatLonInKm=()=>{
           //     }
           //   }, navigation))
           // }, 4000);
+
+          socket.emit('add-user', currentUser2?.user?.id, position.coords);
+          socket.emit('add-user', currentUser2?.user?.id, position.coords);
           socket.emit('locationUpdate', {userId:currentUser2?.user?.id,
           location:{
             latitude: position.coords.latitude,
@@ -737,6 +768,8 @@ formikActions.setSubmitting(false)
       });
     });
 
+    formData.append('termineeMissionCmnt', comment)
+
     dispatch(TermineeMission(lastMission?.mission?._id,formData, navigation))
 //  dispatch(TermineeMission(
 //     //             lastMission?.mission?._id
@@ -770,7 +803,7 @@ formikActions.setSubmitting(false)
         name: new Date() + `_profile_${index}`
       });
     });
-
+    formData.append('demareeMissionCmnt', comment)
     dispatch(AccepteMission(lastMission?.mission?._id,formData, navigation))
 
     .then((data) => {
@@ -799,6 +832,7 @@ formikActions.setSubmitting(false)
 
     });
   }
+  console.log(lastMission)
   const renderItem2 = ({ item, index }) => (
     <View style={{ position: "relative" }}>
       <Image
@@ -1240,6 +1274,8 @@ textColor={
                 marginRight:-10
             }}
             loading={isLOad} mode="contained" onPress={() =>{
+              setComment("")
+  setImage([])
               setvisible(true)
     //         dispatch(TermineeMission(
     //             lastMission?.mission?._id
@@ -1327,6 +1363,8 @@ onPress={()=>{
     //         }
 onPress={()=>{
   //
+  setComment("")
+  setImage([])
   const result = isDateUnderCurrentDate(lastMission?.mission?.mission?.dateDepart)
               if(result){
                 setvisible(true)
@@ -1672,7 +1710,9 @@ onPress={()=>{
             backgroundColor:"white",
             padding:20,
             margin:20,
-            borderRadius:10
+            borderRadius:10,
+            paddingTop:40,
+            paddingBottom:40
           }
 
 
@@ -1689,7 +1729,15 @@ onPress={()=>{
 
         {/* <KeyboardAwareScrollView> */}
 
-
+        <TextInput
+    label="Commentaire"
+    value={comment}
+    onChangeText={text => setComment(text)}
+    style={{
+      // backgroundColor: 'red',
+      marginTop: 20,
+    }}
+  />
   <Text>
 
   { image?.length }/ 5
@@ -1702,6 +1750,11 @@ onPress={()=>{
       renderItem={renderItem2}
       keyExtractor={(item, index) => index.toString()}
     />
+
+    {/* { image?.length >= 1 &&  lastMission?.mission?.status=='Démarrée'  && */}
+
+
+    {/* } */}
     {
       image?.length <5 &&
 
@@ -1709,6 +1762,7 @@ onPress={()=>{
   prendre une photo
   </BTNPaper>
     }
+
   {
     image?.length >= 1 &&
     (

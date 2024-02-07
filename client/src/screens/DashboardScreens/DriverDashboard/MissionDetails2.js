@@ -28,7 +28,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // import { SkeletonPlaceholder } from 'react-native-skeleton-placeholder';
 import Geolocation from 'react-native-geolocation-service';
 import { socket } from '../../../../socket';
-import { Avatar, Button as BTN, Card, Dialog, Divider, Icon, IconButton, MD3Colors, Modal, Portal } from 'react-native-paper';
+import { Avatar, Button as BTN, Card, Dialog, Divider, Icon, IconButton, MD3Colors, Modal, Portal, TextInput } from 'react-native-paper';
 import { SET_EN_ROUTE, SET_LAST_MISSION } from '../../../redux/types';
 import { Image } from 'react-native-elements';
 import { Button as BTNPaper } from 'react-native-paper';
@@ -73,7 +73,9 @@ const MissionDetails2 = ({route}) => {
   const [userConnected_id, setuserConnected_id] = useState()
   const [visibleError, setvisibleError] = useState(false)
   const [DateError, setDateError] = useState(false)
+  const [comment, setComment] = useState("")
   const [Error, setError] = useState()
+  console.log(distance)
   useEffect(() => {
     // Handle connection
     socket.on('connect', () => {
@@ -499,7 +501,7 @@ const savePhotosTerminéé =()=> {
       name: new Date() + `_profile_${index}`
     });
   });
-
+formData.append('termineeMissionCmnt', comment)
   dispatch(TermineeMission(devisId,formData, navigation))
 //  dispatch(TermineeMission(
 //     //             devisId
@@ -548,7 +550,8 @@ const savePhotos =()=> {
       name: new Date() + `_profile_${index}`
     });
   });
-
+  formData.append('demareeMissionCmnt', comment)
+  // console.log(formData)
   dispatch(AccepteMission(devisId,formData, navigation))
 
   .then((data) => {
@@ -566,6 +569,7 @@ type: SET_LAST_MISSION,
 payload: [],
 });
       dispatch(FindLastMission())
+      setComment("")
 
 
   })
@@ -924,6 +928,7 @@ const renderItem2 = ({ item, index }) => (
         mode="contained"
             loading={isLOad}  onPress={() =>{
               setImage([])
+              setComment("")
               setvisible(true)
 //             dispatch(TermineeMission(
 //                 devisId,
@@ -968,6 +973,7 @@ const renderItem2 = ({ item, index }) => (
 onPress={()=>{
 //
 setImage([])
+setComment("")
 dispatch(ConfirmeeMissionByDriver(devisId, navigation))
 
 .then((data) => {
@@ -1011,6 +1017,7 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
               const result = isDateUnderCurrentDate(dateDepart)
               if(result){
                 setImage([])
+                setComment("")
                 setvisible(true)
 
               }else{
@@ -1024,8 +1031,11 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
   </BTNPaper>
 
      }
-     <Portal>
-        <Modal  visible={visible}
+     <Portal
+
+     >
+        <Modal
+          visible={visible}
         onDismiss={()=>  {
           setvisible(false)
         }}
@@ -1034,7 +1044,10 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
             backgroundColor:"white",
             padding:20,
             margin:20,
-            borderRadius:10
+            borderRadius:10,
+            paddingBottom:40,
+            marginTop:40
+
           }
 
 
@@ -1045,7 +1058,9 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
     icon="close"
     iconColor={MD3Colors.error50}
     size={20}
-    onPress={() => setvisible(false)}
+    onPress={() => {
+      setComment("")
+      setvisible(false)}}
   />
 
 
@@ -1064,6 +1079,16 @@ dispatch(ConfirmeeMissionByDriver(devisId, navigation))
       renderItem={renderItem2}
       keyExtractor={(item, index) => index.toString()}
     />
+    <TextInput
+    label="Commentaire"
+    value={comment}
+    onChangeText={text => setComment(text)}
+    style={{
+      // backgroundColor: 'red',
+      marginTop: 20,
+      marginBottom: 20,
+    }}
+  />
     {
       image?.length <5 &&
 
