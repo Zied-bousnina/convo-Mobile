@@ -75,7 +75,7 @@ const MissionDetails2 = ({route}) => {
   const [DateError, setDateError] = useState(false)
   const [comment, setComment] = useState("")
   const [Error, setError] = useState()
-  console.log(distance)
+
   useEffect(() => {
     // Handle connection
     socket.on('connect', () => {

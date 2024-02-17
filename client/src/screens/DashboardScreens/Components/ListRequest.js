@@ -66,11 +66,11 @@ const isDateUnderCurrentDate = (inputDate) => {
       return deg * (Math.PI/180)
     }
     const distance = parseFloat(getDistanceFromLatLonInKm().toFixed(2))
-
     const navigateDetails= ()=> {
+
       navigation.navigate("missionDetails",{
         demandeId:data?.data?.mission?._id,
-        distance:distance,
+        distance:data?.data?.mission?.distance ? data?.data?.mission?.distance : distance,
         address:data?.data?.mission?.address,
         destination:data?.data?.mission?.destination,
         comments:data?.data?.mission?.comments,
@@ -100,7 +100,7 @@ const isDateUnderCurrentDate = (inputDate) => {
 
           navigation.navigate("missionDetails",{
             demandeId:data?.data?.mission?._id,
-            distance:distance,
+            distance:data?.data?.mission?.distance ? data?.data?.mission?.distance : distance,
             address:data?.data?.mission?.address,
             destination:data?.data?.mission?.destination,
             comments:data?.data?.mission?.comments,

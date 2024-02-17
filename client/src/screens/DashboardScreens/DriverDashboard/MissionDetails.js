@@ -61,8 +61,7 @@ const MissionDetails = ({route}) => {
     status
 
   } =  route.params
-  console.log('latitude; ', address)
-  console.log('longitude; ', destination)
+
   const deg2rad=(deg)=> {
     return deg * (Math.PI/180)
   }
@@ -83,7 +82,7 @@ const MissionDetails = ({route}) => {
     var d = R * c; // Distance in km
    return d
   }
-  console.log('distance', getDistanceFromLatLonInKm())
+
   // console.log(distance)
 
 
@@ -334,7 +333,7 @@ const userLatLng = L.latLng(${address?.latitude}, ${address?.longitude});
                   placeholder="distance"
                   style={styles.textInput}
                   placeholderTextColor={'#aaa'}
-                  value={`${Math.floor(getDistanceFromLatLonInKm()).toString()} KM`}
+                  value={`${Math.floor(distance ? distance :getDistanceFromLatLonInKm()).toString()} KM`}
                   editable = {false}
                   color={"#f66"}
                 />

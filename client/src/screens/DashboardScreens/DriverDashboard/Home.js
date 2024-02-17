@@ -134,7 +134,7 @@ if(
       };
 
       fetchData();
-      console.log("updatetete ",currentLocation)
+
       socket.emit('add-user', currentUser2?.user?.id, currentLocation);
       // socket.emit('add-user', currentUser2?.user?.id);
       // socket.emit('add-user', currentUser2?.user?.id, position.coords);
@@ -212,7 +212,7 @@ if(
       postalAddress,
       postalDestination,
     } = mission;
-    console.log("distance",distance)
+
 
     // Customize the notification message based on the mission information
     const title = `Mission ${status}`;
@@ -361,7 +361,7 @@ setnewMission(false)
 
     }
 }, []);
-console.log(lastMission)
+
 const getDistanceFromLatLonInKm=()=>{
     const userLocation = [ lastMission?.mission?.mission?.address?.latitude /* user's latitude */, lastMission?.mission?.mission?.address?.longitude  /* user's longitude */];
   const destinationLocation = [
@@ -832,7 +832,7 @@ formikActions.setSubmitting(false)
 
     });
   }
-  console.log(lastMission)
+
   const renderItem2 = ({ item, index }) => (
     <View style={{ position: "relative" }}>
       <Image
@@ -1216,7 +1216,7 @@ formikActions.setSubmitting(false)
           // sheetRef.current.open();
           navigation.navigate("missionDetails",{
             demandeId:lastMission?.mission?.mission?._id,
-            distance:distance,
+            distance:lastMission?.mission?.mission?.distance ?lastMission?.mission?.mission?.distance : distance ,
             address:lastMission?.mission?.mission?.address,
             destination:lastMission?.mission?.mission?.destination,
             comments:lastMission?.mission?.mission?.comments,
